@@ -1,3 +1,5 @@
+*.gddoc
+
 # Built application files
 *.apk
 *.ap_
