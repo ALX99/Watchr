@@ -64,21 +64,6 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 
+# Custom
 *.gddoc
 dddquickly.pdf
-
-# From android studio
-watchr/*.iml
-watchr/.gradle
-watchr/local.properties
-watchr/.idea/caches
-watchr/.idea/libraries
-watchr/.idea/modules.xml
-watchr/.idea/workspace.xml
-watchr/.idea/navEditor.xml
-watchr/.idea/assetWizardSettings.xml
-watchr/.DS_Store
-watchr/build
-watchr/captures
-watchr/.externalNativeBuild
-watchr/.cxx
