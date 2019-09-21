@@ -9,16 +9,17 @@ import androidx.room.PrimaryKey;
 public class Movie {
     @PrimaryKey
     private final long id;
+
+    private final String title;
+    private final String description;
     @ColumnInfo(name = "genres")
     private final int[] genres;
-    private String title;
 
-    public Movie(long id, String title, int[] genres) {
+    public Movie(long id, String title, String description, int[] genres) {
         this.id = id;
         this.title = title;
+        this.description = description;
         this.genres = genres;
-
-
     }
 
     public long getId() {
@@ -31,5 +32,9 @@ public class Movie {
 
     public int[] getGenres() {
         return genres;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
