@@ -1,5 +1,7 @@
 # Watchr - TDA367 Objektorienterat Programmeringsprojekt
 
+[![Build Status](https://travis-ci.org/ITJohan/tda367-objektorienterat-programmeringsprojekt.svg?branch=master)](https://travis-ci.org/ITJohan/tda367-objektorienterat-programmeringsprojekt)
+
 ## Introduction
 
 This will be an application made for android to easily be able to find movies you will love!
