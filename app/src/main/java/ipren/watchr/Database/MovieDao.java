@@ -12,5 +12,5 @@ import ipren.watchr.Movie;
 public interface MovieDao {
 
     @Query("SELECT * FROM movie WHERE genres IN (:g)")
-    public abstract List<Movie> findMovieByGenre(String[] g);
+    public abstract List<Movie> findMovieByGenre(int[] g);
 }
