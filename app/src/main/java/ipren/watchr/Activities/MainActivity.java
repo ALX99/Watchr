@@ -3,12 +3,11 @@ package ipren.watchr.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -30,8 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
     //This method can be overriden and allows us to inject a ViewModell for testing
     @VisibleForTesting
-    protected MainViewModelInterface getViewModel(){
-      return ViewModelProviders.of(this).get(MainViewModel.class); }
+    protected MainViewModelInterface getViewModel() {
+        return ViewModelProviders.of(this).get(MainViewModel.class);
+    }
 
 
     // This method is for setting the toolbar menu and registering respective listeners
@@ -40,12 +40,19 @@ public class MainActivity extends AppCompatActivity {
         //Setting our menu
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         //Syncing layout to model
-        mainViewModel.getUser().observe(this , e -> {
-            if(e == null)
+        mainViewModel.getUser().observe(this, user -> {
+            if (user == null) {
                 menu.findItem(R.id.login_button).setTitle("Login");
-            else
-                menu.findItem(R.id.login_button).setTitle(e.getUserName());
+                menu.findItem(R.id.profile_photo).setIcon(R.drawable.ic_no_user_photo_24px);
+            } else {
+                menu.findItem(R.id.login_button).setTitle(user.getUserName());
+                Bitmap userProfilePicture = user.getUserProfilePicture();
+                menu.findItem(R.id.profile_photo).setIcon(userProfilePicture != null ?
+                        new BitmapDrawable(getResources(),
+                                user.getUserProfilePicture()) : getResources().getDrawable(R.drawable.ic_no_user_photo_24px));
+            }
         });
+
 
         return true;
     }

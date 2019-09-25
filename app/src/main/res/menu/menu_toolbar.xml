@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/login_button"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         android:title="Login"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/profile_photo"
+        android:icon="@drawable/ic_no_user_photo_24px"
+        android:orderInCategory="101"
+        android:title="Profile photo"
         app:showAsAction="always" />
 </menu>
