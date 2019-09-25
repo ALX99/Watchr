@@ -1,6 +1,9 @@
 package ipren.watchr.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -22,5 +25,16 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
+
+
+        Button buttonOne = findViewById(R.id.button);
+        buttonOne.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+
+                Intent activity2Intent = new Intent(getApplicationContext(), MovieActivity.class);
+                startActivity(activity2Intent);
+            }
+        });
     }
 }
