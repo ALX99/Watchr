@@ -26,15 +26,6 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
-
-        Button buttonOne = findViewById(R.id.button);
-        buttonOne.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-
-                Intent activity2Intent = new Intent(getApplicationContext(), MovieActivity.class);
-                startActivity(activity2Intent);
-            }
-        });
     }
+
 }
