@@ -35,4 +35,6 @@ dependencies {
     // Fancy collapsing image in fragment_movie_details.xml
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+    // CircleImageView
 }
