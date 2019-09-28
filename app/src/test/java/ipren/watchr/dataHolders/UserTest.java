@@ -14,7 +14,9 @@ import org.robolectric.annotation.Config;
 
 import ipren.watchr.R;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 28)
@@ -26,6 +28,7 @@ public class UserTest {
     public void setUp() {
         appContext = ApplicationProvider.getApplicationContext();
     }
+
     //Testing all constructors
     @Test
     public void getUserName() {
@@ -39,6 +42,7 @@ public class UserTest {
         assertTrue(user.getUserName().equals("expected - Fred"));
         assertFalse(user.getUserName().equals("invalid"));
     }
+
     //Testing all constructors
     @Test
     public void getUserProfilePicture() {
