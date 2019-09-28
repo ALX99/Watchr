@@ -1,4 +1,4 @@
-package ipren.watchr.view;
+package ipren.watchr.activities.fragments;
 
 
 import android.os.Bundle;
@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment;
 
 import ipren.watchr.R;
 
-public class FavoritesFragment extends Fragment {
+public class BrowseFragment extends Fragment {
 
 
-    public FavoritesFragment() {
+    public BrowseFragment() {
         // Required empty public constructor
     }
 
@@ -22,7 +22,7 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorites, container, false);
+        return inflater.inflate(R.layout.fragment_browse, container, false);
     }
 
 }

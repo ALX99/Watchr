@@ -18,10 +18,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
+
+    def lifecycle_version = "2.1.0"
     def nav_version = "2.1.0"
+
+
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -35,6 +49,23 @@ dependencies {
     // Fancy collapsing image in fragment_movie_details.xml
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
-    implementation 'de.hdodenhof:circleimageview:3.0.1'
+
     // CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+    // Navigation
+
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+
+
+    //Powermock for testing with roboelectric
+    testImplementation "org.powermock:powermock-module-junit4:1.6.6"
+    testImplementation "org.powermock:powermock-module-junit4-rule:1.6.6"
+    testImplementation "org.powermock:powermock-api-mockito:1.6.6"
+    testImplementation "org.powermock:powermock-classloading-xstream:1.6.6"
+    //Roboelectric for testing
+    testImplementation 'org.robolectric:robolectric:4.3'
+    testImplementation 'androidx.test:core:1.0.0'
+
+
 }

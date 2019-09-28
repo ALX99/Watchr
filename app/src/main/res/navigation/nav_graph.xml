@@ -7,27 +7,27 @@
 
     <fragment
         android:id="@+id/browseFragment"
-        android:name="ipren.watchr.view.BrowseFragment"
+        android:name="ipren.watchr.activities.fragments.BrowseFragment"
         android:label="fragment_browse"
         tools:layout="@layout/fragment_browse" />
     <fragment
         android:id="@+id/recommendedFragment"
-        android:name="ipren.watchr.view.RecommendedFragment"
+        android:name="ipren.watchr.activities.fragments.RecommendedFragment"
         android:label="fragment_recommended"
         tools:layout="@layout/fragment_recommended" />
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="ipren.watchr.view.FavoritesFragment"
+        android:name="ipren.watchr.activities.fragments.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" />
     <fragment
         android:id="@+id/watchLaterFragment"
-        android:name="ipren.watchr.view.WatchLaterFragment"
+        android:name="ipren.watchr.activities.fragments.WatchLaterFragment"
         android:label="fragment_watch_later"
         tools:layout="@layout/fragment_watch_later" />
     <fragment
         android:id="@+id/watchedFragment"
-        android:name="ipren.watchr.view.WatchedFragment"
+        android:name="ipren.watchr.activities.fragments.WatchedFragment"
         android:label="fragment_watched"
         tools:layout="@layout/fragment_watched" />
 </navigation>
