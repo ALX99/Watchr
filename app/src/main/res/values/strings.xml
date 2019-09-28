@@ -8,7 +8,7 @@
     <string name="popularity_text">Popularity</string>
     <string name="rating_text">Rating</string>
     <string name="favorite_text">Favorite</string>
-    <string name="description_text">Description</string>
     <string name="movie_cover_text">Movie Cover</string>
     <string name="movie_poster_text">Movie Poster</string>
+    <string name="actor_text">Actors</string>
 </resources>

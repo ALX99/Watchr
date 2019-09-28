@@ -18,10 +18,8 @@ import ipren.watchr.R;
 import ipren.watchr.dataHolders.Actor;
 
 public class ProductionAdapter extends RecyclerView.Adapter<ProductionAdapter.ViewHolder> {
-    private static final String TAG = "ProductionViewAdapter"; // Debug
 
-
-    private ArrayList<Actor> actors = new ArrayList<>();
+    private ArrayList<Actor> actors;
     private Context mContext;
 
     public ProductionAdapter(Context mContext, ArrayList<Actor> actors) {
