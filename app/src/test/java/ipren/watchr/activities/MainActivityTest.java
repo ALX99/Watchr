@@ -1,30 +1,20 @@
-package ipren.watchr.Activities;
+package ipren.watchr.activities;
 
 
-import android.annotation.TargetApi;
-import android.app.Application;
-import android.content.ClipData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
-import android.os.Build;
 
 
-import androidx.annotation.DrawableRes;
-import androidx.appcompat.graphics.drawable.DrawableWrapper;
 import androidx.appcompat.view.menu.ActionMenuItemView;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
-import org.apache.tools.ant.Main;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,13 +22,12 @@ import org.junit.runner.RunWith;
 
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
-import ipren.watchr.DataHolders.User;
+import ipren.watchr.dataHolders.User;
 import ipren.watchr.R;
-import ipren.watchr.ViewModels.MainViewModelInterface;
+import ipren.watchr.viewModels.MainViewModelInterface;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 28)

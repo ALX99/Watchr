@@ -1,9 +1,12 @@
-package ipren.watchr.Activities;
+package ipren.watchr.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,9 +14,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import ipren.watchr.R;
-import ipren.watchr.ViewModels.MainViewModel;
-import ipren.watchr.ViewModels.MainViewModelInterface;
+import ipren.watchr.viewModels.MainViewModel;
+import ipren.watchr.viewModels.MainViewModelInterface;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +29,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
+
+        // Set up navigation
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+        NavigationUI.setupWithNavController(bottomNav, navController);
+
+        // Get model
         mainViewModel = getViewModel();
     }
 
