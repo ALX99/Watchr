@@ -56,8 +56,6 @@ public class LoginFragment extends Fragment {
         EditText emailTextField = fragmentView.findViewById(R.id.email_text_input);
 
         // Used to make the phone vibrate when wrong password is entered.
-
-
         //This callback loggs the user in or displays error messages
         fragmentView.findViewById(R.id.login_button).setOnClickListener(e ->{
             // Checks that the fields have a value. TODO can be replaced with a "validate string value" method if its not possible to do in the layout
@@ -77,6 +75,7 @@ public class LoginFragment extends Fragment {
                 Navigation.findNavController(fragmentView).popBackStack();
                 Toast.makeText(getContext(), "Welcome, you are logged in", Toast.LENGTH_SHORT).show();
             }else{
+
                 shakeButton((Button) e);
                 if(mainViewModel.isEmailRegistered(emailTextField.getText().toString()))
                     passwordTextField.setError("Wrong password");
