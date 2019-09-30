@@ -20,18 +20,18 @@
         android:padding="4dp">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Title"
-            android:text="Schindler's List" />
+            android:text="Movie title" />
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/overview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Text"
-            android:text="The true story of how businessman Oskar Schindler saved over a thousand Jewish lives from the Nazis while they worked as slaves in his factory during World War II." />
+            android:text="Movie overview" />
 
 
     </LinearLayout>
