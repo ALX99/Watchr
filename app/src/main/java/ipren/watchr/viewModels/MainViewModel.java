@@ -1,6 +1,8 @@
 package ipren.watchr.viewModels;
 
 
+import android.graphics.BitmapFactory;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,5 +19,18 @@ public class MainViewModel extends ViewModel implements MainViewModelInterface {
         return user;
     }
 
+    //This method is loaded with dummy values untill the repository is connected;
+    public boolean validUser(String email){
+        return email.equalsIgnoreCase("david@ipren.com");
+    }
+
+    //This method is loaded with dummy values untill the repository is connected;
+    public boolean loginUser(String email, String password){
+        if(email.equalsIgnoreCase("david@ipren.com") && password.equalsIgnoreCase("123456")){
+            user.postValue(new User("David Olsson"));
+            return true;
+        }
+        return false;
+    }
 
 }
