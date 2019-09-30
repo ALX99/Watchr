@@ -2,6 +2,8 @@ package ipren.watchr.activities.fragments;
 
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,13 @@ public class LoginFragment extends Fragment {
         // Getting the viewmodel by using the activity context to save resources.
         mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
+        initiateRegisterLayout();
+        initiateLoginLayout();
+
+    }
+
+    //This method must be called after onViewCreated and after the mainViewModel has been fetched
+    private void initiateLoginLayout(){
         View fragmentView = getView();
         EditText passwordTextField = fragmentView.findViewById(R.id.password_text_input);
         EditText emailTextField = fragmentView.findViewById(R.id.email_text_input);
@@ -48,6 +57,7 @@ public class LoginFragment extends Fragment {
         // Used to make the phone vibrate when wrong password is entered.
         Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
 
+        //This callback loggs the user in or displays error messages
         fragmentView.findViewById(R.id.login_button).setOnClickListener(e ->{
             // Checks that the fields have a value. TODO can be replaced with a "validate string value" method if its not possible to do in the layout
             Boolean isPasswEmpty = passwordTextField.getText().toString().equalsIgnoreCase("");
@@ -60,25 +70,66 @@ public class LoginFragment extends Fragment {
                 e.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.shake));
                 return;
             }
-
+            String userEmail = emailTextField.getText().toString();
+            String userPassword = passwordTextField.getText().toString();
             //If the values pass the test a login is attempted, if it fails it will show an error message
-           if(mainViewModel.loginUser(emailTextField.getText().toString(), passwordTextField.getText().toString())) {
-               Navigation.findNavController(fragmentView).popBackStack();
-               Toast.makeText(getContext(), "Logged in", Toast.LENGTH_SHORT).show();
-           }else{
-               vibrator.vibrate(200);
-               if(mainViewModel.isEmailRegistered(emailTextField.getText().toString()))
-                   passwordTextField.setError("Wrong password");
-               else
-                   emailTextField.setError("Wrong email");
-           }
+            if(mainViewModel.loginUser(userEmail, userPassword)) {
+                Navigation.findNavController(fragmentView).popBackStack();
+                Toast.makeText(getContext(), "Welcome, you are logged in", Toast.LENGTH_SHORT).show();
+            }else{
+                vibrator.vibrate(200);
+                e.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.shake));
+                if(mainViewModel.isEmailRegistered(emailTextField.getText().toString()))
+                    passwordTextField.setError("Wrong password");
+                else
+                    emailTextField.setError("Wrong email");
+            }
         });
-
-        fragmentView.findViewById(R.id.register_account_btn).setOnClickListener(e -> {
+        //This allows the user to switch to the register page
+        fragmentView.findViewById(R.id.start_user_registration_btn).setOnClickListener(e -> {
             fragmentView.findViewById(R.id.login_layout).setVisibility(View.INVISIBLE);
             fragmentView.findViewById(R.id.register_user_layout).setVisibility(View.VISIBLE);
         });
 
+    }
 
+    //This method must be called after onViewCreated and after the mainViewModel has been fetched
+    private void initiateRegisterLayout(){
+        View fragmentView = getView();
+        EditText password = fragmentView.findViewById(R.id.new_usr_pwd);
+        EditText reTypedPassword = fragmentView.findViewById(R.id.new_user_retyped_pwd);
+        EditText newUserEmail = fragmentView.findViewById(R.id.new_user_email_input);
+
+        // This callback displays an error message if an email is taken or invalid to the register layout
+        newUserEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String newValue = editable.toString();
+                if(!(isEmailFormat(newValue)))
+                    newUserEmail.setError("Not an email adress");
+                else if(mainViewModel.isEmailRegistered(newValue))
+                    newUserEmail.setError("Already exists");
+            }
+        });
+
+        //Attempt to register the user
+        fragmentView.findViewById(R.id.register_user_btn).setOnClickListener(e -> {
+            String passwordTxt = password.getText().toString();
+            String reTypedPasswordTxt = reTypedPassword.getText().toString();
+            String email = newUserEmail.getText().toString();
+            if(passwordTxt.equalsIgnoreCase(reTypedPasswordTxt) && !mainViewModel.isEmailRegistered(email)){
+                //Register here
+            }
+        });
+
+
+    }
+
+    private boolean isEmailFormat(String email){
+        return email != null && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }

@@ -51,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/password_text_input" />
 
     <TextView
-        android:id="@+id/register_account_btn"
+        android:id="@+id/start_user_registration_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="76dp"
