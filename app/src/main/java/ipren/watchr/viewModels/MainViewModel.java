@@ -20,7 +20,7 @@ public class MainViewModel extends ViewModel implements MainViewModelInterface {
     }
 
     //This method is loaded with dummy values untill the repository is connected;
-    public boolean validUser(String email){
+    public boolean isEmailRegistered(String email){
         return email.equalsIgnoreCase("david@ipren.com");
     }
 

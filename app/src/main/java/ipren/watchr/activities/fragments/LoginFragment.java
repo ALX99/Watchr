@@ -42,13 +42,13 @@ public class LoginFragment extends Fragment {
         mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
         View fragmentView = getView();
-        EditText passwordTextField = fragmentView.findViewById(R.id.password_text_field);
-        EditText emailTextField = fragmentView.findViewById(R.id.email_text_field);
+        EditText passwordTextField = fragmentView.findViewById(R.id.password_text_input);
+        EditText emailTextField = fragmentView.findViewById(R.id.email_text_input);
 
         // Used to make the phone vibrate when wrong password is entered.
         Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
 
-        fragmentView.findViewById(R.id.loginButton).setOnClickListener(e ->{
+        fragmentView.findViewById(R.id.login_button).setOnClickListener(e ->{
             // Checks that the fields have a value. TODO can be replaced with a "validate string value" method if its not possible to do in the layout
             Boolean isPasswEmpty = passwordTextField.getText().toString().equalsIgnoreCase("");
             Boolean isEmailEmpty = emailTextField.getText().toString().equalsIgnoreCase("");
@@ -67,11 +67,16 @@ public class LoginFragment extends Fragment {
                Toast.makeText(getContext(), "Logged in", Toast.LENGTH_SHORT).show();
            }else{
                vibrator.vibrate(200);
-               if(mainViewModel.validUser(emailTextField.getText().toString()))
+               if(mainViewModel.isEmailRegistered(emailTextField.getText().toString()))
                    passwordTextField.setError("Wrong password");
                else
                    emailTextField.setError("Wrong email");
            }
+        });
+
+        fragmentView.findViewById(R.id.register_account_btn).setOnClickListener(e -> {
+            fragmentView.findViewById(R.id.login_layout).setVisibility(View.INVISIBLE);
+            fragmentView.findViewById(R.id.register_user_layout).setVisibility(View.VISIBLE);
         });
 
 
