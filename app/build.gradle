@@ -33,6 +33,7 @@ dependencies {
 
     def lifecycle_version = "2.1.0"
     def nav_version = "2.1.0"
+    def butterknife_version = "10.2.0"
 
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
@@ -46,26 +47,25 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    // Fancy collapsing image in fragment_movie_details.xml
-    implementation "androidx.navigation:navigation-fragment:$nav_version"
-    implementation "androidx.navigation:navigation-ui:$nav_version"
-
     // CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.0.1'
-    // Navigation
 
+    // Navigation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
-
-    //Powermock for testing with roboelectric
+    // Powermock for testing with roboelectric
     testImplementation "org.powermock:powermock-module-junit4:1.6.6"
     testImplementation "org.powermock:powermock-module-junit4-rule:1.6.6"
     testImplementation "org.powermock:powermock-api-mockito:1.6.6"
     testImplementation "org.powermock:powermock-classloading-xstream:1.6.6"
-    //Roboelectric for testing
+
+    // Roboelectric for testing
     testImplementation 'org.robolectric:robolectric:4.3'
     testImplementation 'androidx.test:core:1.0.0'
 
+    // Butterknife for easy data binding
+    implementation "com.jakewharton:butterknife:$butterknife_version"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
 
 }
