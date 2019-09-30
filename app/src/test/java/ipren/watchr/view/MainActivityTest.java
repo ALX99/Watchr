@@ -1,4 +1,4 @@
-package ipren.watchr.activities;
+package ipren.watchr.view;
 
 
 import android.content.Context;
@@ -25,9 +25,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
-import ipren.watchr.dataHolders.User;
+import ipren.watchr.model.User;
 import ipren.watchr.R;
-import ipren.watchr.viewModels.MainViewModelInterface;
+import ipren.watchr.viewmodel.MainViewModelInterface;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 28)
