@@ -30,4 +30,15 @@
         android:name="ipren.watchr.activities.fragments.WatchedFragment"
         android:label="fragment_watched"
         tools:layout="@layout/fragment_watched" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="ipren.watchr.activities.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <action
+            android:id="@+id/action_global_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@animator/slide_down"
+
+        />
 </navigation>

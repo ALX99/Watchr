@@ -23,6 +23,7 @@ import ipren.watchr.viewModels.MainViewModelInterface;
 public class MainActivity extends AppCompatActivity {
 
     private MainViewModelInterface mainViewModel;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
 
         // Set up navigation
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
         // Get model
         mainViewModel = getViewModel();
+
+
     }
 
     //This method can be overriden and allows us to inject a ViewModell for testing
@@ -72,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
     //This method is for listening to menu onClick events
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(navController.getCurrentDestination().getId() == R.id.loginFragment)
+            navController.popBackStack();
+        else
+            navController.navigate(R.id.action_global_loginFragment);
         return super.onOptionsItemSelected(item);
     }
 }
