@@ -10,7 +10,8 @@ This will be an application made for android to easily be able to find movies yo
 
 [Trello](https://trello.com/b/gjwIsODj/movieapp)  
 [Requirements and Analysis Document](https://docs.google.com/document/d/1dbzKoYmv8hf_czsvtaJkKjVs7tnyF8L2YQzVcfuWCxw/edit?usp=sharing)  
-[System Design Document](https://docs.google.com/document/d/1GjAOe8Z2GMxuMLxm4WwJcoCDVlYT4zequuEK8OUly7Q/edit?usp=sharing)
+[System Design Document](https://docs.google.com/document/d/1GjAOe8Z2GMxuMLxm4WwJcoCDVlYT4zequuEK8OUly7Q/edit?usp=sharing)  
+[Meeting Protocols](https://drive.google.com/drive/folders/1XBq-GMqKhEiqjhyY5pQ3hbJZXramyKcu?usp=sharing)
 
 Development process:
 
