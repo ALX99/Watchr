@@ -27,6 +27,9 @@ android {
             includeAndroidResources = true
         }
     }
+    lintOptions {
+        disable 'SmallSp'
+    }
 }
 
 dependencies {
@@ -73,7 +76,7 @@ dependencies {
 
     //Roboelectric for testing
     testImplementation 'org.robolectric:robolectric:4.3'
-    testImplementation 'androidx.test:core:1.0.0'
+    testImplementation 'androidx.test:core:1.2.0'
 
 
 }

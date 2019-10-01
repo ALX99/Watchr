@@ -98,10 +98,10 @@ public class MovieDetails extends Fragment {
 
     private ArrayList<Comment> dummyComment() {
         ArrayList x = new ArrayList<Comment>();
-        x.add(new Comment(0, "", "Batman", "im batman"));
-        x.add(new Comment(0, "", "herohunter37", "nice movie, 2/10"));
-        x.add(new Comment(0, "", "elizabeth", "The movie was overall scary, like a scary movie should be. However the movie lacked a realistic and interesting storyline"));
-        x.add(new Comment(0, "", "mrcool634", "yeah movie was decent"));
+        x.add(new Comment(0, "", "User", "Example comment"));
+        x.add(new Comment(0, "", "User", "Example comment"));
+        x.add(new Comment(0, "", "User", "Example comment"));
+        x.add(new Comment(0, "", "User", "Example comment"));
         x.add(new Comment(0, "", "User", "Example comment"));
         x.add(new Comment(0, "", "User", "Example comment"));
         x.add(new Comment(0, "", "User", "Example comment"));
