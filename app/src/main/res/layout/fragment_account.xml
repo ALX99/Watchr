@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#152d37"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#0f2027"
+            android:elevation="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/logout_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rounded_cornerns_button_red"
+                android:elevation="10dp"
+                android:text="Logout"
+                app:layout_constraintBottom_toBottomOf="@+id/profile_img_acc"
+                app:layout_constraintStart_toStartOf="@+id/email_text_field_acc"
+                app:layout_constraintTop_toBottomOf="@+id/email_text_field_acc"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/username_text_field_acc"
+                android:layout_width="199dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="sans-serif"
+                android:text="David Olsson"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/profile_img_acc"
+                app:layout_constraintTop_toTopOf="@+id/profile_img_acc" />
+
+            <TextView
+                android:id="@+id/email_text_field_acc"
+                android:layout_width="198dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="daivd@ipren.com"
+                android:textColor="@android:color/white"
+                android:textSize="15dp"
+                app:layout_constraintEnd_toEndOf="@+id/username_text_field_acc"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/username_text_field_acc"
+                app:layout_constraintTop_toBottomOf="@+id/username_text_field_acc" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_img_acc"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/profile_picture_mock"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

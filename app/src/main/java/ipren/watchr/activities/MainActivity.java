@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar(findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar_menu));
 
         // Set up navigation
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 menu.findItem(R.id.login_button).setTitle(user.getUserName());
                 Bitmap userProfilePicture = user.getUserProfilePicture();
+                //Todo When the repository is built, the User objects wont hold null values, remove this nullcheck
                 menu.findItem(R.id.profile_photo).setIcon(userProfilePicture != null ?
                         new BitmapDrawable(getResources(),
                                 user.getUserProfilePicture()) : getResources().getDrawable(R.drawable.ic_no_user_photo_24px));
@@ -75,10 +76,14 @@ public class MainActivity extends AppCompatActivity {
     //This method is for listening to menu onClick events
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(navController.getCurrentDestination().getId() == R.id.loginFragment)
+        int currentID = navController.getCurrentDestination().getId();
+        if(currentID == R.id.loginFragment || currentID == R.id.accountFragment)
             navController.popBackStack();
         else
-            navController.navigate(R.id.action_global_loginFragment);
+            if(mainViewModel.getUser().getValue() == null)
+                 navController.navigate(R.id.action_global_loginFragment);
+            else
+                navController.navigate(R.id.action_global_accountFragment);
         return super.onOptionsItemSelected(item);
     }
 }

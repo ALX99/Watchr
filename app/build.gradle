@@ -39,12 +39,21 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // Fancy collapsing image in fragment_movie_details.xml
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+
+    // CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
     // Navigation
+
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
@@ -57,6 +66,10 @@ dependencies {
     //Roboelectric for testing
     testImplementation 'org.robolectric:robolectric:4.3'
     testImplementation 'androidx.test:core:1.0.0'
+
+
+    // CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
 
 
 }

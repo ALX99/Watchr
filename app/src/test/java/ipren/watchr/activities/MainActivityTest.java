@@ -74,7 +74,7 @@ public class MainActivityTest {
         Assert.assertTrue(testItem.showsIcon()); //Making sure it is visible, TODO make a negative test.
         String[] userValues = {"David", "Frank", "ÖÄÅØÆæø", "!#¤%&/()=?`-/3$", ""}; // I could make this more extensive but...
         for (String value : userValues) {
-            mockViewModel.setUser(new User(value));
+            mockViewModel.setUser(new User(value, "Not used"));
             Assert.assertTrue(!testItem.getText().equals("Invalid value"));
             Assert.assertTrue(testItem.getText().equals(value));
         }
@@ -97,7 +97,7 @@ public class MainActivityTest {
         expectedBitmap = ((BitmapDrawable) appContext.getResources().getDrawable(R.drawable.profile_picture_mock)).getBitmap();
         Assert.assertFalse(expectedBitmap.sameAs(testBitmap));
         //Switching profile image and testing, bitmap image, needs no
-        mockViewModel.setUser(new User("Not Used", BitmapFactory.decodeResource(appContext.getResources(), R.drawable.profile_picture_mock)));
+        mockViewModel.setUser(new User("Not Used","Not used", BitmapFactory.decodeResource(appContext.getResources(), R.drawable.profile_picture_mock)));
         testBitmap = ((BitmapDrawable) testItem.getItemData().getIcon()).getBitmap();
         Assert.assertTrue((expectedBitmap.sameAs(testBitmap)));
     }

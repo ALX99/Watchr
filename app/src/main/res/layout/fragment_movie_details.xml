@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.MovieDetails">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/movie_cover_text"
+                android:scaleType="centerCrop"
+                android:src="@drawable/cover" />
+
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <!-- Using cardview to achieve rounded corners, since due to a bug XML doesn't recognize the property clipToOutline!-->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/coverCardView"
+                android:layout_width="125dp"
+                android:layout_height="176dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/movie_poster_text"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/poster" />
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Annabelle Comes Home"
+                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/coverCardView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/releaseDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="2019-06-26"
+                app:layout_constraintStart_toEndOf="@+id/coverCardView"
+                app:layout_constraintTop_toBottomOf="@+id/title" />
+
+            <ProgressBar
+                android:id="@+id/popularity"
+                style="?android:progressBarStyleHorizontal"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="24dp"
+                android:layout_weight="1"
+                android:progress="69"
+                android:progressDrawable="@drawable/circle_progress_bar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/coverCardView" />
+
+            <TextView
+                android:id="@+id/popularityText"
+                android:layout_width="16dp"
+                android:layout_height="22dp"
+                android:gravity="center"
+                android:text="69"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/popularity"
+                app:layout_constraintEnd_toEndOf="@+id/popularity"
+                app:layout_constraintStart_toStartOf="@+id/popularity"
+                app:layout_constraintTop_toTopOf="@+id/popularity" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="@string/popularity_text"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/popularity"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/popularity"
+                app:layout_constraintTop_toTopOf="@+id/textView7" />
+
+            <ProgressBar
+                android:id="@+id/rating"
+                style="?android:progressBarStyleHorizontal"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:max="100"
+                android:progress="61"
+                android:progressDrawable="@drawable/circle_progress_bar"
+                app:layout_constraintEnd_toStartOf="@+id/popularity"
+                app:layout_constraintTop_toTopOf="@+id/popularity" />
+
+            <ProgressBar
+                android:id="@+id/ourRating"
+                style="?android:progressBarStyleHorizontal"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:max="100"
+                android:progress="45"
+                android:progressDrawable="@drawable/circle_progress_bar"
+                app:layout_constraintEnd_toStartOf="@+id/rating"
+                app:layout_constraintTop_toTopOf="@+id/rating" />
+
+            <TextView
+                android:id="@+id/ratingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="6.1"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/rating"
+                app:layout_constraintEnd_toEndOf="@+id/rating"
+                app:layout_constraintStart_toStartOf="@+id/rating"
+                app:layout_constraintTop_toTopOf="@+id/rating" />
+
+            <TextView
+                android:id="@+id/ourRatingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="4.5"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/ourRating"
+                app:layout_constraintEnd_toEndOf="@+id/ourRating"
+                app:layout_constraintStart_toStartOf="@+id/ourRating"
+                app:layout_constraintTop_toTopOf="@+id/ourRating" />
+
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Our Rating"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/ourRating"
+                app:layout_constraintStart_toStartOf="@+id/ourRating"
+                app:layout_constraintTop_toBottomOf="@+id/ourRating" />
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rating_text"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/rating"
+                app:layout_constraintStart_toStartOf="@+id/rating"
+                app:layout_constraintTop_toBottomOf="@+id/rating" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/watchLater"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:button="@drawable/add_checkbox"
+                android:checked="false"
+                android:scaleX="0.9"
+                android:scaleY="0.9"
+                app:layout_constraintEnd_toStartOf="@+id/favorite"
+                app:layout_constraintStart_toEndOf="@+id/watched"
+                app:layout_constraintTop_toBottomOf="@+id/coverCardView" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/watched"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="13dp"
+                android:button="@drawable/checkbox"
+                android:checked="false"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                app:layout_constraintStart_toStartOf="@+id/coverCardView"
+                app:layout_constraintTop_toBottomOf="@+id/coverCardView" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="3dp"
+                android:button="@drawable/fav_checkbox"
+                android:checked="false"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                app:layout_constraintEnd_toEndOf="@+id/coverCardView"
+                app:layout_constraintTop_toBottomOf="@+id/coverCardView" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView7"/>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:text="@string/watch_later"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/watchLater"
+                app:layout_constraintStart_toStartOf="@+id/watchLater"
+                app:layout_constraintTop_toTopOf="@+id/textView5" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/favorite_text"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/favorite"
+                app:layout_constraintStart_toStartOf="@+id/favorite"
+                app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/genres"
+                android:layout_width="wrap_content"
+                android:layout_height="110dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toEndOf="@+id/coverCardView"
+                app:layout_constraintTop_toBottomOf="@+id/releaseDate" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/description_text"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="While babysitting the daughter of Ed and Lorraine Warren, a teenager and her friend unknowingly awaken an evil spirit trapped in a doll. "
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Watched"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/watched"
+                app:layout_constraintHorizontal_bias="0.533"
+                app:layout_constraintStart_toStartOf="@+id/watched"
+                app:layout_constraintTop_toBottomOf="@+id/watched" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

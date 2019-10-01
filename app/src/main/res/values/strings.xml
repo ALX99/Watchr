@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Watchr</string>
+    <string name="title_activity_movie">MovieActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="watch_later">Watch Later</string>
+    <string name="popularity_text">Popularity</string>
+    <string name="rating_text">Rating</string>
+    <string name="favorite_text">Favorite</string>
+    <string name="description_text">Description</string>
+    <string name="movie_cover_text">Movie Cover</string>
+    <string name="movie_poster_text">Movie Poster</string>
 </resources>
