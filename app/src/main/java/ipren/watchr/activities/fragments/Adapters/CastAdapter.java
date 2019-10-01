@@ -17,12 +17,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.R;
 import ipren.watchr.dataHolders.Actor;
 
-public class ProductionAdapter extends RecyclerView.Adapter<ProductionAdapter.ViewHolder> {
+public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
 
     private ArrayList<Actor> actors;
     private Context mContext;
 
-    public ProductionAdapter(Context mContext, ArrayList<Actor> actors) {
+    public CastAdapter(Context mContext, ArrayList<Actor> actors) {
         this.actors = actors;
         this.mContext = mContext;
     }

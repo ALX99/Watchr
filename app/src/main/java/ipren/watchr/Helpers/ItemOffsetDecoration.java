@@ -25,6 +25,11 @@ public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        outRect.set(itemOffset / 2, itemOffset, itemOffset / 2, itemOffset);
+        // if horizontal
+        if (parent.getLayoutManager().canScrollHorizontally())
+            outRect.set(itemOffset / 2, itemOffset, itemOffset / 2, itemOffset);
+        else
+            outRect.set(itemOffset, itemOffset / 2, itemOffset, itemOffset / 2);
+
     }
 }
