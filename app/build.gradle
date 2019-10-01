@@ -79,4 +79,8 @@ dependencies {
     testImplementation 'androidx.test:core:1.2.0'
 
 
+    // CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+
+
 }
