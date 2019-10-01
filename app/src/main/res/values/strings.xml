@@ -1,16 +1,21 @@
 <resources>
     <string name="app_name">Watchr</string>
-    <string name="popularity_text">Popularity</string>
-    <string name="rating_text">Rating</string>
-    <string name="favorite_text">Favorite</string>
-    <string name="movie_cover_text">Movie Cover</string>
-    <string name="movie_poster_text">Movie Poster</string>
-    <string name="actor_text">Actors</string>
-    <string name="browse_text">Browse</string>
-    <string name="recommended_text">Recommended</string>
-    <string name="watch_later_text">Watch Later</string>
-    <string name="watched_text">Watched</string>
-    <string name="favorites_text">Favorites</string>
-    <string name="comments_text">Comments</string>
-    <string name="login_text">Login</string>
+    <string name="popularity">Popularity</string>
+    <string name="rating">Rating</string>
+    <string name="favorite">Favorite</string>
+    <string name="movie_cover">Movie Cover</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="actor">Actors</string>
+    <string name="browse">Browse</string>
+    <string name="recommended">Recommended</string>
+    <string name="watch_later">Watch Later</string>
+    <string name="watched">Watched</string>
+    <string name="favorites">Favorites</string>
+    <string name="comments">Comments</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="register">Register</string>
+    <string name="example_email">your@email.address</string>
+    <string name="example_password">*******************</string>
+
 </resources>

@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_browse" />
     <fragment
         android:id="@+id/recommendedFragment"
-        android:name="ipren.watchr.activities.fragments.MovieDetails"
+        android:name="ipren.watchr.activities.fragments.RecommendedFragment"
         android:label="fragment_recommended"
-        tools:layout="@layout/fragment_movie_details" />
+        tools:layout="@layout/fragment_recommended" />
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="ipren.watchr.activities.fragments.FavoritesFragment"

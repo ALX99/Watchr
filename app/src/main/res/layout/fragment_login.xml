@@ -13,6 +13,7 @@
 
 
         <ImageView
+            android:contentDescription="App logo"
             android:id="@+id/imageView"
             android:layout_width="239dp"
             android:layout_height="190dp"

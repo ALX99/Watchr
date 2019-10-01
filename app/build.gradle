@@ -28,7 +28,9 @@ android {
         }
     }
     lintOptions {
-        disable 'SmallSp'
+        // Disable Autofill "autofillHints" warnings, since they use API > 26,
+        // we use 21.
+        disable 'SmallSp', 'Autofill'
     }
 }
 
