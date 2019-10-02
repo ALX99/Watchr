@@ -14,7 +14,7 @@
 
         <ImageView
             android:contentDescription="App logo"
-            android:id="@+id/imageView"
+            android:id="@+id/movieImage"
             android:layout_width="239dp"
             android:layout_height="190dp"
             android:layout_marginTop="55dp"
@@ -33,7 +33,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/movieImage" />
 
         <include
             android:id="@+id/login_layout"
@@ -45,7 +45,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/movieImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

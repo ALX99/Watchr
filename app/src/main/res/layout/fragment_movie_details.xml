@@ -62,7 +62,7 @@
 
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/movieTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -82,7 +82,7 @@
                 android:layout_marginTop="4dp"
                 android:text="2019-06-26"
                 app:layout_constraintStart_toEndOf="@+id/coverCardView"
-                app:layout_constraintTop_toBottomOf="@+id/title" />
+                app:layout_constraintTop_toBottomOf="@+id/movieTitle" />
 
             <ProgressBar
                 android:id="@+id/popularity"

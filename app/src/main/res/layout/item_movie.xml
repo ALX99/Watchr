@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="6dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/movieImage"
+            android:layout_width="106dp"
+            android:layout_height="159dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/poster" />
+
+        <TextView
+            android:id="@+id/movieTitle"
+            style="@style/Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Movie title"
+            app:layout_constraintStart_toEndOf="@+id/movieImage"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/movieOverview"
+            style="@style/Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus rhoncus eros sed efficitur mattis. Morbi feugiat magna auctor mauris egestas, et tempus ipsum bibendum. Mauris a pulvinar ante. Vestibulum tincidunt, ligula vel consequat porttitor, dui erat convallis ipsum, ultricies blandit dolor orci eget turpis."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/movieTitle"
+            app:layout_constraintTop_toBottomOf="@+id/movieTitle" />
+
+        <View
+            android:id="@+id/bottomContainer"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movieImage" />
+
+        <ImageButton
+            android:id="@+id/watchedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/bottomContainer"
+            app:srcCompat="@drawable/ic_watched" />
+
+        <ImageButton
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/watchedButton"
+            app:layout_constraintTop_toTopOf="@+id/bottomContainer"
+            app:srcCompat="@drawable/ic_watch_later" />
+
+        <ImageButton
+            android:id="@+id/favoriteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/ic_favorites"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/addButton"
+            app:layout_constraintTop_toTopOf="@+id/bottomContainer"
+            app:srcCompat="@drawable/ic_favorites" />
+
+        <TextView
+            android:id="@+id/movieRating"
+            style="@style/Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rating: 6.3"
+            app:layout_constraintBottom_toTopOf="@+id/movieGenres"
+            app:layout_constraintStart_toStartOf="@+id/movieOverview" />
+
+        <TextView
+            android:id="@+id/movieGenres"
+            style="@style/Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Genres: Horror"
+            app:layout_constraintBottom_toTopOf="@+id/movieLength"
+            app:layout_constraintStart_toStartOf="@+id/movieRating" />
+
+        <TextView
+            android:id="@+id/movieLength"
+            style="@style/Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Length: 1h 36min"
+            app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
+            app:layout_constraintStart_toStartOf="@+id/movieRating" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
