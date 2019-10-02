@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 menu.findItem(R.id.login_button).setTitle("Login");
                 menu.findItem(R.id.profile_photo).setIcon(R.drawable.ic_no_user_photo_24px);
             } else {
-                menu.findItem(R.id.login_button).setTitle(user.getUserName());
+                menu.findItem(R.id.login_button).setTitle(user.getEmail());
                 Bitmap userProfilePicture = user.getUserProfilePicture();
                 //Todo When the repository is built, the User objects wont hold null values, remove this nullcheck
                 menu.findItem(R.id.profile_photo).setIcon(userProfilePicture != null ?
