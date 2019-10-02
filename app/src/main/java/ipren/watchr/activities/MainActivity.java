@@ -1,5 +1,11 @@
 package ipren.watchr.activities;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,12 +13,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
-
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -23,20 +23,23 @@ import ipren.watchr.viewModels.MainViewModelInterface;
 public class MainActivity extends AppCompatActivity {
 
     private MainViewModelInterface mainViewModel;
+    private NavController navController;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar(findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar_menu));
 
         // Set up navigation
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
         // Get model
         mainViewModel = getViewModel();
+
     }
 
     //This method can be overriden and allows us to inject a ViewModell for testing
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 menu.findItem(R.id.login_button).setTitle(user.getUserName());
                 Bitmap userProfilePicture = user.getUserProfilePicture();
+                //Todo When the repository is built, the User objects wont hold null values, remove this nullcheck
                 menu.findItem(R.id.profile_photo).setIcon(userProfilePicture != null ?
                         new BitmapDrawable(getResources(),
                                 user.getUserProfilePicture()) : getResources().getDrawable(R.drawable.ic_no_user_photo_24px));
@@ -72,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
     //This method is for listening to menu onClick events
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int currentID = navController.getCurrentDestination().getId();
+        if(currentID == R.id.loginFragment || currentID == R.id.accountFragment)
+            navController.popBackStack();
+        else
+            if(mainViewModel.getUser().getValue() == null)
+                 navController.navigate(R.id.action_global_loginFragment);
+            else
+                navController.navigate(R.id.action_global_accountFragment);
         return super.onOptionsItemSelected(item);
     }
 }

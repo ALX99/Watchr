@@ -4,7 +4,7 @@
     <item
         android:id="@+id/login_button"
         android:orderInCategory="101"
-        android:title="Login"
+        android:title="@string/login"
         app:showAsAction="always" />
     <item
         android:id="@+id/profile_photo"
