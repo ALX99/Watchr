@@ -1,6 +1,22 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
+//This is to make password management easier. Loads fields from a txt file. This file must not
+//be pushed to git
+Properties localProperties = new Properties()
+localProperties.load(rootProject.file("ipren.keys").newDataInputStream())
 android {
+
+    signingConfigs {
+        // This file contains default passwords and aliases to the keystore.
+        debug {
+            //The keystore file must not be pushed to git, and will be kept safe storage
+            storeFile file('../debug.keystore')
+            storePassword localProperties.getProperty("debug.store.password")
+            keyAlias localProperties.getProperty("debug.key.alias")
+            keyPassword localProperties.getProperty("debug.key.password")
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -10,7 +26,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         release {
@@ -70,6 +85,8 @@ dependencies {
 
     // CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.0.1'
+    // Firebase
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
 
 
 }
