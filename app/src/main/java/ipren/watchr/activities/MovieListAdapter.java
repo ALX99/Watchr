@@ -53,9 +53,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     @Override
     public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, int position) {
-        ImageView image = holder.itemView.findViewById(R.id.imageView);
-        TextView title = holder.itemView.findViewById(R.id.title);
-        TextView overview = holder.itemView.findViewById(R.id.overview);
+        ImageView image = holder.itemView.findViewById(R.id.movieImage);
+        TextView title = holder.itemView.findViewById(R.id.movieTitle);
+        TextView overview = holder.itemView.findViewById(R.id.movieOverview);
 
         title.setText(movieList.get(position).title);
         overview.setText(movieList.get(position).overview);
