@@ -1,8 +1,8 @@
-package ipren.watchr.viewmodel;
+package ipren.watchr.viewModels;
 
 import androidx.lifecycle.LiveData;
 
-import ipren.watchr.model.User;
+import ipren.watchr.dataHolders.User;
 
 // This Interface enables us to swap MainActivity's ViewModel
 public interface MainViewModelInterface {

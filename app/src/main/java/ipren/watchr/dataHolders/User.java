@@ -1,4 +1,4 @@
-package ipren.watchr.model;
+package ipren.watchr.dataHolders;
 
 import android.graphics.Bitmap;
 

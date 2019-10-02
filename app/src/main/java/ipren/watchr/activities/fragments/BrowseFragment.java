@@ -1,4 +1,4 @@
-package ipren.watchr.view.fragments;
+package ipren.watchr.activities.fragments;
 
 
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,9 +22,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
-import ipren.watchr.model.Movie;
-import ipren.watchr.view.MovieListAdapter;
-import ipren.watchr.viewmodel.ListViewModel;
+import ipren.watchr.activities.MovieListAdapter;
+import ipren.watchr.viewModels.ListViewModel;
 
 public class BrowseFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package ipren.watchr.view;
+package ipren.watchr.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -17,8 +17,8 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ipren.watchr.R;
-import ipren.watchr.viewmodel.MainViewModel;
-import ipren.watchr.viewmodel.MainViewModelInterface;
+import ipren.watchr.viewModels.MainViewModel;
+import ipren.watchr.viewModels.MainViewModelInterface;
 
 public class MainActivity extends AppCompatActivity {
 

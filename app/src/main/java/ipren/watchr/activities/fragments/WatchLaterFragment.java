@@ -1,4 +1,4 @@
-package ipren.watchr.view.fragments;
+package ipren.watchr.activities.fragments;
 
 
 import android.os.Bundle;
@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment;
 
 import ipren.watchr.R;
 
-public class WatchedFragment extends Fragment {
+public class WatchLaterFragment extends Fragment {
 
 
-    public WatchedFragment() {
+    public WatchLaterFragment() {
         // Required empty public constructor
     }
 
@@ -22,7 +22,7 @@ public class WatchedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_watched, container, false);
+        return inflater.inflate(R.layout.fragment_watch_later, container, false);
     }
 
 }

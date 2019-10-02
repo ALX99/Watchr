@@ -1,10 +1,10 @@
-package ipren.watchr.viewmodel;
+package ipren.watchr.viewModels;
 
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import ipren.watchr.model.User;
+import ipren.watchr.dataHolders.User;
 
 
 public class MainViewModel extends ViewModel implements MainViewModelInterface {

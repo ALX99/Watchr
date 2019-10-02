@@ -1,4 +1,4 @@
-package ipren.watchr.view;
+package ipren.watchr.activities;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ipren.watchr.R;
-import ipren.watchr.model.Movie;
+import ipren.watchr.dataHolders.Movie;
 
 /**
  * Class for handling the creation and updating of movie cards in the recycler view

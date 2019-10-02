@@ -1,4 +1,4 @@
-package ipren.watchr.viewmodel;
+package ipren.watchr.viewModels;
 
 import android.app.Application;
 
@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.ArrayList;
 import java.util.List;
 
-import ipren.watchr.model.Movie;
+import ipren.watchr.dataHolders.Movie;
 
 /**
  *
