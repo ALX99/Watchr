@@ -1,4 +1,4 @@
-package ipren.watchr.activities;
+package ipren.watchr.activities.fragments.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
