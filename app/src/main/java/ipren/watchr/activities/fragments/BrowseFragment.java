@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -23,7 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
-import ipren.watchr.activities.MovieListAdapter;
+import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
 import ipren.watchr.viewModels.ListViewModel;
 
 public class BrowseFragment extends Fragment {

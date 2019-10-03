@@ -37,7 +37,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient">
 
 
             <!-- Using cardview to achieve rounded corners, since due to a bug XML doesn't recognize the property clipToOutline!-->
@@ -69,6 +70,7 @@
                 android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:text="Annabelle Comes Home"
+                android:textColor="@color/text"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/coverCardView"
@@ -81,6 +83,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:text="2019-06-26"
+                android:textColor="@color/text"
                 app:layout_constraintStart_toEndOf="@+id/coverCardView"
                 app:layout_constraintTop_toBottomOf="@+id/movieTitle" />
 
@@ -94,6 +97,7 @@
                 android:layout_weight="1"
                 android:progress="69"
                 android:progressDrawable="@drawable/circle_progress_bar"
+                android:progressTint="@color/greenish"
                 app:layout_constraintBottom_toBottomOf="@+id/view"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -103,6 +107,7 @@
                 android:layout_height="22dp"
                 android:gravity="center"
                 android:text="69"
+                android:textColor="@color/text"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/popularity"
                 app:layout_constraintEnd_toEndOf="@+id/popularity"
@@ -114,6 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:text="@string/popularity"
+                android:textColor="@color/text"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView7"
                 app:layout_constraintEnd_toEndOf="@+id/popularity"
@@ -130,6 +136,7 @@
                 android:max="100"
                 android:progress="61"
                 android:progressDrawable="@drawable/circle_progress_bar"
+                android:progressTint="@color/greenish"
                 app:layout_constraintEnd_toStartOf="@+id/popularity"
                 app:layout_constraintTop_toTopOf="@+id/popularity" />
 
@@ -143,6 +150,7 @@
                 android:max="100"
                 android:progress="45"
                 android:progressDrawable="@drawable/circle_progress_bar"
+                android:progressTint="@color/greenish"
                 app:layout_constraintEnd_toStartOf="@+id/rating"
                 app:layout_constraintTop_toTopOf="@+id/rating" />
 
@@ -152,6 +160,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="6.1"
+                android:textColor="@color/text"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/rating"
                 app:layout_constraintEnd_toEndOf="@+id/rating"
@@ -164,6 +173,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="4.5"
+                android:textColor="@color/text"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/ourRating"
                 app:layout_constraintEnd_toEndOf="@+id/ourRating"
@@ -176,6 +186,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Our Rating"
+                android:textColor="@color/text"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView8"
                 app:layout_constraintEnd_toEndOf="@+id/ourRating"
@@ -186,6 +197,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rating"
+                android:textColor="@color/text"
                 android:textSize="10sp"
                 app:layout_constraintEnd_toEndOf="@+id/rating"
                 app:layout_constraintStart_toStartOf="@+id/rating"
@@ -196,7 +208,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginBottom="17dp"
+                android:layout_marginBottom="19dp"
                 android:button="@drawable/add_checkbox"
                 android:checked="false"
                 android:scaleX="0.9"
@@ -209,7 +221,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="25dp"
                 android:button="@drawable/checkbox"
                 android:checked="false"
                 android:scaleX="1.2"
@@ -222,7 +234,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="25dp"
                 android:button="@drawable/fav_checkbox"
                 android:checked="false"
                 android:scaleX="1.2"
@@ -235,7 +247,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="2dp"
                 android:layout_marginTop="60dp"
-                android:background="@color/colorPrimary"
+                android:background="@color/greenish"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/coverCardView" />
@@ -245,6 +257,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
                 android:text="@string/watch_later"
+                android:textColor="@color/text"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView5"
                 app:layout_constraintEnd_toEndOf="@+id/watchLater"
@@ -255,6 +268,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/favorite"
+                android:textColor="@color/text"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView2"
                 app:layout_constraintEnd_toEndOf="@+id/favorite"
@@ -278,7 +292,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/actor"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/text"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -291,6 +305,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
                 android:text="While babysitting the daughter of Ed and Lorraine Warren, a teenager and her friend unknowingly awaken an evil spirit trapped in a doll."
+                android:textColor="@color/text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/coverCardView"
                 app:layout_constraintTop_toBottomOf="@+id/releaseDate" />
@@ -301,6 +316,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/watched"
+                android:textColor="@color/text"
                 android:textSize="10sp"
                 app:layout_constraintEnd_toEndOf="@+id/watched"
                 app:layout_constraintHorizontal_bias="0.533"
@@ -320,7 +336,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="2dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/colorPrimary"
+                android:background="@color/greenish"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/castList" />
@@ -332,7 +348,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/comments"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/text"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view1" />
