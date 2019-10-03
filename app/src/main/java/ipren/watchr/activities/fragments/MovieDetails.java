@@ -46,7 +46,6 @@ public class MovieDetails extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
         // Bind stuff with ButterKnife
         ButterKnife.bind(this, view);
-
         init(view);
 
         return view;
