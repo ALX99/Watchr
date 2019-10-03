@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.dataHolders.Movie;
 
@@ -59,6 +60,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         title.setText(movieList.get(position).title);
         overview.setText(movieList.get(position).overview);
+        Util.loadImage(image, movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
     }
 
     /**

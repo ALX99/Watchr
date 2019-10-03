@@ -22,7 +22,7 @@ public class MovieApiService {
                 .create(MovieApi.class);
     }
 
-    public Single<List<Movie>> getMovies() {
-        return api.getMovies();
+    public Single<MovieList> getMovies(String url) {
+        return api.getMovies(url);
     }
 }
