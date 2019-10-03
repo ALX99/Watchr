@@ -1,14 +1,14 @@
 package ipren.watchr.activities.fragments;
 
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+        import android.os.Bundle;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
+        import androidx.fragment.app.Fragment;
 
-import ipren.watchr.R;
+        import ipren.watchr.R;
 
 public class BrowseFragment extends Fragment {
 

@@ -7,18 +7,18 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="8dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/genre"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark"
             android:paddingHorizontal="2dp"
             android:paddingVertical="2dp"
             android:text="Genre"
-            android:id="@+id/genre"
             tools:layout_editor_absoluteX="39dp"
             tools:layout_editor_absoluteY="29dp" />
 

@@ -6,15 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import ipren.watchr.R;
 
-public class MovieDetails extends Fragment {
+public class SearchFragment extends Fragment {
 
-    public MovieDetails() {
+
+    public SearchFragment() {
         // Required empty public constructor
     }
 
@@ -23,9 +22,7 @@ public class MovieDetails extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie_details, container, false);
-
-
+        return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
 }

@@ -10,6 +10,7 @@
         android:name="ipren.watchr.activities.fragments.BrowseFragment"
         android:label="fragment_browse"
         tools:layout="@layout/fragment_browse" />
+
     <fragment
         android:id="@+id/recommendedFragment"
         android:name="ipren.watchr.activities.fragments.RecommendedFragment"
@@ -30,4 +31,14 @@
         android:name="ipren.watchr.activities.fragments.WatchedFragment"
         android:label="fragment_watched"
         tools:layout="@layout/fragment_watched" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="ipren.watchr.activities.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/browseFragment"
+        android:name="ipren.watchr.activities.fragments.HomeFragment"
+        android:label="fragment_browse"
+        tools:layout="@layout/fragment_home" />
 </navigation>
