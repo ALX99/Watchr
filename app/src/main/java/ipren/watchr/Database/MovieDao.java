@@ -2,6 +2,7 @@ package ipren.watchr.Database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -14,7 +15,7 @@ import ipren.watchr.dataHolders.Movie;
 @Dao
 public interface MovieDao {
     @Query("SELECT * FROM movies")
-    List<Movie> getAllMovies();
+    LiveData<List<Movie>> getAllMovies();
 
     @Query("SELECT * FROM movies WHERE movie_id LIKE :movieID")
     LiveData<Movie> getMovieByID(int movieID);
@@ -33,6 +34,12 @@ public interface MovieDao {
 
     @Update
     void updateMovies(Movie... movies);
+
+    @Delete
+    void deteleMovies(Movie... movies);
+
+    @Query("DELETE FROM movies WHERE movie_id = :movieID")
+    void deleteMoviesByID(int movieID);
 
 
 }

@@ -67,6 +67,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation "android.arch.core:core-testing:1.1.1"
 
     // CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.0.1'

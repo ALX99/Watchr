@@ -57,8 +57,9 @@ public class UserTest {
         user = new User("Not used", "Not used", testBitMap);
         assertTrue(user.getUserProfilePicture().equals(testBitMap));
     }
+
     @Test
-    public void getEmail(){
+    public void getEmail() {
         User user = new User("Not used", "test@email.com");
         assertTrue(user.getEmail().equalsIgnoreCase("test@email.com"));
 

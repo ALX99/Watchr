@@ -56,6 +56,7 @@ public class MovieDetails extends Fragment {
         initCast(v);
         initGenres(v);
         initComments(v);
+
     }
 
     private void initCast(View v) {
@@ -86,11 +87,11 @@ public class MovieDetails extends Fragment {
 
     private ArrayList<Actor> dummyData() {
         ArrayList x = new ArrayList<Actor>();
-        x.add(new Actor(5, "Patrick Wilson", "/djhTpbOvrfdDsWZFFintj2Uv47a.jpg"));
-        x.add(new Actor(6, "Vera Farmiga", "/oWZfxv4cK0h8Jcyz1MvvT2osoAP.jpg"));
-        x.add(new Actor(9, "Mckenna Grace", "/dX6QFwpAzAcXGgxSINwvDxujEgj.jpg"));
-        x.add(new Actor(10, "Madison Iseman", "/qkPW0nHQUlckRj3MRveVTzRpNR2.jpg"));
-        x.add(new Actor(17, "Katie Sarife", "/oQLQZ58uvGgpdtCUpOcoiF5zYJW.jpg"));
+//        x.add(new Actor(5, "Patrick Wilson", "/djhTpbOvrfdDsWZFFintj2Uv47a.jpg"));
+//        x.add(new Actor(6, "Vera Farmiga", "/oWZfxv4cK0h8Jcyz1MvvT2osoAP.jpg"));
+//        x.add(new Actor(9, "Mckenna Grace", "/dX6QFwpAzAcXGgxSINwvDxujEgj.jpg"));
+//        x.add(new Actor(10, "Madison Iseman", "/qkPW0nHQUlckRj3MRveVTzRpNR2.jpg"));
+//        x.add(new Actor(17, "Katie Sarife", "/oQLQZ58uvGgpdtCUpOcoiF5zYJW.jpg"));
         return x;
     }
 
