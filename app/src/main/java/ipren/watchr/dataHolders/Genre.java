@@ -1,5 +1,6 @@
 package ipren.watchr.dataHolders;
 
+// Will be deleted when database is set up properly
 public class Genre {
     private final int id;
     private final String name;
