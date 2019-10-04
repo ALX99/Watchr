@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
 
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.lifecycle.LiveData;
@@ -28,7 +29,7 @@ import ipren.watchr.dataHolders.User;
 import ipren.watchr.viewModels.MainViewModelInterface;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 28)
+@Config(sdk = Build.VERSION_CODES.O_MR1)
 public class MainActivityTest {
 
     //This variable passes the mockViewModel to the TestActivity. REASON: Robolectric does not accept anonymous classes

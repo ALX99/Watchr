@@ -10,7 +10,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MovieApiService {
 
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
-    private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/";
 
     private MovieApi api;
 
