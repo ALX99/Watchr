@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.dataHolders.Movie;
 
@@ -56,9 +57,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         ImageView image = holder.itemView.findViewById(R.id.movieImage);
         TextView title = holder.itemView.findViewById(R.id.movieTitle);
         TextView overview = holder.itemView.findViewById(R.id.movieOverview);
+        TextView rating = holder.itemView.findViewById(R.id.movieRating);
+        TextView genres = holder.itemView.findViewById(R.id.movieGenres);
 
         title.setText(movieList.get(position).title);
         overview.setText(movieList.get(position).overview);
+        rating.setText("Rating: " + movieList.get(position).voteAverage);
+        Util.loadImage(image, "https://image.tmdb.org/t/p//w92" + movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
     }
 
     /**

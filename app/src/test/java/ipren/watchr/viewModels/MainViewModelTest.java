@@ -1,5 +1,7 @@
 package ipren.watchr.viewModels;
 
+import android.os.Build;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +15,7 @@ import static org.junit.Assert.*;
 //This class is based on preset dummy values //TODO Expand this class once the repository is created and inject a mock repository instead
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 28)
+@Config(sdk = Build.VERSION_CODES.O_MR1)
 public class MainViewModelTest {
     MainViewModel mainViewModel;
     @Before

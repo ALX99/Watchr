@@ -23,11 +23,12 @@
         <TextView
             android:id="@+id/movieTitle"
             style="@style/Title"
+            android:maxLength="30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Movie title"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
             app:layout_constraintStart_toEndOf="@+id/movieImage"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,12 +37,13 @@
             style="@style/Text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus rhoncus eros sed efficitur mattis. Morbi feugiat magna auctor mauris egestas, et tempus ipsum bibendum. Mauris a pulvinar ante. Vestibulum tincidunt, ligula vel consequat porttitor, dui erat convallis ipsum, ultricies blandit dolor orci eget turpis."
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/movieTitle"
+            app:layout_constraintStart_toEndOf="@+id/movieImage"
             app:layout_constraintTop_toBottomOf="@+id/movieTitle" />
 
         <View
@@ -92,28 +94,21 @@
             style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="Rating: 6.3"
             app:layout_constraintBottom_toTopOf="@+id/movieGenres"
-            app:layout_constraintStart_toStartOf="@+id/movieOverview" />
+            app:layout_constraintStart_toEndOf="@+id/movieImage" />
 
         <TextView
             android:id="@+id/movieGenres"
             style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Genres: Horror"
-            app:layout_constraintBottom_toTopOf="@+id/movieLength"
-            app:layout_constraintStart_toStartOf="@+id/movieRating" />
-
-        <TextView
-            android:id="@+id/movieLength"
-            style="@style/Text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Length: 1h 36min"
+            android:text="Genres: Horror"
             app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
-            app:layout_constraintStart_toStartOf="@+id/movieRating" />
+            app:layout_constraintStart_toEndOf="@+id/movieImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
