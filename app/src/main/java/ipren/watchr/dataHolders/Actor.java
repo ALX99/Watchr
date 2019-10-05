@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -12,7 +13,8 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity(tableName = "actors", foreignKeys = @ForeignKey(entity = Movie.class,
         parentColumns = "id",
         childColumns = "movie_id",
-        onDelete = CASCADE))
+        onDelete = CASCADE),
+        indices = {@Index("movie_id")})
 public class Actor {
     @PrimaryKey(autoGenerate = true)
     private int ID;
