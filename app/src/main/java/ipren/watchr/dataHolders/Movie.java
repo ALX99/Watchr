@@ -39,7 +39,7 @@ public class Movie {
     @SerializedName("original_title")
     public String originalTitle;
     @SerializedName("genre_ids")
-    @Ignore
+    @ColumnInfo(name = "genre_ids")
     public int[] genreIds;
     @ColumnInfo(name = "title")
     public String title;
@@ -69,8 +69,11 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public Movie(int id, String title) {
+
+    public Movie(int id, String title, int[] genreIds) {
         this.id = id;
         this.title = title;
+        this.genreIds = genreIds;
     }
+
 }

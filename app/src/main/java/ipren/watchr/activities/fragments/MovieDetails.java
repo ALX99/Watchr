@@ -98,16 +98,16 @@ public class MovieDetails extends Fragment {
 
     private ArrayList<Comment> dummyComment() {
         ArrayList x = new ArrayList<Comment>();
-        x.add(new Comment(0, "", "User", "Example comment"));
-        x.add(new Comment(0, "", "User", "Example comment"));
-        x.add(new Comment(0, "", "User", "Example comment"));
-        x.add(new Comment(0, "", "User", "Example comment"));
-        x.add(new Comment(0, "", "User", "Example comment"));
-        x.add(new Comment(0, "", "User", "Example comment"));
-        x.add(new Comment(0, "", "User", "Example comment"));
-        x.add(new Comment(0, "", "User", "Example comment"));
-        x.add(new Comment(0, "", "User", "Example comment"));
-        x.add(new Comment(0, "", "User", "Example comment"));
+        x.add(new Comment(0, "User", "Example comment", ""));
+        x.add(new Comment(0, "User", "Example comment", ""));
+        x.add(new Comment(0, "User", "Example comment", ""));
+        x.add(new Comment(0, "User", "Example comment", ""));
+        x.add(new Comment(0, "User", "Example comment", ""));
+        x.add(new Comment(0, "User", "Example comment", ""));
+        x.add(new Comment(0, "User", "Example comment", ""));
+        x.add(new Comment(0, "User", "Example comment", ""));
+        x.add(new Comment(0, "User", "Example comment", ""));
+        x.add(new Comment(0, "User", "Example comment", ""));
 
         return x;
     }

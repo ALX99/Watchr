@@ -26,20 +26,24 @@ public interface MovieDao {
     between a genre and a movie to be able to query both movies by genre
     and genres by movies.
      */
-//    @Query("SELECT * FROM movies WHERE genre_ids IN(:genres)")
-//    LiveData<List<Movie>> getMoviesByGenre(int[] genres);
+    @Query("SELECT * FROM movies WHERE genre_ids IN(:genres)")
+    LiveData<List<Movie>> getMoviesByGenre(int[] genres);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Movie... movies);
+    void insertMovies(Movie... movies);
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateMovies(Movie... movies);
 
     @Delete
-    void deteleMovies(Movie... movies);
+    void deleteMovies(Movie... movies);
 
     @Query("DELETE FROM movies WHERE movie_id = :movieID")
     void deleteMoviesByID(int movieID);
 
 
+    @Query("SELECT * FROM movies " +
+    "INNER JOIN actors on movies.movie_id = actors.movie_id "+
+    "WHERE character LIKE :chara")
+    LiveData<List<Movie>> getMoviesByActor(String chara);
 }

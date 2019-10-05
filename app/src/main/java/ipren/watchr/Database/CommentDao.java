@@ -11,19 +11,19 @@ import androidx.room.Update;
 import java.util.List;
 
 import ipren.watchr.dataHolders.Actor;
+import ipren.watchr.dataHolders.Comment;
 
 @Dao
-public interface ActorDao {
-    @Query("SELECT * FROM actors WHERE movie_id LIKE :movieID")
-    LiveData<List<Actor>> getActorsFromMovie(int movieID);
+public interface CommentDao {
+    @Query("SELECT * FROM comments WHERE movie_id LIKE :movieID")
+    LiveData<List<Comment>> getCommentsFromMovie(int movieID);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertActors(Actor... actor);
+    void insertComments(Comment... comments);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateActors(Actor... actors);
+    void updateActors(Comment... comments);
 
     @Delete
-    void deleteActors(Actor... actors);
-
+    void deleteActors(Comment... comments);
 }

@@ -9,14 +9,21 @@ import androidx.room.TypeConverters;
 
 import ipren.watchr.Helpers.Converters;
 import ipren.watchr.dataHolders.Actor;
+import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Movie;
 
-@Database(entities = {Movie.class, Actor.class}, version = 1)
+@Database(entities = {Movie.class, Actor.class, Comment.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance
     private static String DB_NAME = "Ipren-Database";
 
+    public abstract ActorDao actorDao();
+
+    public abstract MovieDao movieDao();
+
+    public abstract CommentDao commentDao();
+    
     // Singleton
     public static MovieDB getInstance(Context context) {
         if (INSTANCE != null)
@@ -28,9 +35,4 @@ public abstract class MovieDB extends RoomDatabase {
         return INSTANCE;
 
     }
-
-    public abstract ActorDao actorDao();
-
-    public abstract MovieDao movieDao();
-
 }
