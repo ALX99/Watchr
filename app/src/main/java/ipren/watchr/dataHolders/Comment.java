@@ -12,12 +12,15 @@ import static androidx.room.ForeignKey.CASCADE;
 
 // This tables entries is linked to columns in the movies table
 @Entity(tableName = "comments", foreignKeys = @ForeignKey(entity = Movie.class,
-        parentColumns = "movie_id",
+        parentColumns = "id",
         childColumns = "movie_id",
         onDelete = CASCADE))
 public class Comment {
     @NonNull
     @PrimaryKey
+    @ColumnInfo(name = "id")
+    private final int commentID;
+    @NonNull
     @ColumnInfo(name = "movie_id")
     private final int movieID;
     @ColumnInfo(name = "picture_link")
@@ -29,11 +32,16 @@ public class Comment {
     @ColumnInfo(name = "comment")
     private String comment;
 
-    public Comment(int movieID, String username, String comment, String profilePicLink) {
+    public Comment(int commentID, int movieID, String username, String comment, String profilePicLink) {
+        this.commentID = commentID;
         this.movieID = movieID;
         this.profilePicLink = profilePicLink;
         this.username = username;
         this.comment = comment;
+    }
+
+    public int getCommentID() {
+        return commentID;
     }
 
     public int getMovieID() {

@@ -10,11 +10,12 @@ import static androidx.room.ForeignKey.CASCADE;
 
 // This tables entries is linked to columns in the movies table
 @Entity(tableName = "actors", foreignKeys = @ForeignKey(entity = Movie.class,
-        parentColumns = "movie_id",
+        parentColumns = "id",
         childColumns = "movie_id",
         onDelete = CASCADE))
 public class Actor {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int ID;
     @NonNull
     @ColumnInfo(name = "movie_id")
     private int movieID;
@@ -33,6 +34,14 @@ public class Actor {
         this.character = character;
         this.order = order;
         this.pictureLink = new StringBuilder().append("https://image.tmdb.org/t/p/original").append(pictureLink).toString();
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public int getMovieID() {

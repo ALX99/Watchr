@@ -51,17 +51,10 @@ public class ActorTest {
         actorDao.insertActors(a);
         List<Actor> actors = LiveDataTestUtil.getValue(actorDao.getActorsFromMovie(1));
         Assert.assertEquals(a.getCharacter(), actors.get(0).getCharacter());
+        Actor newA = new Actor(1, "Chris lol", "Joker", 2, "pictureLink");
+        actorDao.insertActors(newA);
+        Assert.assertEquals(2, LiveDataTestUtil.getValue(actorDao.getActorsFromMovie(1)).size());
+
     }
 
-    @Test
-    public void deleteTest() throws Exception {
-        movieDao.insertMovies(m);
-        actorDao.insertActors(a);
-        actorDao.insertActors(new Actor(1,"blabla", "blabla",2,"picturelinkk"));
-        movieDao.deleteMovies(m);
-        List<Actor> actors = LiveDataTestUtil.getValue(actorDao.getActorsFromMovie(m.id));
-        // If movie is deleted all actors associated with
-        // the movie should be deleted as well
-        Assert.assertEquals(0, actors.size());
-    }
 }

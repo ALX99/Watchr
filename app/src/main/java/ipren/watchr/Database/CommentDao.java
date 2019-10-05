@@ -10,7 +10,6 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
 
 @Dao
@@ -22,8 +21,8 @@ public interface CommentDao {
     void insertComments(Comment... comments);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateActors(Comment... comments);
+    void updateComments(Comment... comments);
 
     @Delete
-    void deleteActors(Comment... comments);
+    void deleteComments(Comment... comments);
 }

@@ -26,7 +26,7 @@ public class Movie {
     public String posterPath;
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = "movie_id")
+    @ColumnInfo(name = "id")
     public int id;
     public boolean adult;
     @ColumnInfo(name = "backdrop_path")

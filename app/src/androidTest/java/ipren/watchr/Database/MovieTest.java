@@ -26,6 +26,7 @@ public class MovieTest {
 
     private MovieDao movieDao;
     private MovieDB db;
+    private Movie m = new Movie(1, "testMovie", new int[]{1});
 
     @Before
     public void createDb() {
@@ -47,10 +48,9 @@ public class MovieTest {
 
     @Test
     public void movieInsertTest() throws Exception {
-        Movie movie = new Movie(1, "testMovie", new int[]{1});
-        movieDao.insertMovies(movie);
+        movieDao.insertMovies(m);
         List<Movie> movies = LiveDataTestUtil.getValue(movieDao.getAllMovies());
-        Assert.assertEquals(movies.get(0).title, movie.title);
+        Assert.assertEquals(movies.get(0).title, m.title);
     }
 
     @Test
@@ -64,24 +64,19 @@ public class MovieTest {
 
     @Test
     public void movieDelete() throws Exception {
-        Movie movie = new Movie(1, "testMovie1", new int[]{1});
-        movieDao.insertMovies(movie);
+        movieDao.insertMovies(m);
         movieDao.insertMovies(new Movie(2, "testMovie2", new int[]{1}));
-        movieDao.deleteMovies(movie);
+        movieDao.deleteMovies(m);
         movieDao.deleteMoviesByID(2);
 
         Assert.assertEquals(0, LiveDataTestUtil.getValue(movieDao.getAllMovies()).size());
     }
 
     @Test
-    public void getMoviesByIDs() throws Exception {
-        Movie movie = new Movie(1, "testMovie1", new int[]{
-                1, 23, 67
-        });
-
-        // Yep, not working. Will fix later with M:N relationship between movies table and genre table
-        List<Movie> movies = LiveDataTestUtil.getValue(movieDao.getMoviesByGenre(new int[]{67}));
-        Assert.assertEquals(1, movies.size());
+    public void updateTest() throws Exception {
+        movieDao.insertMovies(m);
+        Movie newM = new Movie(1, "title", new int[]{1});
+        movieDao.updateMovies(newM);
+        Assert.assertEquals(newM.title, LiveDataTestUtil.getValue(movieDao.getMovieByID(1)).title);
     }
-
 }

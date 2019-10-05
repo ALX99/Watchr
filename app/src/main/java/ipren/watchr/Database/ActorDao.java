@@ -2,11 +2,9 @@ package ipren.watchr.Database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
@@ -20,10 +18,7 @@ public interface ActorDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertActors(Actor... actor);
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateActors(Actor... actors);
-
-    @Delete
-    void deleteActors(Actor... actors);
-
+    // No update or delete since then we have to generate
+    // some kind of ID to find the actors we want to
+    // update or delete
 }

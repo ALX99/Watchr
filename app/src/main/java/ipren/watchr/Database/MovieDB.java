@@ -10,9 +10,10 @@ import androidx.room.TypeConverters;
 import ipren.watchr.Helpers.Converters;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 
-@Database(entities = {Movie.class, Actor.class, Comment.class}, version = 1)
+@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance
@@ -23,7 +24,9 @@ public abstract class MovieDB extends RoomDatabase {
     public abstract MovieDao movieDao();
 
     public abstract CommentDao commentDao();
-    
+
+    public abstract GenreDao genreDao();
+
     // Singleton
     public static MovieDB getInstance(Context context) {
         if (INSTANCE != null)
