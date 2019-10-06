@@ -11,8 +11,9 @@ import androidx.room.PrimaryKey;
 public class Genre {
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = "genre_id")
+    @ColumnInfo(name = "id")
     private final int genreID;
+    @ColumnInfo(name = "name")
     private final String name;
 
     public Genre(int genreID, String name) {

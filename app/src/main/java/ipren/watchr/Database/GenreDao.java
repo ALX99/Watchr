@@ -14,10 +14,10 @@ import ipren.watchr.dataHolders.Genre;
 
 @Dao
 public interface GenreDao {
-    @Query("DELETE FROM genres WHERE genre_id IN(:genreIDs)")
+    @Query("DELETE FROM genres WHERE id IN(:genreIDs)")
     int deleteGenreByID(int[] genreIDs);
 
-    @Query("SELECT * FROM genres WHERE genre_id=:genreID")
+    @Query("SELECT * FROM genres WHERE id=:genreID")
     LiveData<Genre> getGenreByID(int genreID);
 
     @Query("SELECT * FROM genres")

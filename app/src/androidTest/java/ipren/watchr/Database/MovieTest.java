@@ -26,7 +26,9 @@ public class MovieTest {
 
     private MovieDao movieDao;
     private MovieDB db;
-    private Movie m = new Movie(1, "testMovie", new int[]{1});
+    private Movie m = new Movie(1, "testMovie");
+    private Movie m2 = new Movie(2, "testMovie");
+
 
     @Before
     public void createDb() {
@@ -41,10 +43,15 @@ public class MovieTest {
         db.close();
     }
 
+    private void insertDummyData() {
+        movieDao.insertMovies(m);
+        movieDao.insertMovies(m2);
+    }
     @Test
     public void testEmpty() throws Exception {
         Assert.assertTrue(LiveDataTestUtil.getValue(movieDao.getAllMovies()).isEmpty());
     }
+
 
     @Test
     public void movieInsertTest() throws Exception {
@@ -55,17 +62,14 @@ public class MovieTest {
 
     @Test
     public void movieFind() throws Exception {
-        Movie movie = new Movie(2, "testMovie", new int[]{1});
-        movieDao.insertMovies(movie);
+        insertDummyData();
         Movie gMovie = LiveDataTestUtil.getValue(movieDao.getMovieByID(2));
-
-        Assert.assertEquals(gMovie.id, movie.id);
+        Assert.assertEquals(gMovie.id, m2.id);
     }
 
     @Test
     public void movieDelete() throws Exception {
-        movieDao.insertMovies(m);
-        movieDao.insertMovies(new Movie(2, "testMovie2", new int[]{1}));
+        insertDummyData();
         movieDao.deleteMovies(m);
         movieDao.deleteMoviesByID(2);
 
@@ -75,7 +79,7 @@ public class MovieTest {
     @Test
     public void updateTest() throws Exception {
         movieDao.insertMovies(m);
-        Movie newM = new Movie(1, "title", new int[]{1});
+        Movie newM = new Movie(1, "title");
         movieDao.updateMovies(newM);
         Assert.assertEquals(newM.title, LiveDataTestUtil.getValue(movieDao.getMovieByID(1)).title);
     }

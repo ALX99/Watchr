@@ -21,7 +21,7 @@ import ipren.watchr.dataHolders.Movie;
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class ActorTest {
     private Actor a = new Actor(1, "Chris Pratt", "Joker", 2, "pictureLink");
-    private Movie m = new Movie(1, "testMovie", new int[]{1});
+    private Movie m = new Movie(1, "testMovie");
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();

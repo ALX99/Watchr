@@ -5,16 +5,13 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.TypeConverters;
 
-import ipren.watchr.Helpers.Converters;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 
-@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class}, version = 1)
-@TypeConverters({Converters.class})
+@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class}, version = 1)
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance
     private static String DB_NAME = "Ipren-Database";
@@ -26,6 +23,8 @@ public abstract class MovieDB extends RoomDatabase {
     public abstract CommentDao commentDao();
 
     public abstract GenreDao genreDao();
+
+    public abstract MovieGenreJoinDao movieGenreJoinDao();
 
     // Singleton
     public static MovieDB getInstance(Context context) {

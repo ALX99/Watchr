@@ -2,6 +2,7 @@ package ipren.watchr.Database;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
@@ -16,13 +17,19 @@ import ipren.watchr.dataHolders.Movie;
         primaryKeys = {"movieID", "genreID"},
         foreignKeys = {
                 @ForeignKey(entity = Movie.class,
-                        parentColumns = "movie_id",
+                        parentColumns = "id",
                         childColumns = "movieID"),
                 @ForeignKey(entity = Genre.class,
-                        parentColumns = "genre_id",
+                        parentColumns = "id",
                         childColumns = "genreID")
-        })
+        },
+        indices = {@Index("genreID")})
 public class MovieGenreJoin {
     public int movieID;
     public int genreID;
+
+    public MovieGenreJoin(int movieID, int genreID) {
+        this.movieID = movieID;
+        this.genreID = genreID;
+    }
 }

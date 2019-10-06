@@ -17,7 +17,7 @@ import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Movie;
 
 public class CommentTest {
-    private Movie m = new Movie(1, "testMovie", new int[]{1});
+    private Movie m = new Movie(1, "testMovie");
     private Comment c = new Comment(0, 1, "username", "comment", "profilePicLink");
 
     @Rule

@@ -32,7 +32,7 @@ public class Actor {
 
     public Actor(int movieID, String name, String character, int order, String pictureLink) {
         this.movieID = movieID;
-        this.name = name.toLowerCase(); // "Chris Pratt" is also "chris pratt"
+        this.name = name;
         this.character = character;
         this.order = order;
         this.pictureLink = new StringBuilder().append("https://image.tmdb.org/t/p/original").append(pictureLink).toString();
