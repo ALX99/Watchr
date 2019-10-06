@@ -1,15 +1,15 @@
 package ipren.watchr.dataHolders;
 
-public class FireBaseResponse {
+public class AuthenticationResponse {
     private boolean successful;
     private String errorMsg = "";
 
-    public FireBaseResponse(boolean successful, String errorMsg) {
+    public AuthenticationResponse(boolean successful, String errorMsg) {
         this(successful);
         this.errorMsg = errorMsg;
     }
 
-    public FireBaseResponse(boolean successful) {
+    public AuthenticationResponse(boolean successful) {
         this.successful = successful;
     }
 

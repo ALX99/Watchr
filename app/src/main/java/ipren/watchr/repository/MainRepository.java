@@ -8,17 +8,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.API.FirebaseAPI;
 
-public class MainRepository {
-    private static final MainRepository MAIN_REPOSITORY = new MainRepository();
-    public static MainRepository getMainRepository(){
+public class MainRepository implements IMainRepository{
+    FirebaseAPI firebaseAPI;
+    private static final IMainRepository MAIN_REPOSITORY = new MainRepository();
+    public static IMainRepository getMainRepository(){
         return MAIN_REPOSITORY;
     }
-    FirebaseAPI firebaseAPI;
+
     private  MainRepository(){
         firebaseAPI = new FirebaseAPI();
     }
 
-    public LiveData<User> getUser(){
+    public LiveData<User> getUserLiveData(){
         return firebaseAPI.getUser();
     }
 
