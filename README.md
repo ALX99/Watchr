@@ -21,3 +21,9 @@ Development process:
 4. Write JUnit tests and make sure they go through
 5. Add class(es), and method(s) to the UML if not already there
 6. Merge with master
+
+## KEYSTORE / Build
+
+1. Put the debug.keystore in the project root folder.
+2. Put ipren.keys in the project root folder.
+3. Build

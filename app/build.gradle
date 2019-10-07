@@ -1,6 +1,22 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
+//This is to make password management easier. Loads fields from a txt file. This file must not
+//be pushed to git
+Properties localProperties = new Properties()
+localProperties.load(rootProject.file("ipren.keys").newDataInputStream())
 android {
+
+    signingConfigs {
+        // This file contains default passwords and aliases to the keystore.
+        debug {
+            //The keystore file must not be pushed to git, and will be kept safe storage
+            storeFile file('../debug.keystore')
+            storePassword localProperties.getProperty("debug.store.password")
+            keyAlias localProperties.getProperty("debug.key.alias")
+            keyPassword localProperties.getProperty("debug.key.password")
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -10,7 +26,16 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
+    }
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"]
+            }
+        }
     }
     buildTypes {
         release {
@@ -39,6 +64,7 @@ dependencies {
     def lifecycle_version = "2.1.0"
     def nav_version = "2.1.0"
     def butterknife_version = "10.2.0"
+    def room_version = "2.2.0-rc01"
 
 
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
@@ -48,9 +74,15 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation "android.arch.core:core-testing:1.1.1"
 
     // CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.0.1'
@@ -79,6 +111,10 @@ dependencies {
 
     // CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.0.1'
+    // Firebase
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation  	'com.google.firebase:firebase-database:19.1.0'
 
     // RxJava for handling asynchronous tasks
     implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
@@ -88,4 +124,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
+
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 }

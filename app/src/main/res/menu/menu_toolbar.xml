@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/login_button"
+        android:id="@+id/user_profile_toolbar"
         android:orderInCategory="101"
-        android:title="@string/login"
-        app:showAsAction="always" />
+        android:title="Profile"
+        app:showAsAction="always"/>
     <item
-        android:id="@+id/profile_photo"
-        android:icon="@drawable/ic_no_user_photo_24px"
-        android:orderInCategory="101"
-        android:title="Profile photo"
-        app:showAsAction="always" />
+        android:id="@+id/sign_in_btn_toolbar"
+        android:title="TODO"
+        app:actionLayout="@layout/loginicon"
+        app:showAsAction="always"/>
+
 </menu>

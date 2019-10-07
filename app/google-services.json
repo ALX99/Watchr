@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "525779727917",
+    "firebase_url": "https://watchr-8cc9a.firebaseio.com",
+    "project_id": "watchr-8cc9a",
+    "storage_bucket": "watchr-8cc9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525779727917:android:dfad9d65f40d755393aaa4",
+        "android_client_info": {
+          "package_name": "ipren.watchr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "525779727917-toqet181kqv49gkir2moohi250cqnskt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ipren.watchr",
+            "certificate_hash": "162b49ea38bf257de2c1404f1a45218ac36af338"
+          }
+        },
+        {
+          "client_id": "525779727917-68k7h5mco91h4d3lfl2monccgkh2v3bp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdxxWq5YyhVfwZrsyUIMy29rd8ai2oE5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "525779727917-68k7h5mco91h4d3lfl2monccgkh2v3bp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/gradient">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/ver_email_layout">
+
+        <include
+            layout="@layout/verify_account_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/settings_layout">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="245dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/rounded_cornerns_button_green"
+            android:text="Save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_name_Input" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_img_acc"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="88dp"
+            android:src="@drawable/default_profile_photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/profile_img_acc"
+            app:layout_constraintEnd_toEndOf="@+id/profile_img_acc"
+            app:layout_constraintStart_toStartOf="@+id/profile_img_acc"
+            app:srcCompat="@drawable/ic_edit_white_24dp" />
+
+
+        <EditText
+            android:id="@+id/email_input_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:editable="false"
+            android:ems="10"
+            android:hint="email@email.com"
+            android:inputType="textEmailAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/UID_txt_field" />
+
+        <EditText
+            android:id="@+id/user_name_Input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Username"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="@+id/email_input_field"
+            app:layout_constraintStart_toStartOf="@+id/email_input_field"
+            app:layout_constraintTop_toBottomOf="@+id/email_input_field" />
+
+        <TextView
+            android:id="@+id/UID_txt_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_img_acc" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

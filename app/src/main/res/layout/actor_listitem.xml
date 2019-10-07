@@ -26,5 +26,5 @@
         android:gravity="center"
         android:paddingLeft="1dp"
         android:paddingRight="1dp"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@color/text" />
 </RelativeLayout>

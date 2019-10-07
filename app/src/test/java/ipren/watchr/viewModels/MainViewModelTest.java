@@ -1,6 +1,10 @@
 package ipren.watchr.viewModels;
 
+
 import android.os.Build;
+
+import androidx.lifecycle.LiveData;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,50 +12,32 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import ipren.watchr.MockClasses.MockMainRepository;
 import ipren.watchr.dataHolders.User;
 
 import static org.junit.Assert.*;
 
-//This class is based on preset dummy values //TODO Expand this class once the repository is created and inject a mock repository instead
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.O_MR1)
 public class MainViewModelTest {
-    MainViewModel mainViewModel;
+    private MainViewModel mainViewModel;
+    private MockMainRepository mockMainRepository;
+    private final User initialUser = new User("David", "david@ipren.com");
     @Before
     public void setUp(){
-        mainViewModel = new MainViewModel();
+        mockMainRepository = new MockMainRepository(initialUser);
+        mainViewModel = new MainViewModel(mockMainRepository);
     }
+
     @Test
     public void getUser() {
-        assertNull(mainViewModel.getUser().getValue());
-        mainViewModel.loginUser("david@ipren.com","123456");
-        User user = mainViewModel.getUser().getValue();
-        assertTrue(user.getEmail().equalsIgnoreCase("david@ipren.com"));
-        assertTrue(user.getUserName().equalsIgnoreCase("David Olsson"));
-        assertNull(user.getUserProfilePicture());
-    }
-
-    @Test
-    public void isEmailRegistered() {
-        assertTrue(mainViewModel.isEmailRegistered("david@ipren.com"));
-        assertFalse(mainViewModel.isEmailRegistered("fake@ipren.com"));
-    }
-
-    @Test
-    public void loginUser() {
-        assertNull(mainViewModel.getUser().getValue());
-        assertTrue(mainViewModel.loginUser("david@ipren.com","123456"));
-        assertEquals(mainViewModel.getUser().getValue().getEmail(), "david@ipren.com");
-        assertEquals(mainViewModel.getUser().getValue().getUserName(), "David Olsson");
-    }
-
-    @Test
-    public void logoutCurrentUser() {
-        assertNull(mainViewModel.getUser().getValue());
-        assertTrue(mainViewModel.loginUser("david@ipren.com","123456"));
-        assertNotNull(mainViewModel.getUser().getValue());
-        mainViewModel.logoutCurrentUser();
-        assertNull(mainViewModel.getUser().getValue());
+        User testUser = new User("Test", "test@ipren.com1");
+        LiveData<User> liveUser = mainViewModel.getUser();
+        assertNotEquals(liveUser.getValue(), testUser);
+        assertNotEquals(mainViewModel.getUser().getValue(), liveUser);
+        mockMainRepository.setUser(testUser);
+        assertEquals(liveUser.getValue(), testUser);
+        assertEquals(mainViewModel.getUser().getValue(), testUser);
     }
 }

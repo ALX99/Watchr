@@ -1,44 +1,33 @@
 package ipren.watchr.viewModels;
 
 
-import android.graphics.BitmapFactory;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import ipren.watchr.dataHolders.User;
+import ipren.watchr.repository.IMainRepository;
+import ipren.watchr.repository.MainRepository;
 
 
 public class MainViewModel extends ViewModel implements MainViewModelInterface {
-    private User mockUser = new User("David Olsson","david@ipren.com");
+
+    private final IMainRepository mainRepository;
     //If you don't set a value the LiveData object wont broadcast any initial value, not even null
     //Setting user to null to signal that no user is logged in
-    private MutableLiveData<User> user = new MutableLiveData<>(null);
+
+    private LiveData<User> user;
 
     //Allows Activity to sync with viewmodel
     public LiveData<User> getUser() {
         return user;
     }
 
-
-
-    //This method is loaded with dummy values untill the repository is connected;
-    public boolean isEmailRegistered(String email){
-        return email.equalsIgnoreCase(mockUser.getEmail());
+    public MainViewModel(IMainRepository mainRepository){
+        this.mainRepository = mainRepository;
+        user = mainRepository.getUserLiveData();
     }
-
-    //This method is loaded with dummy values untill the repository is connected;
-    public boolean loginUser(String email, String password){
-        if(email.equalsIgnoreCase(mockUser.getEmail()) && password.equalsIgnoreCase("123456")){
-            user.postValue(mockUser);
-            return true;
-        }
-        return false;
+    public MainViewModel(){
+        mainRepository = MainRepository.getMainRepository();
+        user = mainRepository.getUserLiveData();
     }
-
-    public void logoutCurrentUser(){
-        this.user.postValue(null);
-    }
-
 }

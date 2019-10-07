@@ -1,12 +1,28 @@
 package ipren.watchr.dataHolders;
 
+
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+// Many to many relationship
+@Entity(tableName = "genres")
 public class Genre {
-    private final int id;
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "id")
+    private final int genreID;
+    @ColumnInfo(name = "name")
     private final String name;
 
-    public Genre(int id, String name) {
-        this.id = id;
+    public Genre(int genreID, String name) {
+        this.genreID = genreID;
         this.name = name;
+    }
+
+    public int getGenreID() {
+        return genreID;
     }
 
     public String getName() {

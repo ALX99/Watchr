@@ -57,18 +57,20 @@ public class MainActivity extends AppCompatActivity {
         //Syncing layout to model
         mainViewModel.getUser().observe(this, user -> {
             if (user == null) {
-                menu.findItem(R.id.login_button).setTitle("Login");
-                menu.findItem(R.id.profile_photo).setIcon(R.drawable.ic_no_user_photo_24px);
+                menu.findItem(R.id.sign_in_btn_toolbar).setVisible(true);menu.findItem(R.id.user_profile_toolbar).setVisible(false);
             } else {
-                menu.findItem(R.id.login_button).setTitle(user.getUserName());
+                menu.findItem(R.id.sign_in_btn_toolbar).setVisible(false);menu.findItem(R.id.user_profile_toolbar).setVisible(true);
                 Bitmap userProfilePicture = user.getUserProfilePicture();
                 //Todo When the repository is built, the User objects wont hold null values, remove this nullcheck
-                menu.findItem(R.id.profile_photo).setIcon(userProfilePicture != null ?
+                menu.findItem(R.id.user_profile_toolbar).setIcon(userProfilePicture != null ?
                         new BitmapDrawable(getResources(),
                                 user.getUserProfilePicture()) : getResources().getDrawable(R.drawable.ic_no_user_photo_24px));
             }
         });
 
+        //Connecting the nested layouts onClickListener to the toolbars onclick listener
+        MenuItem menuItem = menu.findItem(R.id.sign_in_btn_toolbar);
+        menuItem.getActionView().findViewById(R.id.login_icon).setOnClickListener( e -> onOptionsItemSelected(menuItem));
 
         return true;
     }
@@ -81,9 +83,11 @@ public class MainActivity extends AppCompatActivity {
             navController.popBackStack();
         else
             if(mainViewModel.getUser().getValue() == null)
-                 navController.navigate(R.id.action_global_loginFragment);
-            else
-                navController.navigate(R.id.action_global_accountFragment);
+            navController.navigate(R.id.action_global_loginFragment);
+        else
+            navController.navigate(R.id.action_global_accountFragment);
         return super.onOptionsItemSelected(item);
     }
-}
+
+    }
+
