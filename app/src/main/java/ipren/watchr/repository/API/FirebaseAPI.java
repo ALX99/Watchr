@@ -28,9 +28,11 @@ public class FirebaseAPI {
                     if (firebaseUser == null) {
                         this.user.postValue(firebaseUser);
                     } else {
+                        String UID = firebaseUser.getUid();
+                        Boolean isVerified = firebaseUser.isEmailVerified();
                         String email = firebaseUser.getEmail();
                         String userName = firebaseUser.getDisplayName();
-                                this.user.postValue(new User(userName, email));
+                                this.user.postValue(new User(userName, email,UID, isVerified));
                     }
                 }
         );

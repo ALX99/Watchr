@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 public class User {
     private String userName = "No user name";
     private String email = "No email";
+    private boolean isVerified = false;
+    private String UID;
     private Bitmap userProfilePicture;
 
     // This object allows userProfilePicture = null, only for testing
@@ -24,6 +26,19 @@ public class User {
         this.userProfilePicture = userProfilePicture;
     }
 
+    public User(String userName, String email, String UID, boolean isVerified, Bitmap userProfilePicture){
+        this(userName,email, UID, isVerified);
+        this.userProfilePicture = userProfilePicture;
+    }
+
+    public User(String userName, String email, String UID, boolean isVerified){
+        this(userName,email);
+        this.UID = UID;
+        this.isVerified = isVerified;
+    }
+    public String getUID(){return UID;}
+
+    public boolean isVerified(){return  isVerified; }
 
     public String getUserName() {
         return userName;

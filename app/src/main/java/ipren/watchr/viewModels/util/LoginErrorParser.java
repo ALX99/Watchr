@@ -11,7 +11,7 @@ public class LoginErrorParser {
         }else if (exception instanceof FirebaseAuthInvalidCredentialsException) {
             return ((FirebaseAuthInvalidCredentialsException) exception).getErrorCode();
         } else if (exception instanceof FirebaseAuthInvalidUserException)
-            return ((FirebaseAuthInvalidCredentialsException) exception).getErrorCode();
+            return ((FirebaseAuthInvalidUserException) exception).getErrorCode();
         else
             return exception.getLocalizedMessage();
 

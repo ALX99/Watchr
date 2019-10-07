@@ -40,6 +40,17 @@
         android:name="ipren.watchr.activities.fragments.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/accountSettingsFragment"
+        android:name="ipren.watchr.activities.fragments.AccountSettingsFragment"
+        android:label="fragment_account_settings"
+        tools:layout="@layout/account_settings_fragment" />
+
+    <action
+        android:id="@+id/action_global_account_settings"
+        app:destination="@id/accountSettingsFragment"
+        app:enterAnim="@animator/slide_down" />
+
     <action
             android:id="@+id/action_global_loginFragment"
             app:destination="@id/loginFragment"
