@@ -1,6 +1,5 @@
 package ipren.watchr.activities.fragments;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,7 @@ import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
 import ipren.watchr.viewModels.ListViewModel;
+
 
 public class BrowseFragment extends Fragment {
 

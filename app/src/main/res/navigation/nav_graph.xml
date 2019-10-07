@@ -5,11 +5,13 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/browseFragment">
 
+
     <fragment
         android:id="@+id/browseFragment"
         android:name="ipren.watchr.activities.fragments.BrowseFragment"
         android:label="fragment_browse"
         tools:layout="@layout/fragment_browse" />
+
     <fragment
         android:id="@+id/recommendedFragment"
         android:name="ipren.watchr.activities.fragments.MovieDetails"
