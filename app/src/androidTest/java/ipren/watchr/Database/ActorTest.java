@@ -17,6 +17,9 @@ import java.util.List;
 import ipren.watchr.TestUtil.LiveDataTestUtil;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.repository.Database.ActorDao;
+import ipren.watchr.repository.Database.MovieDB;
+import ipren.watchr.repository.Database.MovieDao;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class ActorTest {
