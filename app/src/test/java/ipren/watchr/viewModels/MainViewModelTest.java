@@ -1,10 +1,10 @@
 package ipren.watchr.viewModels;
 
-<<<<<<< HEAD
-import androidx.lifecycle.LiveData;
-=======
+
 import android.os.Build;
->>>>>>> master
+
+import androidx.lifecycle.LiveData;
+
 
 import org.junit.Before;
 import org.junit.Test;
