@@ -1,5 +1,4 @@
 <resources>
     <dimen name="genre_list_margin">2dp</dimen>
     <dimen name="comment_list_margin">4dp</dimen>
-
 </resources>

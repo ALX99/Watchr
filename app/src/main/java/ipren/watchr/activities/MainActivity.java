@@ -83,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
             navController.popBackStack();
         else
             if(mainViewModel.getUser().getValue() == null)
-                 navController.navigate(R.id.action_global_loginFragment);
-            else
-                navController.navigate(R.id.action_global_accountFragment);
+            navController.navigate(R.id.action_global_loginFragment);
+        else
+            navController.navigate(R.id.action_global_accountFragment);
         return super.onOptionsItemSelected(item);
     }
 

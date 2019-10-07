@@ -9,11 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.dataHolders.Actor;
 
@@ -38,11 +37,8 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
     // Where data is being attached
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(mContext)
-                .load(actors.get(position).getPictureLink())
-                .into(holder.image);
-
         holder.name.setText(actors.get(position).getName());
+        Util.loadImage(holder.image, actors.get(position).getPictureLink(), Util.getProgressDrawable(holder.image.getContext()));
     }
 
     @Override
