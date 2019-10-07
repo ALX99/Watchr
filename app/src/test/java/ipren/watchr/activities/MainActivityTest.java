@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.VectorDrawable;
-
+import android.os.Build;
 
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.lifecycle.LiveData;
@@ -19,19 +19,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
-import ipren.watchr.dataHolders.User;
 import ipren.watchr.R;
+import ipren.watchr.dataHolders.User;
 import ipren.watchr.viewModels.MainViewModelInterface;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 28)
+@Config(sdk = Build.VERSION_CODES.O_MR1)
 public class MainActivityTest {
+
+    //This variable passes the mockViewModel to the TestActivity. REASON: Robolectric does not accept anonymous classes
+    static MockViewModel mockViewModel;
+    private Context appContext;
 
     //Helper method to convert vector images to bitmaps for comparison
     private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
@@ -42,17 +45,13 @@ public class MainActivityTest {
         vectorDrawable.draw(canvas);
         return bitmap;
     }
+
     //Convenience method to avoid some code duplication
     private static ActivityController getVisibleActivity(Class activityClass) {
         ActivityController mainActivityController = Robolectric.buildActivity(activityClass);
         mainActivityController.create().start().visible();
         return mainActivityController;
     }
-
-    //This variable passes the mockViewModel to the TestActivity. REASON: Robolectric does not accept anonymous classes
-    static MockViewModel mockViewModel;
-
-    private Context appContext;
 
     //Creates a fresh MockViewModel for each method.
     @Before
@@ -90,7 +89,6 @@ public class MainActivityTest {
 
 
     }
-
 
 
 }

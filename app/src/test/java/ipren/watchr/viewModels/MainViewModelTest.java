@@ -1,6 +1,10 @@
 package ipren.watchr.viewModels;
 
+<<<<<<< HEAD
 import androidx.lifecycle.LiveData;
+=======
+import android.os.Build;
+>>>>>>> master
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +19,7 @@ import static org.junit.Assert.*;
 
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 28)
+@Config(sdk = Build.VERSION_CODES.O_MR1)
 public class MainViewModelTest {
     private MainViewModel mainViewModel;
     private MockMainRepository mockMainRepository;

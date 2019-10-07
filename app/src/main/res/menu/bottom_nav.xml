@@ -4,26 +4,26 @@
     <item
         android:id="@+id/browseFragment"
         android:icon="@drawable/ic_browse"
-        android:title="Browse" />
+        android:title="@string/browse" />
 
     <item
         android:id="@+id/recommendedFragment"
         android:icon="@drawable/ic_recommended"
-        android:title="Recommended" />
+        android:title="@string/recommended" />
 
     <item
         android:id="@+id/watchLaterFragment"
         android:icon="@drawable/ic_watch_later"
-        android:title="Watch Later" />
+        android:title="@string/watch_later" />
 
     <item
         android:id="@+id/watchedFragment"
         android:icon="@drawable/ic_watched"
-        android:title="Watched" />
+        android:title="@string/watched" />
 
     <item
         android:id="@+id/favoritesFragment"
         android:icon="@drawable/ic_favorites"
-        android:title="Favorites" />
+        android:title="@string/favorites" />
 
 </menu>
