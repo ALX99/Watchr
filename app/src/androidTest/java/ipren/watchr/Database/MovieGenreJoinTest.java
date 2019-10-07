@@ -15,6 +15,11 @@ import java.util.List;
 import ipren.watchr.TestUtil.LiveDataTestUtil;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.repository.Database.GenreDao;
+import ipren.watchr.repository.Database.MovieDB;
+import ipren.watchr.repository.Database.MovieDao;
+import ipren.watchr.repository.Database.MovieGenreJoin;
+import ipren.watchr.repository.Database.MovieGenreJoinDao;
 
 public class MovieGenreJoinTest {
     @Rule

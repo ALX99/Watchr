@@ -1,4 +1,4 @@
-package ipren.watchr.Database;
+package ipren.watchr.repository.Database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

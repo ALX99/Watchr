@@ -15,6 +15,9 @@ import java.util.List;
 import ipren.watchr.TestUtil.LiveDataTestUtil;
 import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.repository.Database.CommentDao;
+import ipren.watchr.repository.Database.MovieDB;
+import ipren.watchr.repository.Database.MovieDao;
 
 public class CommentTest {
     private Movie m = new Movie(1, "testMovie");
