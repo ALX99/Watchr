@@ -4,14 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.FragmentNavigator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ import java.util.List;
 
 import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
-import ipren.watchr.activities.fragments.BrowseFragmentDirections;
+import ipren.watchr.activities.fragments.MovieListFragmentDirections;
 import ipren.watchr.dataHolders.Movie;
 
 /**
@@ -73,7 +70,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         Util.loadImage(image, "https://image.tmdb.org/t/p//w92" + movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
         // Tap to go to movie details
         layout.setOnClickListener(v -> {
-            BrowseFragmentDirections.ActionDetail action = BrowseFragmentDirections.actionDetail();
+            MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
             // Pass the movie id
             action.setMovieId(movieList.get(position).id);
             Navigation.findNavController(layout).navigate(action);

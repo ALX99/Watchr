@@ -25,7 +25,7 @@ import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
 import ipren.watchr.viewModels.ListViewModel;
 
-public class BrowseFragment extends Fragment {
+public class MovieListFragment extends Fragment {
 
     private ListViewModel viewModel;
     private MovieListAdapter movieListAdapter = new MovieListAdapter(new ArrayList<>());
@@ -43,7 +43,7 @@ public class BrowseFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
 
 
-    public BrowseFragment() {
+    public MovieListFragment() {
 
     }
 
@@ -51,7 +51,7 @@ public class BrowseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_browse, container, false);
+        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
         // Bind the layout variables
         ButterKnife.bind(this, view);
         return view;
