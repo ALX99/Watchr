@@ -5,10 +5,12 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/MovieListFragment">
 
+    <!-- START LIST FRAGMENTS -->
+
     <fragment
         android:id="@+id/MovieListFragment"
         android:name="ipren.watchr.activities.fragments.MovieListFragment"
-        android:label="fragment_movie_list"
+        android:label="fragment_browse"
         tools:layout="@layout/fragment_movie_list">
         <action
             android:id="@+id/actionDetail"
@@ -17,27 +19,77 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="listType"
+            android:defaultValue="browse" />
     </fragment>
     <fragment
         android:id="@+id/recommendedFragment"
-        android:name="ipren.watchr.activities.fragments.RecommendedFragment"
-        android:label="fragment_recommended"
-        tools:layout="@layout/fragment_movie_details" />
+        android:name="ipren.watchr.activities.fragments.MovieListFragment"
+        android:label="fragment_recommended">
+        <action
+            android:id="@+id/actionDetail"
+            app:destination="@id/detailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="listType"
+            android:defaultValue="recommended" />
+    </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="ipren.watchr.activities.fragments.FavoritesFragment"
+        android:name="ipren.watchr.activities.fragments.MovieListFragment"
         android:label="fragment_favorites"
-        tools:layout="@layout/fragment_favorites" />
+        tools:layout="@layout/fragment_movie_list">
+        <action
+            android:id="@+id/actionDetail"
+            app:destination="@id/detailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="listType"
+            android:defaultValue="favorites" />
+    </fragment>
     <fragment
         android:id="@+id/watchLaterFragment"
-        android:name="ipren.watchr.activities.fragments.WatchLaterFragment"
+        android:name="ipren.watchr.activities.fragments.MovieListFragment"
         android:label="fragment_watch_later"
-        tools:layout="@layout/fragment_watch_later" />
+        tools:layout="@layout/fragment_movie_list">
+        <action
+            android:id="@+id/actionDetail"
+            app:destination="@id/detailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="listType"
+            android:defaultValue="watchLater" />
+    </fragment>
+
     <fragment
         android:id="@+id/watchedFragment"
-        android:name="ipren.watchr.activities.fragments.WatchedFragment"
+        android:name="ipren.watchr.activities.fragments.MovieListFragment"
         android:label="fragment_watched"
-        tools:layout="@layout/fragment_watched" />
+        tools:layout="@layout/fragment_movie_list">
+        <action
+            android:id="@+id/actionDetail"
+            app:destination="@id/detailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="listType"
+            android:defaultValue="watched" />
+    </fragment>
+
+    <!-- END LIST FRAGMENTS -->
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="ipren.watchr.activities.fragments.LoginFragment"
@@ -72,13 +124,6 @@
         android:name="ipren.watchr.activities.fragments.MovieDetails"
         android:label="fragment_details"
         tools:layout="@layout/fragment_movie_details">
-        <action
-            android:id="@+id/actionList"
-            app:destination="@id/MovieListFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
             android:name="movieId"
             android:defaultValue="0"

@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //This method can be overriden and allows us to inject a ViewModell for testing
+    //This method can be overridden and allows us to inject a ViewModel for testing
     @VisibleForTesting
     protected MainViewModelInterface getViewModel() {
         return ViewModelProviders.of(this).get(MainViewModel.class);

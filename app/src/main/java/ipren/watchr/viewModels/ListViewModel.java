@@ -34,17 +34,17 @@ public class ListViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public void refresh() {
-        fetchFromRemote();
+    public void refresh(String url) {
+        fetchFromRemote(url);
     }
 
     /**
      * Fetch movies from API on a new thread, then display it on the main thread
      */
-    private void fetchFromRemote() {
+    private void fetchFromRemote(String url) {
         loading.setValue(true);
         disposable.add(
-                movieService.getMovies("movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1")
+                movieService.getMovies(url)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<MovieList>() {
