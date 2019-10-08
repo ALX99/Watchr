@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
+apply plugin: 'androidx.navigation.safeargs'
+
 //This is to make password management easier. Loads fields from a txt file. This file must not
 //be pushed to git
 Properties localProperties = new Properties()
@@ -61,9 +63,6 @@ android {
 
 dependencies {
 
-    def lifecycle_version = "2.1.0"
-    def nav_version = "2.1.0"
-    def butterknife_version = "10.2.0"
     def room_version = "2.2.0-rc01"
 
 

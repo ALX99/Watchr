@@ -9,10 +9,18 @@
         android:id="@+id/browseFragment"
         android:name="ipren.watchr.activities.fragments.BrowseFragment"
         android:label="fragment_browse"
-        tools:layout="@layout/fragment_browse" />
+        tools:layout="@layout/fragment_browse" >
+        <action
+            android:id="@+id/actionDetail"
+            app:destination="@id/detailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <fragment
         android:id="@+id/recommendedFragment"
-        android:name="ipren.watchr.activities.fragments.MovieDetails"
+        android:name="ipren.watchr.activities.fragments.RecommendedFragment"
         android:label="fragment_recommended"
         tools:layout="@layout/fragment_movie_details" />
     <fragment
@@ -59,4 +67,21 @@
         android:id="@+id/action_global_accountFragment"
         app:destination="@id/accountFragment"
         app:enterAnim="@animator/slide_up" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="ipren.watchr.activities.fragments.MovieDetails"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_movie_details">
+        <action
+            android:id="@+id/actionList"
+            app:destination="@id/browseFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="movieId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
 </navigation>
