@@ -67,6 +67,15 @@ public class BrowseFragment extends Fragment {
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
         movieList.setAdapter(movieListAdapter);
 
+        // Fetch fresh data from API on refresh
+        refreshLayout.setOnRefreshListener(() -> {
+            movieList.setVisibility(View.GONE);
+            listError.setVisibility(View.GONE);
+            loadingView.setVisibility(View.VISIBLE);
+            viewModel.refresh();
+            refreshLayout.setRefreshing(false);
+        });
+
         observeViewModel();
     }
 
