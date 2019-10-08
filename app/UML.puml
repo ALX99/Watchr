@@ -9,52 +9,52 @@ package Activities{
         -NavController navController
     }
     package Fragments{
-        class AccountFragment{
+        +class AccountFragment{
             -AccountViewModel accountViewModel
         }
-        class AccountSettingsFragment{
+       +class AccountSettingsFragment{
             -AccountSettingsViewModel settingsViewModel
         }
-        class BrowseFragment{
+        +class BrowseFragment{
             -ListViewModel viewModel
             -MovieListAdapter movieListAdapter
         }
-        class FavoritesFragment{
+        +class FavoritesFragment{
 
         }
-        class LoginFragment{
+        +class LoginFragment{
             -LoginViewModel loginViewModel
         }
-        class MovieDetails{
+        +class MovieDetails{
 
         }
-        class RecommendedFragment{
+        +class RecommendedFragment{
 
         }
-        class WatchedFragment{
+        +class WatchedFragment{
 
         }
-        class WatchLaterFragment{
+        +class WatchLaterFragment{
 
         }
         package Adapters{
-            class CastAdapter{
+           +class CastAdapter{
                 -ArrayList<Actor> actors
             }
-            class CommentAdapter{
+           +class CommentAdapter{
                 -ArrayList<Comment> comments
             }
-            class GenreAdapter{
+           +class GenreAdapter{
                 -ArrayList<Genre> genres
             }
-            class MovieListAdapter{
+           +class MovieListAdapter{
                 -ArrayList<Movie>
             }
         }
     }
 }
 package DataHolders{
-    class Actor{
+   +class Actor{
         -int ID
         -int movieID
         -int order
@@ -62,22 +62,22 @@ package DataHolders{
         -String character
         -String pictureLink
     }
-    class AuthenticationResponse{
+   +class AuthenticationResponse{
         -boolean successful
         -String errorMsg
     }
-    class Comment{
+   +class Comment{
         -int commentID
         -int movieID
         -String profilePicLink
         -String username
         -String comment
     }
-    class Genre{
+   +class Genre{
         -int genreID
         -String name
     }
-    class Movie{
+   +class Movie{
         +double popularity
         +int voteCount
         +boolean video
@@ -93,17 +93,17 @@ package DataHolders{
         +String overview
         +String releaseDate
     }
-    interface MovieApi{
+   +interface MovieApi{
         #Single<MovieList> getMovies(String)
     }
-    class MovieApiService{
+   +class MovieApiService{
         {static} -String BASE_URL
         -MovieApi api
     }
-    class MovieList{
+   +class MovieList{
         +List<Movie> movies
     }
-    class User{
+   +class User{
         -String userName
         -String email
         -boolean isVerified
