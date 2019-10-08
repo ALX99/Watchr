@@ -15,7 +15,7 @@ import ipren.watchr.dataHolders.Movie;
 @Dao
 public interface MovieGenreJoinDao {
     @Insert
-    void insert(MovieGenreJoin movieGenreJoin);
+    void insert(MovieGenreJoin... movieGenreJoin);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM movies " +
@@ -29,16 +29,14 @@ public interface MovieGenreJoinDao {
             "INNER JOIN movie_genre_join " +
             "ON genres.id =movie_genre_join.genreID " +
             "WHERE movie_genre_join.movieID=:movieID")
-    LiveData<List<Genre>> getGenresForMovie(final int movieID);
+    LiveData<List<Genre>> getGenresFromMovie(final int movieID);
 
-    @Insert
-    void insertMovieGenreJoin(MovieGenreJoin movieGenreJoin);
 
     // No update method since both genreID and movieID
     // are primary keys, so there would be nothing that could
     // be updated
 
     @Delete
-    void deleteMovieGenreJoin(MovieGenreJoin movieGenreJoin);
+    void deleteMovieGenreJoin(MovieGenreJoin... movieGenreJoin);
 
 }
