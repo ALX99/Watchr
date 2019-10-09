@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.DataBindingUtil;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,12 +18,14 @@ import java.util.List;
 import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.MovieListFragmentDirections;
+import ipren.watchr.activities.fragments.listeners.MovieClickListener;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.databinding.ItemMovieBinding;
 
 /**
  * Class for handling the creation and updating of movie cards in the recycler view
  */
-public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> {
+public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements MovieClickListener {
 
     private ArrayList<Movie> movieList;
 
@@ -48,7 +51,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @NonNull
     @Override
     public MovieListAdapter.MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        ItemMovieBinding view = DataBindingUtil.inflate(inflater, R.layout.item_movie, parent, false);
         return new MovieViewHolder(view);
     }
 
@@ -57,24 +61,20 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     @Override
     public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, int position) {
-        ImageView image = holder.itemView.findViewById(R.id.movieImage);
-        TextView title = holder.itemView.findViewById(R.id.movieTitle);
-        TextView overview = holder.itemView.findViewById(R.id.movieOverview);
-        TextView rating = holder.itemView.findViewById(R.id.movieRating);
-        TextView genres = holder.itemView.findViewById(R.id.movieGenres);
-        ConstraintLayout layout = holder.itemView.findViewById(R.id.movieLayout);
+        holder.itemView.setMovie(movieList.get(position));
+        holder.itemView.setListener(this);
+    }
 
-        title.setText(movieList.get(position).title);
-        overview.setText(movieList.get(position).overview);
-        rating.setText("Rating: " + movieList.get(position).voteAverage);
-        Util.loadImage(image, "https://image.tmdb.org/t/p//w92" + movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
-        // Tap to go to movie details
-        layout.setOnClickListener(v -> {
-            MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
-            // Pass the movie id
-            action.setMovieId(movieList.get(position).id);
-            Navigation.findNavController(layout).navigate(action);
-        });
+    @Override
+    public void onMovieClicked(View v) {
+        // Get the id from the hidden TextView
+        String idString = ((TextView) v.findViewById(R.id.movieId)).getText().toString();
+        int id = Integer.valueOf(idString);
+
+        // Navigate to the detail screen with the movie id
+        MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
+        action.setMovieId(id);
+        Navigation.findNavController(v).navigate(action);
     }
 
     /**
@@ -90,10 +90,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     class MovieViewHolder extends RecyclerView.ViewHolder {
 
-        public View itemView;
+        public ItemMovieBinding itemView;
 
-        public MovieViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public MovieViewHolder(@NonNull ItemMovieBinding itemView) {
+            super(itemView.getRoot());
             this.itemView = itemView;
         }
     }

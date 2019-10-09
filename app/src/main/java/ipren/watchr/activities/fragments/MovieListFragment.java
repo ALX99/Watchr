@@ -66,6 +66,7 @@ public class MovieListFragment extends Fragment {
 
         String url = "";
 
+        // For testing purposes
         switch (this.getArguments().getString("listType")) {
             case "browse": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1"; break;
             case "recommended": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=2"; break;

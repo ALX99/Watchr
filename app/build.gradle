@@ -59,6 +59,7 @@ android {
         // we use 21.
         disable 'SmallSp', 'Autofill'
     }
+    dataBinding.enabled = true
 }
 
 dependencies {
