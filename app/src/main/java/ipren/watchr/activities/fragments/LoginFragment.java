@@ -129,6 +129,7 @@ public class LoginFragment extends Fragment {
         loginViewModel.getCreateUserResponse().observe(this, e -> {
             if (e.isSuccessful()) {
                 exitLoginFragment(true);
+                Navigation.findNavController(getView()).navigate(R.id.action_global_account_settings);
             } else {
                 displayAuthError(e.getErrorMsg(), newUserEmail, password,reTypedPassword);
                 shakeButton(getView().findViewById(R.id.register_user_btn));

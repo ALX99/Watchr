@@ -5,11 +5,11 @@
         android:id="@+id/user_profile_toolbar"
         android:orderInCategory="101"
         android:title="Profile"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/sign_in_btn_toolbar"
         android:title="TODO"
         app:actionLayout="@layout/loginicon"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
 </menu>

@@ -1,21 +1,34 @@
 package ipren.watchr.activities;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.viewModels.MainViewModel;
 import ipren.watchr.viewModels.MainViewModelInterface;
@@ -57,22 +70,34 @@ public class MainActivity extends AppCompatActivity {
         //Syncing layout to model
         mainViewModel.getUser().observe(this, user -> {
             if (user == null) {
-                menu.findItem(R.id.sign_in_btn_toolbar).setVisible(true);menu.findItem(R.id.user_profile_toolbar).setVisible(false);
+                showSignInIcon(true, menu);
             } else {
-                menu.findItem(R.id.sign_in_btn_toolbar).setVisible(false);menu.findItem(R.id.user_profile_toolbar).setVisible(true);
-                Bitmap userProfilePicture = user.getUserProfilePicture();
-                //Todo When the repository is built, the User objects wont hold null values, remove this nullcheck
-                menu.findItem(R.id.user_profile_toolbar).setIcon(userProfilePicture != null ?
-                        new BitmapDrawable(getResources(),
-                                user.getUserProfilePicture()) : getResources().getDrawable(R.drawable.ic_no_user_photo_24px));
+                showSignInIcon(false, menu);
+
+                //Android just has to complicate things
+                Glide.with(this).asBitmap().load(user.getUserProfilePictureUri()).into(new CustomTarget<Bitmap>(){
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        menu.findItem(R.id.user_profile_toolbar).setIcon(new BitmapDrawable(resource));
+                    }
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {}
+                });
             }
         });
+
+
 
         //Connecting the nested layouts onClickListener to the toolbars onclick listener
         MenuItem menuItem = menu.findItem(R.id.sign_in_btn_toolbar);
         menuItem.getActionView().findViewById(R.id.login_icon).setOnClickListener( e -> onOptionsItemSelected(menuItem));
 
         return true;
+    }
+
+    private void showSignInIcon(boolean show, Menu menu){
+        menu.findItem(R.id.sign_in_btn_toolbar).setVisible(show);
+        menu.findItem(R.id.user_profile_toolbar).setVisible(!show);
     }
 
     //This method is for listening to menu onClick events
@@ -90,4 +115,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
     }
-

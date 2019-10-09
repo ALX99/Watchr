@@ -1,6 +1,8 @@
 package ipren.watchr.repository;
 
 
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,5 +35,20 @@ public class MainRepository implements IMainRepository{
 
     public void loginUser(String email, String password, OnCompleteListener callback){
         firebaseAPI.loginUser(email, password, callback);
+    }
+
+    @Override
+    public void refreshUsr() {
+        firebaseAPI.refreshUsr();
+    }
+
+    @Override
+    public void reSendVerificationEmail() {
+        firebaseAPI.resendVerificationEmail();
+    }
+
+    @Override
+    public void updateProfile(String userName, Uri pictureUri) {
+        firebaseAPI.updateProfile(userName, pictureUri);
     }
 }

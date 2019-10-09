@@ -1,6 +1,7 @@
 package ipren.watchr.activities.fragments;
 
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
@@ -16,9 +17,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.viewModels.AccountViewModel;
-import ipren.watchr.viewModels.MainViewModel;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -50,14 +51,20 @@ public class AccountFragment extends Fragment {
             accountViewModel.signOut();
         });
 
+        getView().findViewById(R.id.configure_acc_btn).setOnClickListener(e ->
+                Navigation.findNavController(getView()).navigate(R.id.action_global_account_settings));
+
         accountViewModel.getUser().observe(this, e ->{
             ((TextView)getView().findViewById(R.id.username_text_field_acc)).setText(e.getUserName());
             ((TextView)getView().findViewById(R.id.email_text_field_acc)).setText(e.getEmail());
-            //TODO Once the repository is built, this object will not allow null profile picture, this is only temporary . Remove this, if.
-            if(e.getUserProfilePicture() == null)
-                return;
-            ((CircleImageView)getView().findViewById(R.id.profile_img_acc)).setImageDrawable(new BitmapDrawable(getResources(), e.getUserProfilePicture()));
+            Util.loadImage(
+                    (getView().findViewById(R.id.profile_img_acc)),
+                    e.getUserProfilePictureUri().toString(),
+                    Util.getProgressDrawable(getContext()));
+
         });
+
+
 
 
     }

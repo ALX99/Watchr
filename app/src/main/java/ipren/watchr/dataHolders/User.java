@@ -1,6 +1,10 @@
 package ipren.watchr.dataHolders;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
+
+import ipren.watchr.BuildConfig;
+import ipren.watchr.R;
 
 
 //Immutable User object
@@ -9,9 +13,9 @@ public class User {
     private String email = "No email";
     private boolean isVerified = false;
     private String UID;
-    private Bitmap userProfilePicture;
+    private Uri userProfilePictureUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.default_profile_photo);
 
-    // This object allows userProfilePicture = null, only for testing
+    // This object allows userProfilePictureUri = null, only for testing
     // once repository is enabled this will be removed
     public User() {
     }
@@ -21,14 +25,14 @@ public class User {
         this.email = email;
     }
 
-    public User(String userName, String email, Bitmap userProfilePicture) {
+    public User(String userName, String email, Uri userProfilePictureUri) {
         this(userName, email);
-        this.userProfilePicture = userProfilePicture;
+        this.userProfilePictureUri = userProfilePictureUri;
     }
 
-    public User(String userName, String email, String UID, boolean isVerified, Bitmap userProfilePicture){
+    public User(String userName, String email, String UID, boolean isVerified, Uri userProfilePictureUri){
         this(userName,email, UID, isVerified);
-        this.userProfilePicture = userProfilePicture;
+        this.userProfilePictureUri = userProfilePictureUri;
     }
 
     public User(String userName, String email, String UID, boolean isVerified){
@@ -48,7 +52,7 @@ public class User {
         return email;
     }
 
-    public Bitmap getUserProfilePicture() {
-        return userProfilePicture;
+    public Uri getUserProfilePictureUri() {
+        return userProfilePictureUri;
     }
 }
