@@ -1,6 +1,7 @@
-package ipren.watchr.dataHolders;
+package ipren.watchr.repository.API;
 
 import io.reactivex.Single;
+import ipren.watchr.dataHolders.MovieList;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
 

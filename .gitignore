@@ -84,11 +84,9 @@ lint/tmp/
 # JSON DB
 app/schemas/
 
-<<<<<<< HEAD
-//keystore data
+# keystore data
 ipren.keys
-=======
 debug.keystore
 
-ipren.keys
->>>>>>> master
+# UMl
+app/UML/

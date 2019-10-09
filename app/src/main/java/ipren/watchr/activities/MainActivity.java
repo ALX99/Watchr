@@ -1,22 +1,20 @@
 package ipren.watchr.activities;
 
-import android.content.Context;
+
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
+
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,11 +22,11 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
+
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import ipren.watchr.Helpers.Util;
+
 import ipren.watchr.R;
 import ipren.watchr.viewModels.MainViewModel;
 import ipren.watchr.viewModels.MainViewModelInterface;
@@ -55,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //This method can be overriden and allows us to inject a ViewModell for testing
+    //This method can be overridden and allows us to inject a ViewModel for testing
     @VisibleForTesting
     protected MainViewModelInterface getViewModel() {
         return ViewModelProviders.of(this).get(MainViewModel.class);
@@ -75,27 +73,28 @@ public class MainActivity extends AppCompatActivity {
                 showSignInIcon(false, menu);
 
                 //Android just has to complicate things
-                Glide.with(this).asBitmap().load(user.getUserProfilePictureUri()).into(new CustomTarget<Bitmap>(){
+                Glide.with(this).asBitmap().load(user.getUserProfilePictureUri()).into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         menu.findItem(R.id.user_profile_toolbar).setIcon(new BitmapDrawable(resource));
                     }
+
                     @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {}
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
                 });
             }
         });
 
 
-
         //Connecting the nested layouts onClickListener to the toolbars onclick listener
         MenuItem menuItem = menu.findItem(R.id.sign_in_btn_toolbar);
-        menuItem.getActionView().findViewById(R.id.login_icon).setOnClickListener( e -> onOptionsItemSelected(menuItem));
+        menuItem.getActionView().findViewById(R.id.login_icon).setOnClickListener(e -> onOptionsItemSelected(menuItem));
 
         return true;
     }
 
-    private void showSignInIcon(boolean show, Menu menu){
+    private void showSignInIcon(boolean show, Menu menu) {
         menu.findItem(R.id.sign_in_btn_toolbar).setVisible(show);
         menu.findItem(R.id.user_profile_toolbar).setVisible(!show);
     }
@@ -104,14 +103,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int currentID = navController.getCurrentDestination().getId();
-        if(currentID == R.id.loginFragment || currentID == R.id.accountFragment)
+        if (currentID == R.id.loginFragment || currentID == R.id.accountFragment)
             navController.popBackStack();
-        else
-            if(mainViewModel.getUser().getValue() == null)
+        else if (mainViewModel.getUser().getValue() == null)
             navController.navigate(R.id.action_global_loginFragment);
         else
             navController.navigate(R.id.action_global_accountFragment);
         return super.onOptionsItemSelected(item);
     }
 
-    }
+}
