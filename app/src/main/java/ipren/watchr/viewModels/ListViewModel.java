@@ -13,7 +13,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import ipren.watchr.dataHolders.Movie;
-import ipren.watchr.dataHolders.MovieApiService;
+import ipren.watchr.repository.API.MovieApiService;
 import ipren.watchr.dataHolders.MovieList;
 
 /**
