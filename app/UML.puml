@@ -8,6 +8,11 @@ package Activities{
         -MainViewModelInterface interface
         -NavController navController
     }
+    package Listeners{
+        +interface MovieClickListener{
+            +void onMovieClicked(View)
+        }
+    }
     package Fragments{
         +class AccountFragment{
             -AccountViewModel accountViewModel
@@ -15,26 +20,14 @@ package Activities{
         +class AccountSettingsFragment{
             -AccountSettingsViewModel settingsViewModel
         }
-        +class BrowseFragment{
+        +class MovieListFragment{
             -ListViewModel viewModel
             -MovieListAdapter movieListAdapter
-        }
-        +class FavoritesFragment{
-
         }
         +class LoginFragment{
             -LoginViewModel loginViewModel
         }
         +class MovieDetails{
-
-        }
-        +class RecommendedFragment{
-
-        }
-        +class WatchedFragment{
-
-        }
-        +class WatchLaterFragment{
 
         }
         package Adapters{
@@ -97,13 +90,7 @@ package DataHolders{
         +String overview
         +String releaseDate
     }
-    +interface MovieApi{
-        #Single<MovieList> getMovies(String)
-    }
-    +class MovieApiService{
-        {static} -String BASE_URL
-        -MovieApi api
-    }
+
     +class MovieList{
         +List<Movie> movies
     }
@@ -160,6 +147,13 @@ package Repository{
             +void registerUser(String, String, OnCompleteListener)
             +void loginUser(String, String, OnCompleteListener)
             +void signOut()
+        }
+        +interface MovieApi{
+            #Single<MovieList> getMovies(String)
+        }
+        +class MovieApiService{
+            {static} -String BASE_URL
+            -MovieApi api
         }
     }
     package Database{
@@ -242,7 +236,7 @@ AccountViewModel --* IMainRepository
 AccountSettingsViewModel --* User
 AccountSettingsViewModel--* IMainRepository
 
-MainRepository ..> IMainRepository
+MainRepository .r> IMainRepository
 MainRepository --* FirebaseAPI
 MainRepository --o User
 
@@ -254,12 +248,10 @@ MovieDB --* CommentDao
 MovieDB --* GenreDao
 MovieDB --* MovieGenreJoinDao
 
-MovieApiService --* MovieApi
-
 MainActivity --* MainViewModelInterface
 
-BrowseFragment --* ListViewModel
-BrowseFragment --* MovieListAdapter
+MovieListFragment --* ListViewModel
+MovieListFragment --* MovieListAdapter
 
 AccountSettingsFragment --* AccountSettingsViewModel
 
@@ -268,4 +260,8 @@ AccountFragment --* AccountViewModel
 MovieDetails --o CastAdapter
 MovieDetails --o CommentAdapter
 MovieDetails --o GenreAdapter
+
+MovieApiService .u> MovieApi
+
+MovieListAdapter ..> MovieClickListener
 @enduml
