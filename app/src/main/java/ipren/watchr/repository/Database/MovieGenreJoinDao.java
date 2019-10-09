@@ -11,6 +11,7 @@ import java.util.List;
 
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataHolders.MovieGenreJoin;
 
 @Dao
 public interface MovieGenreJoinDao {

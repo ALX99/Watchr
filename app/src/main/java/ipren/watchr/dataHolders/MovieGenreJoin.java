@@ -1,4 +1,4 @@
-package ipren.watchr.repository.Database;
+package ipren.watchr.dataHolders;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
