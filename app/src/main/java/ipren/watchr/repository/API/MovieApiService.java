@@ -1,8 +1,7 @@
-package ipren.watchr.dataHolders;
-
-import java.util.List;
+package ipren.watchr.repository.API;
 
 import io.reactivex.Single;
+import ipren.watchr.dataHolders.MovieList;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;

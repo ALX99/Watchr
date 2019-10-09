@@ -3,6 +3,7 @@ package ipren.watchr.Helpers;
 import android.content.Context;
 import android.widget.ImageView;
 
+import androidx.databinding.BindingAdapter;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
@@ -34,5 +35,13 @@ public class Util {
         cpd.setCenterRadius(50f);
         cpd.start();
         return cpd;
+    }
+
+    /**
+     * For binding images directly in XML
+     */
+    @BindingAdapter("android:imageUrl")
+    public static void loadImage(ImageView imageView, String url) {
+        loadImage(imageView, url, getProgressDrawable(imageView.getContext()));
     }
 }
