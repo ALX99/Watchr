@@ -1,5 +1,7 @@
 package ipren.watchr.repository;
 
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,5 +17,11 @@ public interface IMainRepository {
      void signOutUser();
 
      void loginUser(String email, String password, OnCompleteListener callback);
+
+     void refreshUsr();
+
+     void reSendVerificationEmail();
+
+     void updateProfile(String userName, Uri pictureUri);
 
 }
