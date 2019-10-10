@@ -1,10 +1,13 @@
 package ipren.watchr.repository.Database;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
@@ -27,15 +30,60 @@ public abstract class MovieDB extends RoomDatabase {
 
     public abstract MovieGenreJoinDao movieGenreJoinDao();
 
+    private static Callback dbCallback = new Callback() {
+        @Override
+        public void onOpen(@NonNull SupportSQLiteDatabase db) {
+            super.onOpen(db);
+            new PopulateDbAsync(INSTANCE).execute();
+        }
+    };
+
     // Singleton
-    public static MovieDB getInstance(Context context) {
+    public static synchronized MovieDB getInstance(Context context) {
         if (INSTANCE != null)
             return INSTANCE;
 
         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                 MovieDB.class, DB_NAME)
+                .fallbackToDestructiveMigration()
+                // USED FOR TESTING PURPOSES. REMOVE IN PRODUCTION CODE. TODO
+                .addCallback(dbCallback)
                 .build();
         return INSTANCE;
 
+    }
+
+    // TESTING PURPOSES
+    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+
+        private final MovieDao movieDao;
+        private final GenreDao genreDao;
+        private final MovieGenreJoinDao movieGenreJoinDao;
+        private final CommentDao commentDao;
+
+        PopulateDbAsync(MovieDB db) {
+            movieDao = db.movieDao();
+            genreDao = db.genreDao();
+            movieGenreJoinDao = db.movieGenreJoinDao();
+            commentDao = db.commentDao();
+            //  NUKE();
+        }
+
+        private void NUKE() {
+            movieDao.NUKE();
+            genreDao.NUKE();
+            movieGenreJoinDao.NUKE();
+            commentDao.NUKE();
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            movieDao.insert(new Movie(475557, "ayy lmao"));
+            genreDao.insert(new Genre(1, "Action"));
+            genreDao.insert(new Genre(2, "Horror"));
+            movieGenreJoinDao.insert(new MovieGenreJoin(475557, 1));
+            movieGenreJoinDao.insert(new MovieGenreJoin(475557, 2));
+            return null;
+        }
     }
 }

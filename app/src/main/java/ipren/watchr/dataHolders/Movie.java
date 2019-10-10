@@ -10,59 +10,56 @@ import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "movies")
 public class Movie {
-    @Ignore
-    @ColumnInfo(name = "popularity")
-    public double popularity;
-    @Ignore
-    @ColumnInfo(name = "vote_count")
-    @SerializedName("vote_count")
-    public int voteCount;
-    @Ignore
-    @ColumnInfo(name = "video")
-    public boolean video;
-    @Ignore
-    @ColumnInfo(name = "poster_path")
-    @SerializedName("poster_path")
-    public String posterPath;
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "id")
-    public int id;
+    public final int id; // TODO?
     @Ignore
-    public boolean adult;
+    @ColumnInfo(name = "poster_path")
+    @SerializedName("poster_path")
+    public String posterPath; // TODO
+    @ColumnInfo(name = "title")
+    public String title; // TODO
+    @Ignore
+    public String overview; // TODO
+    @Ignore
+    @ColumnInfo(name = "popularity")
+    private double popularity;
+    @Ignore
+    @ColumnInfo(name = "vote_count")
+    @SerializedName("vote_count")
+    private int voteCount;
+    @Ignore
+    @ColumnInfo(name = "video")
+    private boolean video;
+    @Ignore
+    private boolean adult;
     @Ignore
     @ColumnInfo(name = "backdrop_path")
     @SerializedName("backdrop_path")
-    public String backdropPath;
+    private String backdropPath;
     @Ignore
     @ColumnInfo(name = "language")
     @SerializedName("original_language")
-    public String originalLanguage;
+    private String originalLanguage;
     @Ignore
     @ColumnInfo(name = "original_title")
     @SerializedName("original_title")
-    public String originalTitle;
-    @Ignore
-    @SerializedName("genre_ids")
-    public int[] genreIds;
-    @ColumnInfo(name = "title")
-    public String title;
+    private String originalTitle;
     @ColumnInfo(name = "vote_average")
     @SerializedName("vote_average")
     @Ignore
-    public double voteAverage;
-    @Ignore
-    public String overview;
+    private double voteAverage;
     @Ignore
     @ColumnInfo(name = "release_date")
     @SerializedName("release_date")
-    public String releaseDate;
+    private String releaseDate;
 
     // Will insert these things into the Db
     // when discussed more with group.
     // Ignore for now
     @Ignore
-    public Movie(double popularity, int voteCount, boolean video, String posterPath, int id, boolean adult, String backdropPath, String originalLanguage, String originalTitle, int[] genreIds, String title, double voteAverage, String overview, String releaseDate) {
+    public Movie(double popularity, int voteCount, boolean video, String posterPath, int id, boolean adult, String backdropPath, String originalLanguage, String originalTitle, String title, double voteAverage, String overview, String releaseDate) {
         this.popularity = popularity;
         this.voteCount = voteCount;
         this.video = video;
@@ -72,7 +69,6 @@ public class Movie {
         this.backdropPath = backdropPath;
         this.originalLanguage = originalLanguage;
         this.originalTitle = originalTitle;
-        this.genreIds = genreIds;
         this.title = title;
         this.voteAverage = voteAverage;
         this.overview = overview;

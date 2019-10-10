@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.RoomWarnings;
 
@@ -15,7 +16,7 @@ import ipren.watchr.dataHolders.MovieGenreJoin;
 
 @Dao
 public interface MovieGenreJoinDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(MovieGenreJoin... movieGenreJoin);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -38,6 +39,8 @@ public interface MovieGenreJoinDao {
     // be updated
 
     @Delete
-    void deleteMovieGenreJoin(MovieGenreJoin... movieGenreJoin);
+    void delete(MovieGenreJoin... movieGenreJoin);
 
+    @Query("DELETE FROM movie_genre_join")
+    void NUKE();
 }

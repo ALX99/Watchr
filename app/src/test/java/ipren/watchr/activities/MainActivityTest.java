@@ -20,9 +20,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
-import java.util.List;
-
-import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.viewModels.MainViewModelInterface;
 
@@ -115,13 +112,4 @@ class MockViewModel extends ViewModel implements MainViewModelInterface {
         this.user.postValue(user);
     }
 
-    @Override
-    public LiveData<User> getUser(int UID) {
-        return null;
-    }
-
-    @Override
-    public List<Comment> getCommentsFromMovie() {
-        return null;
-    }
 }

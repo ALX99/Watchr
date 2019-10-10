@@ -46,8 +46,8 @@ public class MovieTest {
     }
 
     private void insertDummyData() {
-        movieDao.insertMovies(m);
-        movieDao.insertMovies(m2);
+        movieDao.insert(m);
+        movieDao.insert(m2);
     }
     @Test
     public void testEmpty() throws Exception {
@@ -57,7 +57,7 @@ public class MovieTest {
 
     @Test
     public void movieInsertTest() throws Exception {
-        movieDao.insertMovies(m);
+        movieDao.insert(m);
         List<Movie> movies = LiveDataTestUtil.getValue(movieDao.getAllMovies());
         Assert.assertEquals(movies.get(0).title, m.title);
     }
@@ -72,7 +72,7 @@ public class MovieTest {
     @Test
     public void movieDelete() throws Exception {
         insertDummyData();
-        movieDao.deleteMovies(m);
+        movieDao.delete(m);
         movieDao.deleteMoviesByID(2);
 
         Assert.assertEquals(0, LiveDataTestUtil.getValue(movieDao.getAllMovies()).size());
@@ -80,9 +80,9 @@ public class MovieTest {
 
     @Test
     public void updateTest() throws Exception {
-        movieDao.insertMovies(m);
+        movieDao.insert(m);
         Movie newM = new Movie(1, "title");
-        movieDao.updateMovies(newM);
+        movieDao.update(newM);
         Assert.assertEquals(newM.title, LiveDataTestUtil.getValue(movieDao.getMovieByID(1)).title);
     }
 }

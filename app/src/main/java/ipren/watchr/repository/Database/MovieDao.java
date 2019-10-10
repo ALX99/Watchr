@@ -21,15 +21,18 @@ public interface MovieDao {
     LiveData<Movie> getMovieByID(int movieID);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMovies(Movie... movies);
+    void insert(Movie... movies);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateMovies(Movie... movies);
+    void update(Movie... movies);
 
     @Delete
-    void deleteMovies(Movie... movies);
+    void delete(Movie... movies);
 
     @Query("DELETE FROM movies WHERE id = :movieID")
     void deleteMoviesByID(int movieID);
+
+    @Query("DELETE FROM movies")
+    void NUKE();
 
 }

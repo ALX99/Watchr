@@ -39,30 +39,30 @@ public class GenreTest {
 
     @Test
     public void insertTest() throws Exception {
-        genreDao.insertGenres(g);
+        genreDao.insert(g);
         Genre genre = LiveDataTestUtil.getValue(genreDao.getGenreByID(1));
         Assert.assertEquals(g.getName(), genre.getName());
     }
 
     @Test
     public void deleteTest() throws Exception {
-        genreDao.insertGenres(g);
+        genreDao.insert(g);
         int deletesRows = genreDao.deleteGenreByID(new int[]{1});
         Assert.assertEquals(1, deletesRows);
-        genreDao.insertGenres(g);
-        genreDao.insertGenres(new Genre(2, "Action"));
+        genreDao.insert(g);
+        genreDao.insert(new Genre(2, "Action"));
         deletesRows = genreDao.deleteGenreByID(new int[]{1, 2});
         Assert.assertEquals(2, deletesRows);
-        genreDao.insertGenres(g);
-        genreDao.deleteGenres(g);
+        genreDao.insert(g);
+        genreDao.delete(g);
         Assert.assertEquals(0, LiveDataTestUtil.getValue(genreDao.getAllGenres()).size());
     }
 
     @Test
     public void updateTest() throws Exception {
-        genreDao.insertGenres(g);
+        genreDao.insert(g);
         Genre newG = new Genre(1, "Action");
-        genreDao.updateGenres(newG);
+        genreDao.update(newG);
         Assert.assertEquals(newG.getName(), LiveDataTestUtil.getValue(genreDao.getGenreByID(1)).getName());
     }
 

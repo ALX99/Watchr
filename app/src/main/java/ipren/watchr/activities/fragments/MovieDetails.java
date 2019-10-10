@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,9 +24,12 @@ import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Genre;
+import ipren.watchr.viewModels.IMovieViewModel;
+import ipren.watchr.viewModels.MovieViewModel;
 
 public class MovieDetails extends Fragment {
-
+    private int movieID;
+    private IMovieViewModel viewModel;
     // Butter knife <3
     @BindView(R.id.castList)
     RecyclerView cast;
@@ -41,48 +46,57 @@ public class MovieDetails extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Get movieID argument
+        this.movieID = getArguments().getInt("movieId");
 
         // Our view for this fragment
         View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
         // Bind stuff with ButterKnife
         ButterKnife.bind(this, view);
+        Toast.makeText(getContext(), Integer.toString(movieID), Toast.LENGTH_SHORT).show();
+
         init(view);
-
         return view;
-
     }
 
     private void init(View v) {
-        initCast(v);
-        initGenres(v);
-        initComments(v);
+        viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+
+        // init methods work the same way
+        // They add a LinearLayoutManager, then optionally an
+        // ItemDecoration and then inits the adapter and associated it with the RecycleView.
+        initCast();
+        initGenres();
+        initComments();
 
     }
 
-    private void initCast(View v) {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getParentFragment().getContext(), LinearLayoutManager.HORIZONTAL, false);
-        cast.setLayoutManager(layoutManager);
+    private void initCast() {
+        cast.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         CastAdapter adapter = new CastAdapter(getParentFragment().getContext(), dummyData());
         cast.setAdapter(adapter);
     }
 
-    private void initComments(View v) {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getParentFragment().getContext(), LinearLayoutManager.VERTICAL, false);
-        ItemOffsetDecoration dividerItemDecoration = new ItemOffsetDecoration(genres.getContext(), R.dimen.comment_list_margin);
-        comments.addItemDecoration(dividerItemDecoration);
-        comments.setLayoutManager(layoutManager);
-        CommentAdapter adapter = new CommentAdapter(getParentFragment().getContext(), dummyComment());
+    private void initComments() {
+        comments.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        comments.addItemDecoration(new ItemOffsetDecoration(genres.getContext(), R.dimen.comment_list_margin));
+        CommentAdapter adapter = new CommentAdapter(requireContext(), dummyComment());
         comments.setAdapter(adapter);
     }
 
-    private void initGenres(View v) {
-        GridLayoutManager layoutManager = new GridLayoutManager(getParentFragment().getContext(), 2, LinearLayoutManager.HORIZONTAL, false);
-
-        ItemOffsetDecoration dividerItemDecoration = new ItemOffsetDecoration(genres.getContext(), R.dimen.genre_list_margin);
-        genres.addItemDecoration(dividerItemDecoration);
-        genres.setLayoutManager(layoutManager);
-        GenreAdapter adapter = new GenreAdapter(getParentFragment().getContext(), dummyGenre());
+    private void initGenres() {
+        genres.setLayoutManager(new GridLayoutManager(requireContext(), 2, LinearLayoutManager.HORIZONTAL, false));
+        genres.addItemDecoration(new ItemOffsetDecoration(genres.getContext(), R.dimen.genre_list_margin));
+        GenreAdapter adapter = new GenreAdapter(dummyGenre());
         genres.setAdapter(adapter);
+
+        // Observe LiveData
+        // If the Lifecycle object is not in an active state, then the observer isn't called even if the value changes.
+        // After the Lifecycle object is destroyed, the observer is automatically removed.
+        // So no need to unsub?
+        viewModel.getGenres(movieID).observe(this, genres -> {
+            adapter.setData(genres);
+        });
     }
 
     private ArrayList<Actor> dummyData() {
@@ -112,6 +126,7 @@ public class MovieDetails extends Fragment {
         return x;
     }
 
+    // TODO, remove when API fully implemented.
     private ArrayList<Genre> dummyGenre() {
         ArrayList x = new ArrayList<Genre>();
         x.add(new Genre(27, "Horror"));
@@ -119,5 +134,7 @@ public class MovieDetails extends Fragment {
         x.add(new Genre(9648, "Mystery"));
         return x;
     }
+
+    // TODO, note to self: make adapters only work with LIveData when API is implemented and stuff works.
 
 }

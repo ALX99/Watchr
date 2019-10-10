@@ -43,15 +43,15 @@ public class CommentTest {
     }
 
     private void insertDummyData() {
-        movieDao.insertMovies(m);
-        commentDao.insertComments(c);
+        movieDao.insert(m);
+        commentDao.insert(c);
     }
 
 
     @Test
     public void insertTest() throws Exception {
-        movieDao.insertMovies(m);
-        commentDao.insertComments(c);
+        movieDao.insert(m);
+        commentDao.insert(c);
         List<Comment> comments = LiveDataTestUtil.getValue(commentDao.getCommentsFromMovie(1));
         Assert.assertEquals("username", comments.get(0).getUsername());
     }
@@ -59,12 +59,12 @@ public class CommentTest {
     @Test
     public void deleteTest() throws Exception {
         insertDummyData();
-        movieDao.deleteMovies(m);
+        movieDao.delete(m);
         List<Comment> comments = LiveDataTestUtil.getValue(commentDao.getCommentsFromMovie(1));
         Assert.assertEquals(0, comments.size());
 
         insertDummyData();
-        commentDao.deleteComments(c);
+        commentDao.delete(c);
         Assert.assertEquals(0, LiveDataTestUtil.getValue(commentDao.getCommentsFromMovie(1)).size());
     }
 
@@ -72,7 +72,7 @@ public class CommentTest {
     public void updateTest() throws Exception {
         insertDummyData();
         Comment newC = new Comment(0, 1, "newUsername", "comment", "profilePicLink");
-        commentDao.updateComments(newC);
+        commentDao.update(newC);
         Assert.assertEquals(newC.getUsername(), LiveDataTestUtil.getValue(commentDao.getCommentsFromMovie(1)).get(0).getUsername());
     }
 

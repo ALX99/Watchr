@@ -24,12 +24,15 @@ public interface GenreDao {
     LiveData<List<Genre>> getAllGenres();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertGenres(Genre... genres);
+    void insert(Genre... genres);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateGenres(Genre... genres);
+    void update(Genre... genres);
 
     @Delete
-    void deleteGenres(Genre... genres);
+    void delete(Genre... genres);
+
+    @Query("DELETE FROM genres")
+    void NUKE();
 
 }
