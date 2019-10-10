@@ -6,6 +6,9 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import java.util.List;
+
+import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.User;
 
 public interface IMainRepository {

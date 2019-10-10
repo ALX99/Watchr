@@ -10,6 +10,5 @@ import ipren.watchr.dataHolders.User;
 // This Interface enables us to swap MainActivity's ViewModel
 public interface MainViewModelInterface {
     LiveData<User> getUser();
-    LiveData<User> getUser(int UID);
-    List<Comment> getCommentsFromMovie();
+
 }

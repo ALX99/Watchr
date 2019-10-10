@@ -264,4 +264,6 @@ MovieDetails --o GenreAdapter
 MovieApiService .u> MovieApi
 
 MovieListAdapter ..> MovieClickListener
+
+LoginFragment --o LoginViewModel
 @enduml

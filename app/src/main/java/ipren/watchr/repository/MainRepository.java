@@ -7,6 +7,9 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import java.util.List;
+
+import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.API.FirebaseAPI;
 
