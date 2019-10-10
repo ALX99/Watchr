@@ -15,14 +15,14 @@ import ipren.watchr.dataHolders.User;
 
 import static org.junit.Assert.*;
 
-
+//TODO remake this test
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 28)
 public class LoginViewModelTest {
 
     private LoginViewModel loginViewModel;
     private MockMainRepository mockMainRepository;
-    private final User initialUser = new User("David", "david@ipren.com");
+    private final User initialUser = new User("Fred", "Fred@test.com", null, null, false);
     @Before
     public void setUp(){
         mockMainRepository = new MockMainRepository(initialUser);
@@ -31,7 +31,7 @@ public class LoginViewModelTest {
 
     @Test
     public void getUser() {
-        User testUser = new User("Test", "test@ipren.com1");
+        User testUser = new User("Fred", "Fred@test.com1", null, null, false);
         LiveData<User> liveUser = loginViewModel.getUser();
         assertNotEquals(liveUser.getValue(), testUser);
         assertNotEquals(loginViewModel.getUser().getValue(), liveUser);
@@ -66,7 +66,7 @@ public class LoginViewModelTest {
 
     @Test
     public void registerUser() {
-        String testEmail = "fred@ipren.com";
+        String testEmail = "fred@test.com";
         String testPassword = "123456";
         LiveData<User> userLiveData = loginViewModel.getUser();
         assertNotEquals(userLiveData.getValue().getEmail(), testEmail);
@@ -76,7 +76,7 @@ public class LoginViewModelTest {
 
     @Test
     public void signIn() {
-        String testEmail = "fred@ipren.com";
+        String testEmail = "fred@test.com";
         String testPassword = "123456";
         LiveData<User> userLiveData = loginViewModel.getUser();
         assertNotEquals(userLiveData.getValue().getEmail(), testEmail);

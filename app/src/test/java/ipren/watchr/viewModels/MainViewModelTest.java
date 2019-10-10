@@ -17,13 +17,13 @@ import ipren.watchr.dataHolders.User;
 
 import static org.junit.Assert.*;
 
-
+//TODO remake this test
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.O_MR1)
 public class MainViewModelTest {
     private MainViewModel mainViewModel;
     private MockMainRepository mockMainRepository;
-    private final User initialUser = new User("David", "david@ipren.com");
+    private final User initialUser = new User("Fred", "Fred@test.com", null, null, false);
     @Before
     public void setUp(){
         mockMainRepository = new MockMainRepository(initialUser);
@@ -32,7 +32,7 @@ public class MainViewModelTest {
 
     @Test
     public void getUser() {
-        User testUser = new User("Test", "test@ipren.com1");
+        User testUser = new User("Test", "test@test.com1", null, null, false);
         LiveData<User> liveUser = mainViewModel.getUser();
         assertNotEquals(liveUser.getValue(), testUser);
         assertNotEquals(mainViewModel.getUser().getValue(), liveUser);
