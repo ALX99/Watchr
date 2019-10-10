@@ -11,35 +11,24 @@ import ipren.watchr.R;
 public class User {
     private String userName = "No user name";
     private String email = "No email";
-    private boolean isVerified = false;
-    private String UID;
+    private boolean isVerified;
+    private String UID = "UID missing";
     private Uri userProfilePictureUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.default_profile_photo);
 
-    // This object allows userProfilePictureUri = null, only for testing
-    // once repository is enabled this will be removed
-    public User() {
-    }
 
-    public User(String userName, String email) {
-        this.userName = userName;
-        this.email = email;
-    }
-
-    public User(String userName, String email, Uri userProfilePictureUri) {
-        this(userName, email);
-        this.userProfilePictureUri = userProfilePictureUri;
-    }
-
-    public User(String userName, String email, String UID, boolean isVerified, Uri userProfilePictureUri){
-        this(userName,email, UID, isVerified);
-        this.userProfilePictureUri = userProfilePictureUri;
-    }
-
-    public User(String userName, String email, String UID, boolean isVerified){
-        this(userName,email);
-        this.UID = UID;
+    public User(String userName, String email,  Uri userProfilePictureUri, String UID, boolean isVerified){
+        if(userName != null)
+            this.userName = userName;
+        if(email != null)
+            this.email = email;
+        if(userProfilePictureUri != null)
+            this.userProfilePictureUri = userProfilePictureUri;
+        if(UID != null)
+            this.UID = UID;
         this.isVerified = isVerified;
     }
+
+
     public String getUID(){return UID;}
 
     public boolean isVerified(){return  isVerified; }

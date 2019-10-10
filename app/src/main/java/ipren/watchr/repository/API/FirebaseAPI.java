@@ -81,12 +81,13 @@ public class FirebaseAPI {
     private User buildUserObject(FirebaseUser firebaseUser) {
         if (firebaseUser == null)
             return null;
+
         String UID = firebaseUser.getUid();
         Boolean isVerified = firebaseUser.isEmailVerified();
         String email = firebaseUser.getEmail();
         String userName = firebaseUser.getDisplayName();
         Uri profilePicture = firebaseUser.getPhotoUrl();
-        return new User(userName, email, UID, isVerified, profilePicture);
+        return new User(userName, email,  profilePicture, UID, isVerified);
     }
 
     public void updateProfile(String userName, Uri uri) {

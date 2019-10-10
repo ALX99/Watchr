@@ -29,7 +29,8 @@ public class FirebaseDatabaseHelper {
         fireStore = FirebaseFirestore.getInstance();
 
     }
-    public void addComment(String user_id, String movie_id, String text, OnCompleteListener callback){
+
+    public void addComment(String user_id, String movie_id, String text, OnCompleteListener callback) {
         Map<String, String> comment = new HashMap<>();
 
         comment.put("user_id", user_id);
@@ -40,7 +41,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void addRating(String user_id, String movie_id, int score, OnCompleteListener callback){
+    public void addRating(String user_id, String movie_id, int score, OnCompleteListener callback) {
         Map<String, String> comment = new HashMap<>();
 
         comment.put("user_id", user_id);
@@ -54,53 +55,55 @@ public class FirebaseDatabaseHelper {
     //TODO These methods replace the previous dataSet on change, if possible replace with  functions
     // that update rather than replace.
 
-    public LiveData<FireComment[]> getCommentByMovieID(String movie_id){
-        if(commentsByMovie_id.containsKey(movie_id))
-            return commentsByMovie_id.get(movie_id);
-        else {
+    public LiveData<FireComment[]> getCommentByMovieID(String movie_id) {
+        if (!commentsByMovie_id.containsKey(movie_id)) {
+
             MutableLiveData<FireComment[]> commentList = new MutableLiveData<>(null);
+            commentsByMovie_id.put(movie_id, commentList);
+
             Query query = fireStore.collection("comments").whereEqualTo("movie_id", movie_id);
             query.addSnapshotListener((value, exception) -> {
-                if(exception != null){
+                if (exception != null) {
                     Log.w("Firestore", "Listen failed", exception);
                     return;
                 }
 
                 List<FireComment> newSet = new ArrayList<>();
-                for(QueryDocumentSnapshot doc : value){
+                for (QueryDocumentSnapshot doc : value) {
                     newSet.add(doc.toObject(FireComment.class));
                 }
                 commentList.postValue((FireComment[]) newSet.toArray());
 
             });
-
-            return commentList;
         }
+
+        return commentsByMovie_id.get(movie_id);
     }
 
-    public LiveData<FireComment[]> getCommentsByUserID(String user_id){
-        if(commentsByUser_id.containsKey(user_id))
-            return commentsByUser_id.get(user_id);
-        else {
+    public LiveData<FireComment[]> getCommentsByUserID(String user_id) {
+        if (!commentsByUser_id.containsKey(user_id)) {
+
             MutableLiveData<FireComment[]> commentList = new MutableLiveData<>(null);
+            commentsByUser_id.put(user_id, commentList);
+
             Query query = fireStore.collection("comments").whereEqualTo("user_id", user_id);
             query.addSnapshotListener((value, exception) -> {
-                if(exception != null){
+                if (exception != null) {
                     Log.w("Firestore", "Listen failed", exception);
                     return;
                 }
 
                 List<FireComment> newSet = new ArrayList<>();
-                for(QueryDocumentSnapshot doc : value){
+                for (QueryDocumentSnapshot doc : value) {
                     newSet.add(doc.toObject(FireComment.class));
                 }
 
                 commentList.postValue(newSet.toArray(new FireComment[newSet.size()]));
 
             });
-
-            return commentList;
         }
+        return commentsByUser_id.get(user_id);
+
     }
 
 }
