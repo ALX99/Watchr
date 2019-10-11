@@ -42,7 +42,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     .load(commments.get(position).getProfilePicLink())
                     .into(holder.profilePic);
         else {
-            int resourceId = mContext.getResources().getIdentifier("profile_picture_mock", "drawable", "ipren.watchr");
+            int resourceId = mContext.getResources().getIdentifier("default_profile_photo", "drawable", "ipren.watchr");
             holder.profilePic.setImageDrawable(ContextCompat.getDrawable(mContext, resourceId));
         }
         holder.username.setText(commments.get(position).getUsername());

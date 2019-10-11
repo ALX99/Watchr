@@ -10,13 +10,8 @@
     <string name="recommended">Recommended</string>
     <string name="watch_later">Watch Later</string>
 
-    <string name="popularity_text">Popularity</string>
-    <string name="rating_text">Rating</string>
-    <string name="favorite_text">Favorite</string>
-    <string name="description_text">Description</string>
-    <string name="movie_cover_text">Movie Cover</string>
-    <string name="movie_poster_text">Movie Poster</string>
-    <string name="comment_hint">Enter a comment...</string>
+
+    <string name="comment_hint">Enter a comment&#8230;</string>
     <string name="verify_account_text">In order for you to use all user functionality you must verify your account by clicking the link in the email we sent</string>
     <string name="account_features">Functionality includes, custom profile, commenting on movies, rating movies, saving movies to lists</string>
     <string name="resend_verification_email">If you have not received an email, you can click this button to resend it</string>
@@ -29,5 +24,6 @@
     <string name="register">Register</string>
     <string name="example_email">your@email.address</string>
     <string name="example_password">*******************</string>
-
+    <string name="email">Email: %1$s</string>
+    <string name="uid">UID: %1$s</string>
 </resources>

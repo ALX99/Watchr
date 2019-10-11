@@ -2,6 +2,7 @@ package ipren.watchr.activities.fragments;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,9 +19,6 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
-
-import android.net.Uri;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,9 +65,9 @@ public class AccountSettingsFragment extends Fragment {
             showEmailVerifiedLayout(e.isVerified());
 
             // set Image here getView().findViewById(R.id.profile_img_acc)
-            ((TextView) getView().findViewById(R.id.email_input_field)).setText("Email: " + e.getEmail());
+            ((TextView) getView().findViewById(R.id.email_input_field)).setText(String.format(getResources().getString(R.string.email), e.getEmail()));
             ((TextView) getView().findViewById(R.id.username_Input)).setText(e.getUserName());
-            ((TextView) getView().findViewById(R.id.UID_txt_field)).setText("UID: " + e.getUID());
+            ((TextView) getView().findViewById(R.id.UID_txt_field)).setText(String.format(getResources().getString(R.string.uid), e.getUID()));
             Util.loadImage(getView().findViewById(R.id.profile_img_acc), e.getUserProfilePictureUri().toString(), Util.getProgressDrawable(getContext()));
         });
     }
@@ -138,7 +137,7 @@ public class AccountSettingsFragment extends Fragment {
                 if (uri == null) {
                     Toast.makeText(getContext(),
                             "Something went wrong, try the gallery instead"
-                            , Toast.LENGTH_LONG);
+                            , Toast.LENGTH_LONG).show();
                     return;
                 }
                 Intent pickCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

@@ -57,7 +57,7 @@ android {
     lintOptions {
         // Disable Autofill "autofillHints" warnings, since they use API > 26,
         // we use 21.
-        disable 'SmallSp', 'Autofill'
+        disable 'SmallSp', 'Autofill', 'ContentDescription'
     }
     dataBinding.enabled = true
 }
