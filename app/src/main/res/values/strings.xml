@@ -16,6 +16,7 @@
     <string name="description_text">Description</string>
     <string name="movie_cover_text">Movie Cover</string>
     <string name="movie_poster_text">Movie Poster</string>
+    <string name="comment_hint">Enter a comment...</string>
     <string name="verify_account_text">In order for you to use all user functionality you must verify your account by clicking the link in the email we sent</string>
     <string name="account_features">Functionality includes, custom profile, commenting on movies, rating movies, saving movies to lists</string>
     <string name="resend_verification_email">If you have not received an email, you can click this button to resend it</string>
