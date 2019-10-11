@@ -1,5 +1,6 @@
 package ipren.watchr.repository.API;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -7,9 +8,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,7 +107,18 @@ public class FirebaseDatabaseHelper {
             });
         }
         return commentsByUser_id.get(user_id);
+    }
 
+    public
+
+    void syncUserWithDatabase(FirebaseUser user) {
+        if (user == null)
+            return;
+            Uri uri = user.getPhotoUrl();
+          Map<String, Object> userData = new HashMap<>();
+          userData.put("username", user.getDisplayName());
+          userData.put("photoUri", uri !=null ? uri.toString() : null);
+            fireStore.collection("users").document(user.getUid()).set(userData, SetOptions.merge());
     }
 
 }
