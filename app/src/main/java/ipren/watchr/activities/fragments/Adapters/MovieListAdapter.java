@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,56 +67,67 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         holder.itemView.setListener(this);
     }
 
+    /**
+     * Navigates to the detail screen when card is clicked
+     */
     @Override
     public void onMovieClicked(View v) {
-        // Get the id from the hidden TextView
-        String idString = ((TextView) v.findViewById(R.id.movieId)).getText().toString();
-        int id = Integer.valueOf(idString);
+        int id = getMovieId(v);
 
-        // Navigate to the detail screen with the movie id
         MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
         action.setMovieId(id);
         Navigation.findNavController(v).navigate(action);
     }
 
+    /**
+     * Adds/removes the movie to the favorite list
+     */
     @Override
     public void onFavoriteClicked(View v) {
-        // TODO: Put this in it's own method for DRY
-        // Get the id from the hidden TextView
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
-        String idString = ((TextView) parent.findViewById(R.id.movieId)).getText().toString();
-        int id = Integer.valueOf(idString);
+        int id = getMovieId(parent);
 
-        // TODO: Change this to tint color
-        v.setBackgroundResource(R.color.colorAccent);
+        // TODO: make into method and make it turn off if active
+        ImageButton btn = (ImageButton) v;
+        btn.setColorFilter(btn.getContext().getResources().getColor(R.color.colorAccent));
 
         Toast.makeText(v.getContext(), "Added id " + id + " to favorites", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Adds/removes the movie to the watch later list
+     */
     @Override
     public void onWatchLaterClicked(View v) {
-        // Get the id from the hidden TextView
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
-        String idString = ((TextView) parent.findViewById(R.id.movieId)).getText().toString();
-        int id = Integer.valueOf(idString);
+        int id = getMovieId(parent);
 
-        // TODO: Change this to tint color
-        v.setBackgroundResource(R.color.colorAccent);
+        ImageButton btn = (ImageButton) v;
+        btn.setColorFilter(btn.getContext().getResources().getColor(R.color.colorAccent));
 
         Toast.makeText(v.getContext(), "Added id " + id + " to watch later", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Adds/removes the movie to the watched list
+     */
     @Override
     public void onWatchedClicked(View v) {
-        // Get the id from the hidden TextView
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
-        String idString = ((TextView) parent.findViewById(R.id.movieId)).getText().toString();
-        int id = Integer.valueOf(idString);
+        int id = getMovieId(parent);
 
-        // TODO: Change this to tint color
-        v.setBackgroundResource(R.color.colorAccent);
+        ImageButton btn = (ImageButton) v;
+        btn.setColorFilter(btn.getContext().getResources().getColor(R.color.colorAccent));
 
         Toast.makeText(v.getContext(), "Added id " + id + " to watched", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Returns the current movie id from context
+     */
+    private int getMovieId(View v) {
+        String idString = ((TextView) v.findViewById(R.id.movieId)).getText().toString();
+        return Integer.valueOf(idString);
     }
 
     /**
