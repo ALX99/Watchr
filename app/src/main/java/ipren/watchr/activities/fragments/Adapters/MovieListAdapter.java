@@ -1,10 +1,13 @@
 package ipren.watchr.activities.fragments.Adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.Navigation;
@@ -72,6 +75,46 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
         action.setMovieId(id);
         Navigation.findNavController(v).navigate(action);
+    }
+
+    @Override
+    public void onFavoriteClicked(View v) {
+        // TODO: Put this in it's own method for DRY
+        // Get the id from the hidden TextView
+        ConstraintLayout parent = (ConstraintLayout) v.getParent();
+        String idString = ((TextView) parent.findViewById(R.id.movieId)).getText().toString();
+        int id = Integer.valueOf(idString);
+
+        // TODO: Change this to tint color
+        v.setBackgroundResource(R.color.colorAccent);
+
+        Toast.makeText(v.getContext(), "Added id " + id + " to favorites", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onWatchLaterClicked(View v) {
+        // Get the id from the hidden TextView
+        ConstraintLayout parent = (ConstraintLayout) v.getParent();
+        String idString = ((TextView) parent.findViewById(R.id.movieId)).getText().toString();
+        int id = Integer.valueOf(idString);
+
+        // TODO: Change this to tint color
+        v.setBackgroundResource(R.color.colorAccent);
+
+        Toast.makeText(v.getContext(), "Added id " + id + " to watch later", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onWatchedClicked(View v) {
+        // Get the id from the hidden TextView
+        ConstraintLayout parent = (ConstraintLayout) v.getParent();
+        String idString = ((TextView) parent.findViewById(R.id.movieId)).getText().toString();
+        int id = Integer.valueOf(idString);
+
+        // TODO: Change this to tint color
+        v.setBackgroundResource(R.color.colorAccent);
+
+        Toast.makeText(v.getContext(), "Added id " + id + " to watched", Toast.LENGTH_SHORT).show();
     }
 
     /**

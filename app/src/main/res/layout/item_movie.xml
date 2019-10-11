@@ -85,6 +85,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/bottomContainer"
+                android:onClick="@{listener::onWatchedClicked}"
                 app:srcCompat="@drawable/ic_watched" />
 
             <ImageButton
@@ -96,6 +97,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/watchedButton"
                 app:layout_constraintTop_toTopOf="@+id/bottomContainer"
+                android:onClick="@{listener::onWatchLaterClicked}"
                 app:srcCompat="@drawable/ic_watch_later" />
 
             <ImageButton
@@ -107,6 +109,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/addButton"
                 app:layout_constraintTop_toTopOf="@+id/bottomContainer"
+                android:onClick="@{listener::onFavoriteClicked}"
                 app:srcCompat="@drawable/ic_favorites" />
 
             <TextView

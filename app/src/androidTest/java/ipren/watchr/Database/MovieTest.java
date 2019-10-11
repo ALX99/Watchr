@@ -49,6 +49,7 @@ public class MovieTest {
         movieDao.insert(m);
         movieDao.insert(m2);
     }
+
     @Test
     public void testEmpty() throws Exception {
         Assert.assertTrue(LiveDataTestUtil.getValue(movieDao.getAllMovies()).isEmpty());
