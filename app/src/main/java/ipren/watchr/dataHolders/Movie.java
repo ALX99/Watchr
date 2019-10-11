@@ -75,10 +75,44 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-
     public Movie(int id, String title) {
         this.id = id;
         this.title = title;
     }
 
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public boolean isVideo() {
+        return video;
+    }
+
+    public boolean isAdult() {
+        return adult;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public String getOriginalLanguage() {
+        return originalLanguage;
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
 }

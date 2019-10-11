@@ -1,7 +1,6 @@
 package ipren.watchr.Helpers;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -9,7 +8,6 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 
 import ipren.watchr.R;
 
@@ -22,7 +20,7 @@ public class Util {
     public static void loadImage(ImageView imageView, String url, CircularProgressDrawable progressDrawable) {
         RequestOptions options = new RequestOptions()
                 .placeholder(progressDrawable)
-                .error(R.drawable.poster_w92);
+                .error(R.drawable.poster_error);
         Glide.with(imageView.getContext())
                 .setDefaultRequestOptions(options)
                 .load(url)

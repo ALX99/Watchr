@@ -18,10 +18,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
 
     private List<Genre> genres;
 
-    public GenreAdapter(List<Genre> genres) {
-        this.genres = genres;
-    }
-
     public GenreAdapter() {
         genres = new ArrayList<>();
     }
@@ -45,8 +41,20 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
 
     // Method to update the data
     public void setData(List<Genre> genres) {
-        this.genres = genres;
+        if (genres.size() == 0)
+            this.genres = dummyGenre();
+        else
+            this.genres = genres;
         notifyDataSetChanged();
+    }
+
+    // TODO, remove when API fully implemented.
+    private ArrayList<Genre> dummyGenre() {
+        ArrayList x = new ArrayList<Genre>();
+        x.add(new Genre(27, "Horror"));
+        x.add(new Genre(53, "Thriller"));
+        x.add(new Genre(9648, "Mystery"));
+        return x;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

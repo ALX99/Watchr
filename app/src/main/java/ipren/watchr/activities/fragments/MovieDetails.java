@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -17,13 +19,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.Helpers.ItemOffsetDecoration;
+import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
-import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.viewModels.IMovieViewModel;
 import ipren.watchr.viewModels.MovieViewModel;
 
@@ -62,7 +64,9 @@ public class MovieDetails extends Fragment {
     private void init(View v) {
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
-        // init methods work the same way
+
+        initMovie();
+        // init methods below work the same way
         // They add a LinearLayoutManager, then optionally an
         // ItemDecoration and then inits the adapter and associated it with the RecycleView.
         initCast();
@@ -71,6 +75,34 @@ public class MovieDetails extends Fragment {
 
     }
 
+    private void initMovie() {
+        viewModel.getMovie(movieID).observe(this, Movie -> {
+            // Don't try to set anything if the object is null.
+            // Will result in fatal crash
+            if (Movie == null)
+                return;
+
+            // Load images
+            Util.loadImage((getView().findViewById(R.id.poster)), new StringBuilder("https://image.tmdb.org/t/p/w500").append(Movie.posterPath).toString(), Util.getProgressDrawable(requireContext())); // Poster
+            Util.loadImage((getView().findViewById(R.id.cover)), new StringBuilder("https://image.tmdb.org/t/p/w500").append(Movie.getBackdropPath()).toString(), Util.getProgressDrawable(requireContext())); // Poster
+
+            // Title
+            ((TextView) getView().findViewById(R.id.movieTitle)).setText(Movie.title);
+            // Overview
+            ((TextView) getView().findViewById(R.id.description)).setText(Movie.overview);
+            // Release date
+            ((TextView) getView().findViewById(R.id.releaseDate)).setText(Movie.getReleaseDate());
+            // Vote score
+            ((TextView) getView().findViewById(R.id.ratingText)).setText(Double.toString(Movie.getVoteAverage()));
+            ((ProgressBar) getView().findViewById(R.id.rating)).setProgress((int) Math.round(Movie.getVoteAverage()));
+            // Popularity
+            int pop = (int) Math.round(Movie.getPopularity());
+            ((TextView) getView().findViewById(R.id.popularityText)).setText(Integer.toString(pop));
+            ((ProgressBar) getView().findViewById(R.id.popularity)).setProgress(pop);
+
+
+        });
+    }
     private void initCast() {
         cast.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         CastAdapter adapter = new CastAdapter(getParentFragment().getContext(), dummyData());
@@ -87,7 +119,7 @@ public class MovieDetails extends Fragment {
     private void initGenres() {
         genres.setLayoutManager(new GridLayoutManager(requireContext(), 2, LinearLayoutManager.HORIZONTAL, false));
         genres.addItemDecoration(new ItemOffsetDecoration(genres.getContext(), R.dimen.genre_list_margin));
-        GenreAdapter adapter = new GenreAdapter(dummyGenre());
+        GenreAdapter adapter = new GenreAdapter();
         genres.setAdapter(adapter);
 
         // Observe LiveData
@@ -125,16 +157,4 @@ public class MovieDetails extends Fragment {
 
         return x;
     }
-
-    // TODO, remove when API fully implemented.
-    private ArrayList<Genre> dummyGenre() {
-        ArrayList x = new ArrayList<Genre>();
-        x.add(new Genre(27, "Horror"));
-        x.add(new Genre(53, "Thriller"));
-        x.add(new Genre(9648, "Mystery"));
-        return x;
-    }
-
-    // TODO, note to self: make adapters only work with LIveData when API is implemented and stuff works.
-
 }
