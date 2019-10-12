@@ -2,11 +2,13 @@ package ipren.watchr.activities.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ipren.watchr.Constants;
 import ipren.watchr.Helpers.ItemOffsetDecoration;
 import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
@@ -34,7 +37,6 @@ import ipren.watchr.viewModels.MovieViewModel;
 public class MovieDetails extends Fragment {
     private int movieID;
     private IMovieViewModel viewModel;
-    // Butter knife <3
     @BindView(R.id.castList)
     RecyclerView cast;
     @BindView(R.id.genreList)
@@ -43,6 +45,35 @@ public class MovieDetails extends Fragment {
     RecyclerView comments;
     @BindView(R.id.send)
     ImageView send;
+    @BindView(R.id.posterCardView)
+    View posterCardView;
+    @BindView(R.id.description)
+    TextView description;
+    @BindView(R.id.commentEdit)
+    EditText comment;
+    @BindView(R.id.descriptionScrollView)
+    ScrollView descriptionScrollView;
+    @BindView(R.id.poster)
+    ImageView poster;
+    @BindView(R.id.cover)
+    ImageView cover;
+    @BindView(R.id.status)
+    TextView status;
+    @BindView(R.id.movieTitle)
+    TextView title;
+    @BindView(R.id.releaseDate)
+    TextView releaseDate;
+    @BindView(R.id.ratingText)
+    TextView ratingText;
+    @BindView(R.id.rating)
+    ProgressBar rating;
+    @BindView(R.id.popularityText)
+    TextView popularityText;
+    @BindView(R.id.popularity)
+    ProgressBar popularity;
+    @BindView(R.id.runtime)
+    TextView runtime;
+
 
     public MovieDetails() {
         // Required empty public constructor
@@ -67,7 +98,7 @@ public class MovieDetails extends Fragment {
     private void init(View v) {
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
-
+        setupScrolling();
         initMovie();
         // init methods below work the same way
         // They add a LinearLayoutManager, then optionally an
@@ -76,32 +107,52 @@ public class MovieDetails extends Fragment {
         initGenres();
         initComments();
 
+
+    }
+
+    // Don't ask me why this boilerplate code is needed to setup a scrollable
+    // TextView inside a nested scrollview. But if this isn't added scrolling
+    // inside descriptionScrollView is near impossible
+    private void setupScrolling() {
+        descriptionScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                descriptionScrollView.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+
     }
 
     private void initMovie() {
         viewModel.getMovie(movieID).observe(this, Movie -> {
             // Don't try to set anything if the object is null.
             // Will result in fatal crash
-            if (Movie == null)
+            if (Movie == null || Movie.overview == null)
                 return;
 
             // Load images
-            Util.loadImage((getView().findViewById(R.id.poster)), new StringBuilder("https://image.tmdb.org/t/p/w500").append(Movie.posterPath).toString(), Util.getProgressDrawable(requireContext())); // Poster
-            Util.loadImage((getView().findViewById(R.id.cover)), new StringBuilder("https://image.tmdb.org/t/p/w500").append(Movie.getBackdropPath()).toString(), Util.getProgressDrawable(requireContext())); // Poster
+            Util.loadImage(poster, new StringBuilder(Constants.MOVIE_DB_GET_IMAGE).append(Movie.posterPath).toString(), Util.getProgressDrawable(requireContext())); // Poster
+            Util.loadImage(cover, new StringBuilder(Constants.MOVIE_DB_GET_IMAGE).append(Movie.getBackdropPath()).toString(), Util.getProgressDrawable(requireContext())); // Cover
 
             // Title
-            ((TextView) getView().findViewById(R.id.movieTitle)).setText(Movie.title);
+            title.setText(Movie.title);
             // Overview
-            ((TextView) getView().findViewById(R.id.description)).setText(Movie.overview);
+            description.setText(Movie.overview);
+            // Status
+            status.setText(String.format(getResources().getString(R.string.status), Movie.getStatus()));
+            // Runtime
+            runtime.setText(String.format(getResources().getString(R.string.runtime), Movie.getRuntime()));
             // Release date
-            ((TextView) getView().findViewById(R.id.releaseDate)).setText(Movie.getReleaseDate());
+            releaseDate.setText(Movie.getReleaseDate());
             // Vote score
-            ((TextView) getView().findViewById(R.id.ratingText)).setText(Double.toString(Movie.getVoteAverage()));
-            ((ProgressBar) getView().findViewById(R.id.rating)).setProgress((int) Math.round(Movie.getVoteAverage()));
+            ratingText.setText(Double.toString(Movie.getVoteAverage()));
+            rating.setProgress((int) Math.round(Movie.getVoteAverage()));
             // Popularity
             int pop = (int) Math.round(Movie.getPopularity());
-            ((TextView) getView().findViewById(R.id.popularityText)).setText(Integer.toString(pop));
-            ((ProgressBar) getView().findViewById(R.id.popularity)).setProgress(pop);
+            popularityText.setText(Integer.toString(pop));
+            popularity.setProgress(pop);
 
 
         });
@@ -120,8 +171,10 @@ public class MovieDetails extends Fragment {
 
         // OnClickListener to send comments
         send.setOnClickListener((View v) -> {
-            String text = ((EditText) getView().findViewById(R.id.commentEdit)).getText().toString();
             // TODO
+            String text = comment.getText().toString();
+            comment.setText("");
+            comment.clearFocus();
             Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
         });
     }

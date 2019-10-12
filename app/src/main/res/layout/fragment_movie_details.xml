@@ -25,7 +25,6 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/cover" />
 
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -48,10 +47,10 @@
                 android:layout_width="125dp"
                 android:layout_height="186dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 app:cardCornerRadius="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/movieTitle">
 
                 <ImageView
                     android:id="@+id/poster"
@@ -63,31 +62,44 @@
                     android:src="@drawable/poster" />
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: "
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@id/runtime"
+                app:layout_constraintLeft_toLeftOf="@id/posterCardView"
+                app:layout_constraintTop_toTopOf="@id/genreList" />
+
 
             <TextView
                 android:id="@+id/movieTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="8dp"
                 android:fontFamily="sans-serif"
-                android:gravity="center"
+                android:autoSizeTextType="uniform"
                 android:text="Annabelle Comes Home"
                 android:textColor="@color/text"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/posterCardView"
+                android:textSize="19sp"
+                app:layout_constraintEnd_toStartOf="@id/releaseDate"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/releaseDate"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:text="2019-06-26"
+                android:layout_marginEnd="8dp"
                 android:textColor="@color/text"
-                app:layout_constraintStart_toEndOf="@+id/posterCardView"
-                app:layout_constraintTop_toBottomOf="@+id/movieTitle" />
+                app:layout_constraintBottom_toBottomOf="@id/movieTitle"
+                app:layout_constraintLeft_toRightOf="@id/movieTitle"
+                android:layout_height="wrap_content"
+                android:text="2019-06-26"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/movieTitle" />
 
             <ProgressBar
                 android:id="@+id/popularity"
@@ -252,7 +264,7 @@
                 android:background="@color/greenish"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/posterCardView" />
+                app:layout_constraintTop_toBottomOf="@+id/runtime" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -278,14 +290,13 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/genreList"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/posterCardView"
-                app:layout_constraintStart_toEndOf="@+id/posterCardView"
-                app:layout_constraintTop_toBottomOf="@+id/description" />
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/posterCardView"
+                app:layout_constraintTop_toBottomOf="@id/posterCardView" />
 
             <TextView
                 android:id="@+id/actortext"
@@ -299,19 +310,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view" />
 
-            <TextView
-                android:id="@+id/description"
+            <ScrollView
+                android:id="@+id/descriptionScrollView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:text="While babysitting the daughter of Ed and Lorraine Warren, a teenager and her friend unknowingly awaken an evil spirit trapped in a doll."
-                android:textColor="@color/text"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="4dp"
+                android:fadeScrollbars="false"
+                android:fillViewport="true"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/posterCardView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/posterCardView"
-                app:layout_constraintTop_toBottomOf="@+id/releaseDate" />
+                app:layout_constraintStart_toEndOf="@id/posterCardView"
+                app:layout_constraintTop_toTopOf="@id/posterCardView">
 
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="false"
+                    android:text="While babysitting the daughter of Ed and Lorraine Warren, a teenager and her friend unknowingly awaken an evil spirit trapped in a doll."
+                    android:textColor="@color/text"
+                    android:textSize="14sp" />
+            </ScrollView>
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
@@ -399,6 +421,36 @@
                 android:src="@drawable/send"
                 app:layout_constraintBottom_toBottomOf="@id/commentEdit"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/runtimeImageView"
+                android:layout_width="6dp"
+                android:layout_height="0dp"
+                android:background="@color/greenish"
+                app:layout_constraintBottom_toBottomOf="@id/runtime"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/runtime" />
+
+            <ImageView
+                android:id="@+id/statusImageView"
+                android:layout_width="6dp"
+                android:layout_height="0dp"
+                android:background="@color/greenish"
+                app:layout_constraintBottom_toBottomOf="@id/status"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/status" />
+
+            <TextView
+                android:id="@+id/runtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:text="Runtime:"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/genreList"
+                app:layout_constraintStart_toEndOf="@id/runtimeImageView"
+                app:layout_constraintTop_toBottomOf="@id/status" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

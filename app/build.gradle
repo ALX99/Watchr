@@ -28,6 +28,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Put "API_KEY=YOUR_API_KEY" in gradle.properties
+        buildConfigField("String", "API_KEY", API_KEY)
     }
     defaultConfig {
         javaCompileOptions {
@@ -57,7 +60,7 @@ android {
     lintOptions {
         // Disable Autofill "autofillHints" warnings, since they use API > 26,
         // we use 21.
-        disable 'SmallSp', 'Autofill', 'ContentDescription'
+        disable 'SmallSp', 'Autofill', 'ContentDescription', "ClickableViewAccessibility"
     }
     dataBinding.enabled = true
 }
