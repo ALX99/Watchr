@@ -83,3 +83,5 @@ lint/tmp/
 
 # JSON DB
 app/schemas/
+
+gradle.properties
