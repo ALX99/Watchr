@@ -1,51 +1,42 @@
-package ipren.watchr.repository.API;
+package ipren.watchr.repository.API.Firebase;
 
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
-
-import java.io.File;
 
 import ipren.watchr.dataHolders.User;
 
-public class FirebaseAPI {
+public class FirebaseAuthAPI {
     private FirebaseAuth mAuth;
     private final MutableLiveData userLiveData = new MutableLiveData(null);
+    private final FirebaseDatabaseHelper fireDatabaseHelper;
 
-
-    public FirebaseAPI() {
+    public FirebaseAuthAPI() {
         mAuth = FirebaseAuth.getInstance();
-        mAuth.addAuthStateListener(e -> {
-                    FirebaseUser firebaseUser = e.getCurrentUser();
-                    if (firebaseUser == null) {
-                        this.userLiveData.postValue(firebaseUser);
-                    } else {
-                        this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser()));
-                    }
-                }
-        );
+        fireDatabaseHelper = new FirebaseDatabaseHelper();
+        mAuth.addAuthStateListener(e -> refreshUsr());
     }
-
-    //TODO try to implement realTime database sync
 
     // The "reload()" method does not trigger the AuthstateListener so livedata must be updated manually
     public void refreshUsr() {
-        mAuth.getCurrentUser().reload().addOnCompleteListener(e
-                -> this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser())));
+        mAuth.getCurrentUser().reload().addOnCompleteListener(e -> {
+            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+            if (firebaseUser == null) {
+                this.userLiveData.postValue(firebaseUser);
+            } else {
+                this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser()));
+                fireDatabaseHelper.syncUserWithDatabase(firebaseUser);
+            }
+        });
     }
 
     public void resendVerificationEmail() {

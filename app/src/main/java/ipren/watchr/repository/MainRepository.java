@@ -7,48 +7,96 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import ipren.watchr.dataHolders.FireComment;
+import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.API.FirebaseAPI;
+import ipren.watchr.repository.API.Firebase.FirebaseAuthAPI;
 
 public class MainRepository implements IMainRepository{
-    FirebaseAPI firebaseAPI;
+    FirebaseAuthAPI firebaseAuthAPI;
     private static final IMainRepository MAIN_REPOSITORY = new MainRepository();
     public static IMainRepository getMainRepository(){
         return MAIN_REPOSITORY;
     }
 
     private  MainRepository(){
-        firebaseAPI = new FirebaseAPI();
+        firebaseAuthAPI = new FirebaseAuthAPI();
     }
 
     public LiveData<User> getUserLiveData(){
-        return firebaseAPI.getUser();
+        return firebaseAuthAPI.getUser();
     }
 
     public void registerUser(String email, String password, OnCompleteListener callback){
-        firebaseAPI.registerUser(email,password, callback);
+        firebaseAuthAPI.registerUser(email,password, callback);
     }
 
     public void signOutUser(){
-       firebaseAPI.signOut();
+       firebaseAuthAPI.signOut();
     }
 
     public void loginUser(String email, String password, OnCompleteListener callback){
-        firebaseAPI.loginUser(email, password, callback);
+        firebaseAuthAPI.loginUser(email, password, callback);
     }
 
     @Override
     public void refreshUsr() {
-        firebaseAPI.refreshUsr();
+        firebaseAuthAPI.refreshUsr();
     }
 
     @Override
     public void reSendVerificationEmail() {
-        firebaseAPI.resendVerificationEmail();
+        firebaseAuthAPI.resendVerificationEmail();
     }
 
     @Override
     public void updateProfile(String userName, Uri pictureUri) {
-        firebaseAPI.updateProfile(userName, pictureUri);
+        firebaseAuthAPI.updateProfile(userName, pictureUri);
+    }
+
+    @Override
+    public LiveData<FireComment> getComments(String movie_id, int searchMethod) {
+        return null;
+    }
+
+    @Override
+    public LiveData<FireRating> getRatings(String movie_id, int searchMethod) {
+        return null;
+    }
+
+    @Override
+    public LiveData<PublicProfile> getPublicProfile(String user_id) {
+        return null;
+    }
+
+    @Override
+    public void addMovieToList(String list, String movie_id, String user_id) {
+
+    }
+
+    @Override
+    public void removeMovieFromList(String list, String movie_id, String user_id) {
+
+    }
+
+    @Override
+    public void rateMovie(int score, String movie_id, String user_id) {
+
+    }
+
+    @Override
+    public void removeRating(String rating_id) {
+
+    }
+
+    @Override
+    public void commentMovie(String text, String movie_id, String user_id) {
+
+    }
+
+    @Override
+    public void removeComment(String comment_id) {
+
     }
 }
