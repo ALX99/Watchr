@@ -26,4 +26,7 @@
     <string name="example_password">*******************</string>
     <string name="email">Email: %1$s</string>
     <string name="uid">UID: %1$s</string>
+    <string name="status">Status: %1$s</string>
+    <string name="runtime">Runtime: %1$smin</string>
+
 </resources>

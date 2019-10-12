@@ -12,5 +12,7 @@ public interface IMovieRepository {
     LiveData<Movie> getMovieByID(int id);
 
     LiveData<List<Genre>> getGenresFromMovie(int id);
+
+    LiveData<List<Movie>> getTrending();
 }
 

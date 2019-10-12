@@ -23,6 +23,9 @@ public interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Movie... movies);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(List<Movie> movies);
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(Movie... movies);
 

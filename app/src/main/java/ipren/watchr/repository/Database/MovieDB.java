@@ -14,8 +14,9 @@ import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.MovieGenreJoin;
+import ipren.watchr.dataHolders.MovieList;
 
-@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class}, version = 1)
+@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 8)
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance
     private static String DB_NAME = "Ipren-Database";
@@ -47,11 +48,13 @@ public abstract class MovieDB extends RoomDatabase {
                 MovieDB.class, DB_NAME)
                 .fallbackToDestructiveMigration()
                 // USED FOR TESTING PURPOSES. REMOVE IN PRODUCTION CODE. TODO
-                .addCallback(dbCallback)
+                //.addCallback(dbCallback)
                 .build();
         return INSTANCE;
 
     }
+
+    public abstract MovieListDao movieListDao();
 
     // TESTING PURPOSES
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
@@ -66,7 +69,6 @@ public abstract class MovieDB extends RoomDatabase {
             genreDao = db.genreDao();
             movieGenreJoinDao = db.movieGenreJoinDao();
             commentDao = db.commentDao();
-            //  NUKE();
         }
 
         private void NUKE() {
