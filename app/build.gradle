@@ -30,7 +30,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // Put "API_KEY=YOUR_API_KEY" in gradle.properties
-        buildConfigField("String", "API_KEY", API_KEY)
+        def api = hasProperty('API_KEY') ? API_KEY : System.getenv('API_kEY') ? API_KEY : "fail"
+        buildConfigField("String", "API_KEY", api)
     }
     defaultConfig {
         javaCompileOptions {
@@ -67,7 +68,7 @@ android {
 
 dependencies {
 
-    def room_version = "2.2.0-rc01"
+    def room_version = "2.2.0"
 
 
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
