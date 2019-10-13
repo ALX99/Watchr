@@ -180,7 +180,7 @@ public class MovieDetails extends Fragment {
     }
 
     private void initGenres() {
-        genres.setLayoutManager(new GridLayoutManager(requireContext(), 2, LinearLayoutManager.HORIZONTAL, false));
+        genres.setLayoutManager(new GridLayoutManager(requireContext(), 1, LinearLayoutManager.HORIZONTAL, false));
         genres.addItemDecoration(new ItemOffsetDecoration(genres.getContext(), R.dimen.genre_list_margin));
         GenreAdapter adapter = new GenreAdapter();
         genres.setAdapter(adapter);
