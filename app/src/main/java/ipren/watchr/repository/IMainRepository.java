@@ -40,9 +40,9 @@ public interface IMainRepository {
     //Firebase database functions
     LiveData<PublicProfile> getPublicProfile(String user_id);
 
-    LiveData<FireComment> getComments(String movie_id, int searchMethod);
+    LiveData<FireComment[]> getComments(String movie_id, int searchMethod);
 
-    LiveData<FireRating> getRatings(String movie_id, int searchMethod);
+    LiveData<FireRating[]> getRatings(String movie_id, int searchMethod);
 
     void addMovieToList(String list, String movie_id, String user_id);
 

@@ -20,7 +20,7 @@ public class FirebaseAuthAPI {
     private final MutableLiveData userLiveData = new MutableLiveData(null);
     private final FirebaseDatabaseHelper fireDatabaseHelper;
 
-    public FirebaseAuthAPI() {
+    FirebaseAuthAPI() {
         mAuth = FirebaseAuth.getInstance();
         fireDatabaseHelper = new FirebaseDatabaseHelper();
         mAuth.addAuthStateListener(e -> refreshUsr());
@@ -29,13 +29,7 @@ public class FirebaseAuthAPI {
     // The "reload()" method does not trigger the AuthstateListener so livedata must be updated manually
     public void refreshUsr() {
         mAuth.getCurrentUser().reload().addOnCompleteListener(e -> {
-            FirebaseUser firebaseUser = mAuth.getCurrentUser();
-            if (firebaseUser == null) {
-                this.userLiveData.postValue(firebaseUser);
-            } else {
-                this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser()));
-                fireDatabaseHelper.syncUserWithDatabase(firebaseUser);
-            }
+            this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser()));
         });
     }
 
@@ -78,46 +72,45 @@ public class FirebaseAuthAPI {
         String email = firebaseUser.getEmail();
         String userName = firebaseUser.getDisplayName();
         Uri profilePicture = firebaseUser.getPhotoUrl();
-        return new User(userName, email,  profilePicture, UID, isVerified);
+        return new User(userName, email, profilePicture, UID, isVerified);
     }
 
     public void updateProfile(String userName, Uri uri) {
-        if (uri != null){
-           uploadImage(uri , e -> {
-               if (e.isSuccessful());
-                     uploadProfileChanges(userName, (Uri)e.getResult());
-           });
-        }else {
+        if (uri != null) {
+            uploadImage(uri, e -> {
+                if (e.isSuccessful()) ;
+                uploadProfileChanges(userName, (Uri) e.getResult());
+            });
+        } else {
             uploadProfileChanges(userName, null);
         }
 
 
     }
 
-    private void uploadProfileChanges(String userName, Uri uri){
+    private void uploadProfileChanges(String userName, Uri uri) {
         UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
-        if(uri != null)
+        if (uri != null)
             builder.setPhotoUri(uri);
-        if(userName != null)
+        if (userName != null)
             builder.setDisplayName(userName);
 
         mAuth.getCurrentUser().updateProfile(builder.build()).addOnCompleteListener(e -> {
-            if(e.isSuccessful())
+            if (e.isSuccessful())
                 refreshUsr();
         });
 
     }
 
-    private void uploadImage(Uri uri, OnCompleteListener callback){
+    private void uploadImage(Uri uri, OnCompleteListener callback) {
         StorageReference storageRef = FirebaseStorage.getInstance().
-                getReference().child("pics/" + mAuth.getCurrentUser().getUid() );
+                getReference().child("pics/" + mAuth.getCurrentUser().getUid());
 
-       storageRef.putFile(uri).addOnCompleteListener(e -> {
-           if(e.isSuccessful())
-               storageRef.getDownloadUrl().addOnCompleteListener(callback);
-       });
+        storageRef.putFile(uri).addOnCompleteListener(e -> {
+            if (e.isSuccessful())
+                storageRef.getDownloadUrl().addOnCompleteListener(callback);
+        });
     }
-
 
 
 }

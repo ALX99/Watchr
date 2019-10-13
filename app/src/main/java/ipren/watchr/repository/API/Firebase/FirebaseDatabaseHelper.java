@@ -64,7 +64,7 @@ public class FirebaseDatabaseHelper {
     private HashMap<String, HashMap<String, MutableLiveData<String[]>>> movieListByUser_id = new HashMap<>();
 
 
-    public FirebaseDatabaseHelper() {
+    FirebaseDatabaseHelper() {
         fireStore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
@@ -74,22 +74,22 @@ public class FirebaseDatabaseHelper {
     }
 
 
-    void syncUserWithDatabase(FirebaseUser user) {
+    void syncUserWithDatabase(User user) {
         if (user == null)
             return;
-        Uri uri = user.getPhotoUrl();
+        Uri uri = user.getUserProfilePictureUri();
         Map<String, Object> userData = new HashMap<>();
-        userData.put("username", user.getDisplayName());
+        userData.put("username", user.getUserName());
         userData.put("photoUri", uri != null ? uri.toString() : null);
-        fireStore.collection("users").document(user.getUid()).set(userData, SetOptions.merge());
+        fireStore.collection("users").document(user.getUID()).set(userData, SetOptions.merge());
     }
 
 
-    public void saveMovieToList(String movie_id, String list, String user_id) {
+    public void saveMovieToList(String movie_id, String user_id, String list) {
         fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION).document(list).update("movies", FieldValue.arrayUnion(movie_id));
     }
 
-    public void deleteMoviefromList(String movie_id, String list, String user_id) {
+    public void deleteMovieFromList(String list, String movie_id, String user_id) {
         fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION).document(list).update("movies", FieldValue.arrayRemove(movie_id));
     }
 
@@ -118,7 +118,7 @@ public class FirebaseDatabaseHelper {
     }
 
 
-    public void addComment(String user_id, String movie_id, String text, OnCompleteListener callback) {
+    public void addComment( String text, String movie_id, String user_id, OnCompleteListener callback) {
         Map<String, String> comment = new HashMap<>();
 
         comment.put(USER_ID_FIELD, user_id);
@@ -133,7 +133,7 @@ public class FirebaseDatabaseHelper {
         fireStore.collection(COMMENT_PATH).document(comment_id).delete();
     }
 
-    public void addRating(String user_id, String movie_id, int score, OnCompleteListener callback) {
+    public void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
         Map<String, String> comment = new HashMap<>();
 
         comment.put(USER_ID_FIELD, user_id);

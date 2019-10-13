@@ -10,11 +10,12 @@ import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.FireRating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
+import ipren.watchr.repository.API.Firebase.FireApiManager;
 
 public interface UserDataAPI {
 
     static UserDataAPI getInstance() {
-            return null;
+            return FireApiManager.getInstance();
     }
 
     //Firebase auth functions
@@ -37,9 +38,9 @@ public interface UserDataAPI {
 
     LiveData<PublicProfile> getPublicProfile(String user_id);
 
-    LiveData<FireComment> getComments(String movie_id, int searchMethod);
+    LiveData<FireComment[]> getComments(String movie_id, int searchMethod);
 
-    LiveData<FireRating> getRatings(String movie_id, int searchMethod);
+    LiveData<FireRating[]> getRatings(String movie_id, int searchMethod);
 
     void addMovieToList(String list, String movie_id, String user_id);
 
