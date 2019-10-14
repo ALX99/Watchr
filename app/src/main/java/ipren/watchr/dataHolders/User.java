@@ -28,6 +28,15 @@ public class User {
         this.isVerified = isVerified;
     }
 
+    public User(User user){
+        this.userName = user.email;
+        this.email = user.email;
+        this.isVerified = user.isVerified;
+        this.UID = user.UID;
+        this.userProfilePictureUri = user.userProfilePictureUri;
+
+    }
+
 
     public String getUID(){return UID;}
 
