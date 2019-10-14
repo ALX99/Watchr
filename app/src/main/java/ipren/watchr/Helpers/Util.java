@@ -24,6 +24,7 @@ public class Util {
         Glide.with(imageView.getContext())
                 .setDefaultRequestOptions(options)
                 .load(url)
+                .error(R.drawable.poster_error)
                 .into(imageView);
     }
 

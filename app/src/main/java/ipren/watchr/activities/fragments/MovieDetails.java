@@ -30,13 +30,16 @@ import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
 import ipren.watchr.dataHolders.Actor;
-import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.User;
+import ipren.watchr.repository.IMainRepository;
 import ipren.watchr.viewModels.IMovieViewModel;
 import ipren.watchr.viewModels.MovieViewModel;
 
 public class MovieDetails extends Fragment {
     private int movieID;
     private IMovieViewModel viewModel;
+    private IMainRepository mainRepository;
+    private User user;
     @BindView(R.id.castList)
     RecyclerView cast;
     @BindView(R.id.genreList)
@@ -97,6 +100,10 @@ public class MovieDetails extends Fragment {
 
     private void init(View v) {
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        mainRepository = IMainRepository.getMainRepository();
+        mainRepository.getUserLiveData().observe(this, user -> {
+            this.user = user;
+        });
 
         setupScrolling();
         initMovie();
@@ -156,6 +163,7 @@ public class MovieDetails extends Fragment {
 
 
         });
+
     }
     private void initCast() {
         cast.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -166,16 +174,22 @@ public class MovieDetails extends Fragment {
     private void initComments() {
         comments.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         comments.addItemDecoration(new ItemOffsetDecoration(genres.getContext(), R.dimen.comment_list_margin));
-        CommentAdapter adapter = new CommentAdapter(requireContext(), dummyComment());
+        CommentAdapter adapter = new CommentAdapter(requireContext());
         comments.setAdapter(adapter);
 
+        mainRepository.getComments(Integer.toString(movieID), IMainRepository.SEARCH_METHOD_MOVIE_ID).observe(this, comments -> {
+            adapter.setData(comments);
+        });
         // OnClickListener to send comments
         send.setOnClickListener((View v) -> {
             // TODO
             String text = comment.getText().toString();
             comment.setText("");
             comment.clearFocus();
-            Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+            if (user != null)
+                mainRepository.commentMovie(text, Integer.toString(movieID), user.getUID(), null);
+            else
+                Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -204,20 +218,4 @@ public class MovieDetails extends Fragment {
         return x;
     }
 
-
-    private ArrayList<Comment> dummyComment() {
-        ArrayList x = new ArrayList<Comment>();
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-        x.add(new Comment(0, 0, "User", "Example comment", ""));
-
-        return x;
-    }
 }
