@@ -2,14 +2,19 @@ package ipren.watchr.activities.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +33,7 @@ import ipren.watchr.viewModels.ListViewModel;
 public class MovieListFragment extends Fragment {
 
     private ListViewModel viewModel;
-    private MovieListAdapter movieListAdapter = new MovieListAdapter(new ArrayList<>());
+    private MovieListAdapter movieListAdapter;
 
     @BindView(R.id.movieList)
     RecyclerView movieList;
@@ -44,9 +49,15 @@ public class MovieListFragment extends Fragment {
 
 
     public MovieListFragment() {
-
+        movieListAdapter = new MovieListAdapter(new ArrayList<>());
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // So onCreateOptionsMenu gets called
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +65,7 @@ public class MovieListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
         // Bind the layout variables
         ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -116,6 +128,35 @@ public class MovieListFragment extends Fragment {
                     listError.setVisibility(View.GONE);
                     movieList.setVisibility(View.GONE);
                 }
+            }
+        });
+    }
+
+    /**
+     * Set up and create the search bar
+     */
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.search_bar, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        // Get rid of magnifying glass on keyboard
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                movieListAdapter.getFilter().filter(newText);
+                return false;
             }
         });
     }

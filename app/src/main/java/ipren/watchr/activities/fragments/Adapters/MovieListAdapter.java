@@ -1,5 +1,6 @@
 package ipren.watchr.activities.fragments.Adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +38,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     public MovieListAdapter(List<Movie> movieList) {
         this.movieList = movieList;
-        // Create a copy of the list so we can filter the other
-        movieListFull = new ArrayList<>(movieList);
     }
 
     /**
@@ -47,6 +46,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void updateMovieList(List<Movie> newMovieList) {
         movieList.clear();
         movieList.addAll(newMovieList);
+        // Create a copy of the list so we can filter the other
+        movieListFull = new ArrayList<>(movieList);
         notifyDataSetChanged();
     }
 
@@ -145,20 +146,53 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         return movieList.size();
     }
 
+    /**
+     * Returns the filter
+     */
     @Override
     public Filter getFilter() {
         return filter;
     }
 
+    /**
+     * Search and filter handling
+     */
     private Filter filter = new Filter() {
+
+        /**
+         * Filters all the movies in the current list according to the filter constraint.
+         * This is done in a background thread.
+         */
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            return null;
+            List<Movie> filteredMovieList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredMovieList.addAll(movieListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Movie movie : movieListFull) {
+                    if (movie.title.toLowerCase().contains(filterPattern)) {
+                        filteredMovieList.add(movie);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredMovieList;
+
+            return results;
         }
 
+        /**
+         * Displays the filter results on the main thread.
+         */
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-
+            movieList.clear();
+            movieList.addAll((List) results.values);
+            notifyDataSetChanged();
         }
     };
 
