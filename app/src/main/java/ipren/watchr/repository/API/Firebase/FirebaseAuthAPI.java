@@ -28,7 +28,8 @@ public class FirebaseAuthAPI {
 
     // The "reload()" method does not trigger the AuthstateListener so livedata must be updated manually
     void refreshUsr() {
-        mAuth.getCurrentUser().reload().addOnCompleteListener(e -> {
+        if(mAuth.getCurrentUser() != null )
+            mAuth.getCurrentUser().reload().addOnCompleteListener(e -> {
             this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser()));
         });
     }
