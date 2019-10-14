@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,15 +29,18 @@ import ipren.watchr.databinding.ItemMovieBinding;
 /**
  * Class for handling the creation and updating of movie cards in the recycler view
  */
-public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements MovieClickListener {
+public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements MovieClickListener, Filterable {
 
-    private ArrayList<Movie> movieList;
+    private List<Movie> movieList;
+    private List<Movie> movieListFull;
 
     /**
      * Creates a movie adapter with a list of movies
      */
-    public MovieListAdapter(ArrayList<Movie> movieList) {
+    public MovieListAdapter(List<Movie> movieList) {
         this.movieList = movieList;
+        // Create a copy of the list so we can filter the other
+        movieListFull = new ArrayList<>(movieList);
     }
 
     /**
@@ -86,10 +91,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void onFavoriteClicked(View v) {
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
         int id = getMovieId(parent);
-
-        // TODO: make into method and make it turn off if active
-        ImageButton btn = (ImageButton) v;
-        btn.setColorFilter(btn.getContext().getResources().getColor(R.color.colorAccent));
+        // TODO: Fix multiple buttons being highlighted because ViewHolders is being reused
+        changeButtonColor((ImageButton) v, R.color.colorAccent);
 
         Toast.makeText(v.getContext(), "Added id " + id + " to favorites", Toast.LENGTH_SHORT).show();
     }
@@ -102,8 +105,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
         int id = getMovieId(parent);
 
-        ImageButton btn = (ImageButton) v;
-        btn.setColorFilter(btn.getContext().getResources().getColor(R.color.colorAccent));
+        changeButtonColor((ImageButton) v, R.color.colorAccent);
 
         Toast.makeText(v.getContext(), "Added id " + id + " to watch later", Toast.LENGTH_SHORT).show();
     }
@@ -116,8 +118,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
         int id = getMovieId(parent);
 
-        ImageButton btn = (ImageButton) v;
-        btn.setColorFilter(btn.getContext().getResources().getColor(R.color.colorAccent));
+        changeButtonColor((ImageButton) v, R.color.colorAccent);
 
         Toast.makeText(v.getContext(), "Added id " + id + " to watched", Toast.LENGTH_SHORT).show();
     }
@@ -131,12 +132,37 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     }
 
     /**
+     * Changes the color of the button
+     */
+    private void changeButtonColor(ImageButton v, int color) {
+        ImageButton btn = v;
+        btn.setColorFilter(btn.getContext().getResources().getColor(color));
+    }
+
+    /**
      * Returns the size of the movie array
      */
     @Override
     public int getItemCount() {
         return movieList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    private Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            return null;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+        }
+    };
 
     /**
      * Class for holding a movie view layout

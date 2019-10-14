@@ -93,6 +93,9 @@ public class MovieListFragment extends Fragment {
         observeViewModel();
     }
 
+    /**
+     * Makes the fragment listen to the live data in the view model
+     */
     private void observeViewModel() {
         viewModel.movies.observe(this, movies -> {
             if (movies != null && movies instanceof List) {
