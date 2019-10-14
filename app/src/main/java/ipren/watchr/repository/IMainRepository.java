@@ -44,17 +44,17 @@ public interface IMainRepository {
 
     LiveData<FireRating[]> getRatings(String movie_id, int searchMethod);
 
-    void addMovieToList(String list, String movie_id, String user_id);
+    void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
-    void removeMovieFromList(String list, String movie_id, String user_id);
+    void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
-    void rateMovie(int score, String movie_id, String user_id);
+    void rateMovie(int score, String movie_id, String user_id, OnCompleteListener callback);
 
-    void removeRating(String rating_id);
+    void removeRating(String rating_id, OnCompleteListener callback);
 
-    void commentMovie(String text, String movie_id, String user_id);
+    void commentMovie(String text, String movie_id, String user_id, OnCompleteListener callback);
 
-    void removeComment(String comment_id);
+    void removeComment(String comment_id, OnCompleteListener callback);
 
 
 }

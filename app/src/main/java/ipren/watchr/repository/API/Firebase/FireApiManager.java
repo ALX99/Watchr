@@ -5,6 +5,7 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.FireRating;
@@ -103,36 +104,38 @@ public class FireApiManager implements UserDataAPI {
     }
 
     @Override
-    public void addMovieToList(String list, String movie_id, String user_id) {
-        firestoreDatabase.saveMovieToList(list, movie_id, user_id);
+    public void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback) {
+        firestoreDatabase.saveMovieToList(list, movie_id, user_id, callback);
     }
 
     @Override
-    public void removeMovieFromList(String list, String movie_id, String user_id) {
-        firestoreDatabase.deleteMovieFromList(list, movie_id, user_id);
+    public void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
+        firestoreDatabase.deleteMovieFromList(list, movie_id, user_id, callback);
     }
 
     @Override
-    public void rateMovie(int score, String movie_id, String user_id) {
+    public void rateMovie(int score, String movie_id, String user_id, OnCompleteListener callback) {
         if (score > 10)
             score = 10;
         else if (score < 0)
             score = 0;
-        firestoreDatabase.addRating(score, movie_id, user_id, null);
+
+       firestoreDatabase.addRating(score, movie_id, user_id, callback);
+
     }
 
     @Override
-    public void removeRating(String rating_id) {
-        firestoreDatabase.removeRating(rating_id);
+    public void removeRating(String rating_id, OnCompleteListener callback) {
+        firestoreDatabase.removeRating(rating_id, callback);
     }
 
     @Override
-    public void commentMovie(String text, String movie_id, String user_id) {
-        firestoreDatabase.addComment(text, movie_id, user_id, null);
+    public void commentMovie(String text, String movie_id, String user_id, OnCompleteListener callback) {
+        firestoreDatabase.addComment(text, movie_id, user_id, callback);
     }
 
     @Override
-    public void removeComment(String comment_id) {
-        firestoreDatabase.removeComment(comment_id);
+    public void removeComment(String comment_id, OnCompleteListener callback) {
+        firestoreDatabase.removeComment(comment_id, callback);
     }
 }

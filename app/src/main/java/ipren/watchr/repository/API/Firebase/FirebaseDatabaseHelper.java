@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -86,12 +87,19 @@ public class FirebaseDatabaseHelper {
     }
 
 
-    public void saveMovieToList(String movie_id, String user_id, String list) {
-        fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION).document(list).update("movies", FieldValue.arrayUnion(movie_id));
+    public void saveMovieToList(String movie_id, String user_id, String list, OnCompleteListener callback) {
+       Task task =  fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
+               .document(list).update("movies", FieldValue.arrayUnion(movie_id));
+
+        if(callback != null)
+            task.addOnCompleteListener(callback);
     }
 
-    public void deleteMovieFromList(String list, String movie_id, String user_id) {
-        fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION).document(list).update("movies", FieldValue.arrayRemove(movie_id));
+    public void deleteMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
+       Task task =  fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION).document(list).update("movies", FieldValue.arrayRemove(movie_id));
+        if(callback != null)
+            task.addOnCompleteListener(callback);
+
     }
 
     public LiveData<String[]> getMovieListByUserID(String list, String user_id) {
@@ -126,12 +134,17 @@ public class FirebaseDatabaseHelper {
         comment.put(MOVIE_ID_FIELD, movie_id);
         comment.put(COMMENT_TXT_FIELD, text);
 
-        fireStore.collection(COMMENT_PATH).add(comment).addOnCompleteListener(callback);
+        Task task = fireStore.collection(COMMENT_PATH).add(comment);
+        if(callback != null)
+            task.addOnCompleteListener(callback);
 
     }
 
-     void removeComment(String comment_id) {
-        fireStore.collection(COMMENT_PATH).document(comment_id).delete();
+     void removeComment(String comment_id, OnCompleteListener callback) {
+       Task task =  fireStore.collection(COMMENT_PATH).document(comment_id).delete();
+         if(callback != null)
+             task.addOnCompleteListener(callback);
+
     }
 
      void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
@@ -141,11 +154,15 @@ public class FirebaseDatabaseHelper {
         comment.put(MOVIE_ID_FIELD, movie_id);
         comment.put("score", "" + score);
 
-        fireStore.collection(RATING_PATH).add(comment).addOnCompleteListener(callback);
+       Task task = fireStore.collection(RATING_PATH).add(comment);
+       if(callback != null)
+           task.addOnCompleteListener(callback);
     }
 
-     void removeRating(String rating_id) {
-        fireStore.collection(RATING_PATH).document(rating_id).delete();
+     void removeRating(String rating_id, OnCompleteListener callback) {
+        Task task = fireStore.collection(RATING_PATH).document(rating_id).delete();
+         if(callback != null)
+             task.addOnCompleteListener(callback);
     }
 
 

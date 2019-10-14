@@ -74,32 +74,32 @@ public class MainRepository implements IMainRepository{
     }
 
     @Override
-    public void addMovieToList(String list, String movie_id, String user_id) {
-        userDataApi.addMovieToList(list, movie_id, user_id);
+    public void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback) {
+        userDataApi.addMovieToList(list, movie_id, user_id, callback);
     }
 
     @Override
-    public void removeMovieFromList(String list, String movie_id, String user_id) {
-        userDataApi.removeMovieFromList(list, movie_id, user_id);
+    public void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
+        userDataApi.removeMovieFromList(list, movie_id, user_id, callback);
     }
 
     @Override
-    public void rateMovie(int score, String movie_id, String user_id) {
-        userDataApi.rateMovie(score, movie_id, user_id);
+    public void rateMovie(int score, String movie_id, String user_id, OnCompleteListener callback) {
+        userDataApi.rateMovie(score, movie_id, user_id, callback);
     }
 
     @Override
-    public void removeRating(String rating_id) {
-        userDataApi.removeRating(rating_id);
+    public void removeRating(String rating_id, OnCompleteListener callback) {
+        userDataApi.removeRating(rating_id, callback);
     }
 
     @Override
-    public void commentMovie(String text, String movie_id, String user_id) {
-            userDataApi.commentMovie(text,movie_id, user_id);
+    public void commentMovie(String text, String movie_id, String user_id, OnCompleteListener callback) {
+            userDataApi.commentMovie(text,movie_id, user_id, callback);
     }
 
     @Override
-    public void removeComment(String comment_id) {
-            userDataApi.removeComment(comment_id);
+    public void removeComment(String comment_id, OnCompleteListener callback) {
+            userDataApi.removeComment(comment_id, callback);
     }
 }
