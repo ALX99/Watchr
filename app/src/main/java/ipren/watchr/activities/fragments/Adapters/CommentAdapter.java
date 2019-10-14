@@ -10,20 +10,20 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.R;
-import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.FireComment;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
-    private ArrayList<Comment> commments;
+    private List<FireComment> commments;
     private Context mContext;
 
-    public CommentAdapter(Context mContext, ArrayList<Comment> commments) {
-        this.commments = commments;
+    public CommentAdapter(Context mContext) {
+        commments = new ArrayList<>();
         this.mContext = mContext;
     }
 
@@ -37,17 +37,24 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Make sure there is a URL in there, otherwise set default image
-        if (!commments.get(position).getProfilePicLink().isEmpty())
-            Glide.with(mContext)
-                    .load(commments.get(position).getProfilePicLink())
-                    .into(holder.profilePic);
-        else {
-            int resourceId = mContext.getResources().getIdentifier("profile_picture_mock", "drawable", "ipren.watchr");
-            holder.profilePic.setImageDrawable(ContextCompat.getDrawable(mContext, resourceId));
-        }
-        holder.username.setText(commments.get(position).getUsername());
-        holder.comment.setText(commments.get(position).getComment());
+//        if (!commments.get(position).getProfilePicLink().isEmpty())
+//            Glide.with(mContext)
+//                    .load(commments.get(position).getProfilePicLink())
+//                    .into(holder.profilePic);
 
+        int resourceId = mContext.getResources().getIdentifier("default_profile_photo", "drawable", "ipren.watchr");
+            holder.profilePic.setImageDrawable(ContextCompat.getDrawable(mContext, resourceId));
+
+        holder.username.setText(commments.get(position).getUser_id());
+        holder.comment.setText(commments.get(position).getText());
+
+    }
+
+    // Method to update the data
+    public void setData(FireComment[] comments) {
+        if (comments != null)
+            this.commments = Arrays.asList(comments);
+        notifyDataSetChanged();
     }
 
     @Override

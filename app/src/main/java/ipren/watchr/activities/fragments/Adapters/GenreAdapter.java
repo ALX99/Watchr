@@ -1,6 +1,5 @@
 package ipren.watchr.activities.fragments.Adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ipren.watchr.R;
 import ipren.watchr.dataHolders.Genre;
 
 public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> {
 
-    private ArrayList<Genre> genres;
-    private Context mContext;
+    private List<Genre> genres;
 
-    public GenreAdapter(Context mContext, ArrayList<Genre> genres) {
-        this.genres = genres;
-        this.mContext = mContext;
+    public GenreAdapter() {
+        genres = new ArrayList<>();
     }
 
     @NonNull
@@ -39,6 +37,12 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return genres.size();
+    }
+
+    // Method to update the data
+    public void setData(List<Genre> genres) {
+        this.genres = genres;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

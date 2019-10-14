@@ -16,7 +16,11 @@ public interface ActorDao {
     LiveData<List<Actor>> getActorsFromMovie(int movieID);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertActors(Actor... actor);
+    void insert(Actor... actor);
+
+    @Query("DELETE FROM actors")
+    void NUKE();
+
 
     // No update or delete since then we have to generate
     // some kind of ID to find the actors we want to

@@ -45,15 +45,15 @@ public class ActorTest {
 
     @Test
     public void insertTest() throws Exception {
-        movieDao.insertMovies(m);
+        movieDao.insert(m);
         // Insert the actor after the movie since the actor table is a foreign key
         // referencing entries in the movies table. The movie id must already exist in movies
         // before we try to insert an actor associated with that movie
-        actorDao.insertActors(a);
+        actorDao.insert(a);
         List<Actor> actors = LiveDataTestUtil.getValue(actorDao.getActorsFromMovie(1));
         Assert.assertEquals(a.getCharacter(), actors.get(0).getCharacter());
         Actor newA = new Actor(1, "Chris lol", "Joker", 2, "pictureLink");
-        actorDao.insertActors(newA);
+        actorDao.insert(newA);
         Assert.assertEquals(2, LiveDataTestUtil.getValue(actorDao.getActorsFromMovie(1)).size());
 
     }

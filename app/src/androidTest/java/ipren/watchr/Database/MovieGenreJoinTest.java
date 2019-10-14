@@ -46,9 +46,9 @@ public class MovieGenreJoinTest {
     }
 
     private void insertDummyData() {
-        movieDao.insertMovies(m);
-        genreDao.insertGenres(g);
-        genreDao.insertGenres(g1);
+        movieDao.insert(m);
+        genreDao.insert(g);
+        genreDao.insert(g1);
         movieGenreJoinDao.insert(new MovieGenreJoin(1, 2));
         movieGenreJoinDao.insert(new MovieGenreJoin(1, 3));
 
@@ -68,7 +68,7 @@ public class MovieGenreJoinTest {
         List<Movie> movies = LiveDataTestUtil.getValue(movieGenreJoinDao.getMoviesByGenre(new int[]{2, 3}));
         Assert.assertEquals(m.title, movies.get(0).title);
 
-        movieGenreJoinDao.deleteMovieGenreJoin(new MovieGenreJoin(1, 2));
+        movieGenreJoinDao.delete(new MovieGenreJoin(1, 2));
         movies = LiveDataTestUtil.getValue(movieGenreJoinDao.getMoviesByGenre(new int[]{2, 3}));
         Assert.assertEquals(m.title, movies.get(0).title);
 
@@ -77,7 +77,7 @@ public class MovieGenreJoinTest {
     @Test
     public void deleteTest() throws Exception {
         insertDummyData();
-        movieGenreJoinDao.deleteMovieGenreJoin(new MovieGenreJoin(1, 2));
+        movieGenreJoinDao.delete(new MovieGenreJoin(1, 2));
         List<Genre> genres = LiveDataTestUtil.getValue(movieGenreJoinDao.getGenresFromMovie(1));
         Assert.assertEquals(1, genres.size());
 

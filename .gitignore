@@ -84,9 +84,4 @@ lint/tmp/
 # JSON DB
 app/schemas/
 
-# keystore data
-# ipren.keys
-# debug.keystore
-
-# UMl
-app/UML/
+gradle.properties

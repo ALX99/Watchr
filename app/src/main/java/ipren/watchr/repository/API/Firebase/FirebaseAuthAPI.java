@@ -1,54 +1,40 @@
-package ipren.watchr.repository.API;
+package ipren.watchr.repository.API.Firebase;
 
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.firebase.storage.UploadTask.TaskSnapshot;
-
-import java.io.File;
 
 import ipren.watchr.dataHolders.User;
 
-public class FirebaseAPI {
+public class FirebaseAuthAPI {
     private FirebaseAuth mAuth;
     private final MutableLiveData userLiveData = new MutableLiveData(null);
 
-
-    public FirebaseAPI() {
+    FirebaseAuthAPI() {
         mAuth = FirebaseAuth.getInstance();
-        mAuth.addAuthStateListener(e -> {
-                    FirebaseUser firebaseUser = e.getCurrentUser();
-                    if (firebaseUser == null) {
-                        this.userLiveData.postValue(firebaseUser);
-                    } else {
-                        this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser()));
-                    }
-                }
-        );
+        mAuth.addAuthStateListener(e -> refreshUsr());
     }
-
-    //TODO try to implement realTime database sync
 
     // The "reload()" method does not trigger the AuthstateListener so livedata must be updated manually
-    public void refreshUsr() {
-        mAuth.getCurrentUser().reload().addOnCompleteListener(e
-                -> this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser())));
+    void refreshUsr() {
+        if (mAuth.getCurrentUser() != null)
+            mAuth.getCurrentUser().reload().addOnCompleteListener(e ->
+                    this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser())));
+        else
+            this.userLiveData.postValue(null);
+
     }
 
-    public void resendVerificationEmail() {
+    void resendVerificationEmail() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser == null || firebaseUser.isEmailVerified())
             return;
@@ -56,15 +42,15 @@ public class FirebaseAPI {
         firebaseUser.sendEmailVerification();
     }
 
-    public LiveData<User> getUser() {
+    LiveData<User> getUser() {
         return this.userLiveData;
     }
 
-    public void loginUser(String email, String password, OnCompleteListener callback) {
+    void loginUser(String email, String password, OnCompleteListener callback) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(callback);
     }
 
-    public void registerUser(String email, String password, OnCompleteListener callback) {
+    void registerUser(String email, String password, OnCompleteListener callback) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful())
                 task.getResult().getUser().sendEmailVerification();
@@ -73,7 +59,7 @@ public class FirebaseAPI {
         });
     }
 
-    public void signOut() {
+    void signOut() {
         mAuth.signOut();
     }
 
@@ -87,46 +73,45 @@ public class FirebaseAPI {
         String email = firebaseUser.getEmail();
         String userName = firebaseUser.getDisplayName();
         Uri profilePicture = firebaseUser.getPhotoUrl();
-        return new User(userName, email,  profilePicture, UID, isVerified);
+        return new User(userName, email, profilePicture, UID, isVerified);
     }
 
-    public void updateProfile(String userName, Uri uri) {
-        if (uri != null){
-           uploadImage(uri , e -> {
-               if (e.isSuccessful());
-                     uploadProfileChanges(userName, (Uri)e.getResult());
-           });
-        }else {
+    void updateProfile(String userName, Uri uri) {
+        if (uri != null) {
+            uploadImage(uri, e -> {
+                if (e.isSuccessful()) ;
+                uploadProfileChanges(userName, (Uri) e.getResult());
+            });
+        } else {
             uploadProfileChanges(userName, null);
         }
 
 
     }
 
-    private void uploadProfileChanges(String userName, Uri uri){
+    private void uploadProfileChanges(String userName, Uri uri) {
         UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
-        if(uri != null)
+        if (uri != null)
             builder.setPhotoUri(uri);
-        if(userName != null)
+        if (userName != null)
             builder.setDisplayName(userName);
 
         mAuth.getCurrentUser().updateProfile(builder.build()).addOnCompleteListener(e -> {
-            if(e.isSuccessful())
+            if (e.isSuccessful())
                 refreshUsr();
         });
 
     }
 
-    private void uploadImage(Uri uri, OnCompleteListener callback){
+    private void uploadImage(Uri uri, OnCompleteListener callback) {
         StorageReference storageRef = FirebaseStorage.getInstance().
-                getReference().child("pics/" + mAuth.getCurrentUser().getUid() );
+                getReference().child("pics/" + mAuth.getCurrentUser().getUid());
 
-       storageRef.putFile(uri).addOnCompleteListener(e -> {
-           if(e.isSuccessful())
-               storageRef.getDownloadUrl().addOnCompleteListener(callback);
-       });
+        storageRef.putFile(uri).addOnCompleteListener(e -> {
+            if (e.isSuccessful())
+                storageRef.getDownloadUrl().addOnCompleteListener(callback);
+        });
     }
-
 
 
 }

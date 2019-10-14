@@ -4,9 +4,6 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
-import ipren.watchr.dataHolders.Genre;
-import ipren.watchr.dataHolders.Movie;
-
 // table that binds together a many to many relationship
 // in an SQL database. A movie can have many genres
 // and a genre can have many movies.
@@ -31,5 +28,13 @@ public class MovieGenreJoin {
     public MovieGenreJoin(int movieID, int genreID) {
         this.movieID = movieID;
         this.genreID = genreID;
+    }
+
+    public int getMovieID() {
+        return movieID;
+    }
+
+    public int getGenreID() {
+        return genreID;
     }
 }
