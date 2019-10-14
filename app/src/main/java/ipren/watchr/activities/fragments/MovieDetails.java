@@ -31,15 +31,12 @@ import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.IMainRepository;
 import ipren.watchr.viewModels.IMovieViewModel;
 import ipren.watchr.viewModels.MovieViewModel;
 
 public class MovieDetails extends Fragment {
     private int movieID;
     private IMovieViewModel viewModel;
-    private IMainRepository mainRepository;
-    private User user;
     @BindView(R.id.castList)
     RecyclerView cast;
     @BindView(R.id.genreList)
@@ -76,7 +73,7 @@ public class MovieDetails extends Fragment {
     ProgressBar popularity;
     @BindView(R.id.runtime)
     TextView runtime;
-
+    private User user;
 
     public MovieDetails() {
         // Required empty public constructor
@@ -94,18 +91,21 @@ public class MovieDetails extends Fragment {
         // Bind stuff with ButterKnife
         ButterKnife.bind(this, view);
         Toast.makeText(getContext(), Integer.toString(movieID), Toast.LENGTH_SHORT).show(); // Debug
-        init(view);
+        init();
         return view;
     }
 
-    private void init(View v) {
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setupScrolling();
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        mainRepository = IMainRepository.getMainRepository();
-        mainRepository.getUserLiveData().observe(this, user -> {
+        viewModel.setMovieID(movieID);
+        // Observer user
+        viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             this.user = user;
         });
 
-        setupScrolling();
         initMovie();
         // init methods below work the same way
         // They add a LinearLayoutManager, then optionally an
@@ -113,8 +113,9 @@ public class MovieDetails extends Fragment {
         initCast();
         initGenres();
         initComments();
+    }
 
-
+    private void init() {
     }
 
     // Don't ask me why this boilerplate code is needed to setup a scrollable
@@ -133,7 +134,7 @@ public class MovieDetails extends Fragment {
     }
 
     private void initMovie() {
-        viewModel.getMovie(movieID).observe(this, Movie -> {
+        viewModel.getMovie().observe(getViewLifecycleOwner(), Movie -> {
             // Don't try to set anything if the object is null.
             // Will result in fatal crash
             if (Movie == null || Movie.overview == null)
@@ -177,19 +178,16 @@ public class MovieDetails extends Fragment {
         CommentAdapter adapter = new CommentAdapter(requireContext());
         comments.setAdapter(adapter);
 
-        mainRepository.getComments(Integer.toString(movieID), IMainRepository.SEARCH_METHOD_MOVIE_ID).observe(this, comments -> {
+        viewModel.getComments().observe(getViewLifecycleOwner(), comments -> {
             adapter.setData(comments);
         });
+
         // OnClickListener to send comments
         send.setOnClickListener((View v) -> {
             // TODO
-            String text = comment.getText().toString();
+            viewModel.commentOnMovie(movieID, user.getUID(), comment.getText().toString());
             comment.setText("");
             comment.clearFocus();
-            if (user != null)
-                mainRepository.commentMovie(text, Integer.toString(movieID), user.getUID(), null);
-            else
-                Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -199,11 +197,8 @@ public class MovieDetails extends Fragment {
         GenreAdapter adapter = new GenreAdapter();
         genres.setAdapter(adapter);
 
-        // Observe LiveData
-        // If the Lifecycle object is not in an active state, then the observer isn't called even if the value changes.
-        // After the Lifecycle object is destroyed, the observer is automatically removed.
-        // So no need to unsub?
-        viewModel.getGenres(movieID).observe(this, genres -> {
+
+        viewModel.getGenres().observe(getViewLifecycleOwner(), genres -> {
             adapter.setData(genres);
         });
     }
