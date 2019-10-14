@@ -12,6 +12,9 @@ import org.junit.Test;
 
 import ipren.watchr.TestUtil.LiveDataTestUtil;
 import ipren.watchr.dataHolders.Genre;
+import ipren.watchr.repository.Database.GenreDao;
+import ipren.watchr.repository.Database.MovieDB;
+import ipren.watchr.repository.Database.MovieDao;
 
 public class GenreTest {
 

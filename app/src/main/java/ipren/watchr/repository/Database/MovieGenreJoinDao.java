@@ -1,4 +1,4 @@
-package ipren.watchr.Database;
+package ipren.watchr.repository.Database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -11,11 +11,12 @@ import java.util.List;
 
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataHolders.MovieGenreJoin;
 
 @Dao
 public interface MovieGenreJoinDao {
     @Insert
-    void insert(MovieGenreJoin movieGenreJoin);
+    void insert(MovieGenreJoin... movieGenreJoin);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM movies " +
@@ -29,16 +30,14 @@ public interface MovieGenreJoinDao {
             "INNER JOIN movie_genre_join " +
             "ON genres.id =movie_genre_join.genreID " +
             "WHERE movie_genre_join.movieID=:movieID")
-    LiveData<List<Genre>> getGenresForMovie(final int movieID);
+    LiveData<List<Genre>> getGenresFromMovie(final int movieID);
 
-    @Insert
-    void insertMovieGenreJoin(MovieGenreJoin movieGenreJoin);
 
     // No update method since both genreID and movieID
     // are primary keys, so there would be nothing that could
     // be updated
 
     @Delete
-    void deleteMovieGenreJoin(MovieGenreJoin movieGenreJoin);
+    void deleteMovieGenreJoin(MovieGenreJoin... movieGenreJoin);
 
 }

@@ -1,5 +1,7 @@
 package ipren.watchr.MockClasses;
 
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -8,6 +10,7 @@ import com.google.android.gms.tasks.Task;
 
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IMainRepository;
+//TODO remake this test
 
 public class MockMainRepository implements IMainRepository {
 
@@ -41,7 +44,7 @@ public class MockMainRepository implements IMainRepository {
 
     @Override
     public void registerUser(String email, String password, OnCompleteListener callback) {
-        this.userLiveData.postValue(new User("unkown",email));
+        this.userLiveData.postValue(new User("unkown",email, null, null, false));
         callback.onComplete(authResponse);
     }
 
@@ -52,7 +55,22 @@ public class MockMainRepository implements IMainRepository {
 
     @Override
     public void loginUser(String email, String password, OnCompleteListener callback) {
-        this.userLiveData.postValue(new User("unkown",email));
+        this.userLiveData.postValue(new User("unkown",email, null, null, false));
         callback.onComplete(authResponse);
+    }
+
+    @Override
+    public void refreshUsr() {
+
+    }
+
+    @Override
+    public void reSendVerificationEmail() {
+
+    }
+
+    @Override
+    public void updateProfile(String userName, Uri pictureUri) {
+
     }
 }

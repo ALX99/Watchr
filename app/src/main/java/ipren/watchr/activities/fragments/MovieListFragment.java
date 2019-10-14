@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,8 +25,7 @@ import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
 import ipren.watchr.viewModels.ListViewModel;
 
-
-public class BrowseFragment extends Fragment {
+public class MovieListFragment extends Fragment {
 
     private ListViewModel viewModel;
     private MovieListAdapter movieListAdapter = new MovieListAdapter(new ArrayList<>());
@@ -43,7 +43,7 @@ public class BrowseFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
 
 
-    public BrowseFragment() {
+    public MovieListFragment() {
 
     }
 
@@ -51,7 +51,7 @@ public class BrowseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_browse, container, false);
+        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
         // Bind the layout variables
         ButterKnife.bind(this, view);
         return view;
@@ -61,11 +61,33 @@ public class BrowseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Toast.makeText(getContext(), this.getArguments().getString("listType"), Toast.LENGTH_SHORT).show();
+
+        String url = "";
+
+        // For testing purposes
+        switch (this.getArguments().getString("listType")) {
+            case "browse": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1"; break;
+            case "recommended": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=2"; break;
+            case "watchLater": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=3"; break;
+            case "watched": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=4"; break;
+            case "favorites": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=5"; break;
+        }
+
         viewModel = ViewModelProviders.of(this).get(ListViewModel.class);
-        viewModel.refresh();
+        viewModel.refresh(url);
 
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
         movieList.setAdapter(movieListAdapter);
+
+        // Fetch fresh data from API on refresh
+        refreshLayout.setOnRefreshListener(() -> {
+            movieList.setVisibility(View.GONE);
+            listError.setVisibility(View.GONE);
+            loadingView.setVisibility(View.VISIBLE);
+            viewModel.refresh("movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1");
+            refreshLayout.setRefreshing(false);
+        });
 
         observeViewModel();
     }

@@ -1,4 +1,4 @@
-package ipren.watchr.Database;
+package ipren.watchr.repository.Database;
 
 import android.content.Context;
 
@@ -10,6 +10,7 @@ import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataHolders.MovieGenreJoin;
 
 @Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class}, version = 1)
 public abstract class MovieDB extends RoomDatabase {

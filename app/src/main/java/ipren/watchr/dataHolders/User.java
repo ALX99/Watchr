@@ -1,41 +1,43 @@
 package ipren.watchr.dataHolders;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
+
+import ipren.watchr.BuildConfig;
+import ipren.watchr.R;
 
 
 //Immutable User object
 public class User {
     private String userName = "No user name";
     private String email = "No email";
-    private boolean isVerified = false;
-    private String UID;
-    private Bitmap userProfilePicture;
+    private boolean isVerified;
+    private String UID = "UID missing";
+    private Uri userProfilePictureUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.default_profile_photo);
 
-    // This object allows userProfilePicture = null, only for testing
-    // once repository is enabled this will be removed
-    public User() {
-    }
 
-    public User(String userName, String email) {
-        this.userName = userName;
-        this.email = email;
-    }
-
-    public User(String userName, String email, Bitmap userProfilePicture) {
-        this(userName, email);
-        this.userProfilePicture = userProfilePicture;
-    }
-
-    public User(String userName, String email, String UID, boolean isVerified, Bitmap userProfilePicture){
-        this(userName,email, UID, isVerified);
-        this.userProfilePicture = userProfilePicture;
-    }
-
-    public User(String userName, String email, String UID, boolean isVerified){
-        this(userName,email);
-        this.UID = UID;
+    public User(String userName, String email,  Uri userProfilePictureUri, String UID, boolean isVerified){
+        if(userName != null)
+            this.userName = userName;
+        if(email != null)
+            this.email = email;
+        if(userProfilePictureUri != null)
+            this.userProfilePictureUri = userProfilePictureUri;
+        if(UID != null)
+            this.UID = UID;
         this.isVerified = isVerified;
     }
+
+    public User(User user){
+        this.userName = user.email;
+        this.email = user.email;
+        this.isVerified = user.isVerified;
+        this.UID = user.UID;
+        this.userProfilePictureUri = user.userProfilePictureUri;
+
+    }
+
+
     public String getUID(){return UID;}
 
     public boolean isVerified(){return  isVerified; }
@@ -48,7 +50,7 @@ public class User {
         return email;
     }
 
-    public Bitmap getUserProfilePicture() {
-        return userProfilePicture;
+    public Uri getUserProfilePictureUri() {
+        return userProfilePictureUri;
     }
 }

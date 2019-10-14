@@ -16,6 +16,8 @@ import java.util.List;
 
 import ipren.watchr.TestUtil.LiveDataTestUtil;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.repository.Database.MovieDB;
+import ipren.watchr.repository.Database.MovieDao;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class MovieTest {
@@ -47,6 +49,7 @@ public class MovieTest {
         movieDao.insertMovies(m);
         movieDao.insertMovies(m2);
     }
+
     @Test
     public void testEmpty() throws Exception {
         Assert.assertTrue(LiveDataTestUtil.getValue(movieDao.getAllMovies()).isEmpty());

@@ -15,6 +15,11 @@ import java.util.List;
 import ipren.watchr.TestUtil.LiveDataTestUtil;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataHolders.MovieGenreJoin;
+import ipren.watchr.repository.Database.GenreDao;
+import ipren.watchr.repository.Database.MovieDB;
+import ipren.watchr.repository.Database.MovieDao;
+import ipren.watchr.repository.Database.MovieGenreJoinDao;
 
 public class MovieGenreJoinTest {
     @Rule
@@ -44,8 +49,8 @@ public class MovieGenreJoinTest {
         movieDao.insertMovies(m);
         genreDao.insertGenres(g);
         genreDao.insertGenres(g1);
-        movieGenreJoinDao.insertMovieGenreJoin(new MovieGenreJoin(1, 2));
-        movieGenreJoinDao.insertMovieGenreJoin(new MovieGenreJoin(1, 3));
+        movieGenreJoinDao.insert(new MovieGenreJoin(1, 2));
+        movieGenreJoinDao.insert(new MovieGenreJoin(1, 3));
 
     }
 
@@ -53,7 +58,7 @@ public class MovieGenreJoinTest {
     public void getGenresForMovieTest() throws Exception {
         insertDummyData();
 
-        List<Genre> genres = LiveDataTestUtil.getValue(movieGenreJoinDao.getGenresForMovie(1));
+        List<Genre> genres = LiveDataTestUtil.getValue(movieGenreJoinDao.getGenresFromMovie(1));
         Assert.assertEquals(2, genres.size());
     }
 
@@ -73,7 +78,7 @@ public class MovieGenreJoinTest {
     public void deleteTest() throws Exception {
         insertDummyData();
         movieGenreJoinDao.deleteMovieGenreJoin(new MovieGenreJoin(1, 2));
-        List<Genre> genres = LiveDataTestUtil.getValue(movieGenreJoinDao.getGenresForMovie(1));
+        List<Genre> genres = LiveDataTestUtil.getValue(movieGenreJoinDao.getGenresFromMovie(1));
         Assert.assertEquals(1, genres.size());
 
     }

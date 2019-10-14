@@ -1,4 +1,4 @@
-package ipren.watchr.repository;
+package ipren.watchr.repository.API;
 
 import android.net.Uri;
 
@@ -10,16 +10,13 @@ import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.FireRating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
+import ipren.watchr.repository.API.Firebase.FireApiManager;
 
-public interface IMainRepository {
-    int SEARCH_METHOD_MOVIE_ID = 0;
-    int SEARCH_METHOD_USER_ID = 1;
+public interface UserDataAPI {
 
-    static IMainRepository getMainRepository() {
-        return MainRepository.getMainRepository();
+    static UserDataAPI getInstance() {
+            return FireApiManager.getInstance();
     }
-
-
 
     //Firebase auth functions
 
@@ -38,6 +35,7 @@ public interface IMainRepository {
     void updateProfile(String userName, Uri pictureUri);
 
     //Firebase database functions
+
     LiveData<PublicProfile> getPublicProfile(String user_id);
 
     LiveData<FireComment[]> getComments(String movie_id, int searchMethod);
@@ -48,7 +46,7 @@ public interface IMainRepository {
 
     void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
-    void rateMovie(int score, String movie_id, String user_id, OnCompleteListener callback);
+    void rateMovie(int score, String movie_id, String user_id,OnCompleteListener callback);
 
     void removeRating(String rating_id, OnCompleteListener callback);
 

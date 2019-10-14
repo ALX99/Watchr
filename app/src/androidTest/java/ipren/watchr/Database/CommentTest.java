@@ -15,14 +15,15 @@ import java.util.List;
 import ipren.watchr.TestUtil.LiveDataTestUtil;
 import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.repository.Database.CommentDao;
+import ipren.watchr.repository.Database.MovieDB;
+import ipren.watchr.repository.Database.MovieDao;
 
 public class CommentTest {
-    private Movie m = new Movie(1, "testMovie");
-    private Comment c = new Comment(0, 1, "username", "comment", "profilePicLink");
-
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-
+    private Movie m = new Movie(1, "testMovie");
+    private Comment c = new Comment(0, 1, "username", "comment", "profilePicLink");
     private CommentDao commentDao;
     private MovieDao movieDao;
     private MovieDB db;

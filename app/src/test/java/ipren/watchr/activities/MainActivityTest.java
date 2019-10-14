@@ -3,19 +3,15 @@ package ipren.watchr.activities;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 
-import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.test.core.app.ApplicationProvider;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +20,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
-import ipren.watchr.R;
+import java.util.List;
+
+import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.viewModels.MainViewModelInterface;
 
@@ -117,5 +115,13 @@ class MockViewModel extends ViewModel implements MainViewModelInterface {
         this.user.postValue(user);
     }
 
+    @Override
+    public LiveData<User> getUser(int UID) {
+        return null;
+    }
 
+    @Override
+    public List<Comment> getCommentsFromMovie() {
+        return null;
+    }
 }

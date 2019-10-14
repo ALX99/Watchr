@@ -1,5 +1,7 @@
 package ipren.watchr.viewModels;
 
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -23,6 +25,19 @@ public class AccountSettingsViewModel extends ViewModel {
 
    public LiveData<User> getUser(){
        return liveUser;
+   }
+
+   public void refreshUsr(){
+       mainRepository.refreshUsr();
+   }
+
+   public void updateUserProfile(String username, Uri imageUri){
+       mainRepository.updateProfile(username, imageUri);
+
+   }
+
+   public void resendVerificationEmail(){
+       mainRepository.reSendVerificationEmail();
    }
 
 
