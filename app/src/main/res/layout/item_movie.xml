@@ -38,7 +38,7 @@
                 android:layout_height="159dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:imageUrl="@{`https://image.tmdb.org/t/p//w92` + movie.posterPath}"/>
+                android:imageUrl="@{`https://image.tmdb.org/t/p//w500` + movie.posterPath}" />
 
             <TextView
                 android:id="@+id/movieTitle"

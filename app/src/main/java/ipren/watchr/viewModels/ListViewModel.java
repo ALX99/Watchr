@@ -13,8 +13,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import ipren.watchr.dataHolders.Movie;
-import ipren.watchr.repository.API.MovieApiService;
 import ipren.watchr.dataHolders.MovieList;
+import ipren.watchr.repository.API.MovieApi;
 
 /**
  *
@@ -25,7 +25,7 @@ public class ListViewModel extends AndroidViewModel {
     public MutableLiveData<Boolean> movieLoadError = new MutableLiveData<>();
     public MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
-    private MovieApiService movieService = new MovieApiService();
+    private MovieApi movieService = new MovieApi();
     // Collects disposable single observers and disposes them
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -50,7 +50,7 @@ public class ListViewModel extends AndroidViewModel {
                         .subscribeWith(new DisposableSingleObserver<MovieList>() {
                             @Override
                             public void onSuccess(MovieList movieList) {
-                                movies.setValue(movieList.movies);
+                                movies.setValue(movieList.getMovies());
                                 movieLoadError.setValue(false);
                                 loading.setValue(false);
                             }

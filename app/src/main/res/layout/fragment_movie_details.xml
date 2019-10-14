@@ -18,12 +18,12 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
+                android:id="@+id/cover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/movie_cover"
                 android:scaleType="centerCrop"
                 android:src="@drawable/cover" />
-
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -43,23 +43,36 @@
 
             <!-- Using cardview to achieve rounded corners, since due to a bug XML doesn't recognize the property clipToOutline!-->
             <androidx.cardview.widget.CardView
-                android:id="@+id/coverCardView"
+                android:id="@+id/posterCardView"
                 android:layout_width="125dp"
                 android:layout_height="186dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 app:cardCornerRadius="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/movieTitle">
 
                 <ImageView
-                    android:id="@+id/cover"
+                    android:id="@+id/poster"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/endGradient"
                     android:contentDescription="@string/movie_poster"
                     android:scaleType="fitXY"
                     android:src="@drawable/poster" />
             </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: "
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/informationText" />
 
 
             <TextView
@@ -67,25 +80,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="8dp"
                 android:fontFamily="sans-serif"
-                android:gravity="center"
+                android:autoSizeTextType="uniform"
                 android:text="Annabelle Comes Home"
                 android:textColor="@color/text"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/coverCardView"
+                android:textSize="19sp"
+                app:layout_constraintEnd_toStartOf="@id/releaseDate"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/releaseDate"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:text="2019-06-26"
+                android:layout_marginEnd="8dp"
                 android:textColor="@color/text"
-                app:layout_constraintStart_toEndOf="@+id/coverCardView"
-                app:layout_constraintTop_toBottomOf="@+id/movieTitle" />
+                app:layout_constraintBottom_toBottomOf="@id/movieTitle"
+                app:layout_constraintLeft_toRightOf="@id/movieTitle"
+                android:layout_height="wrap_content"
+                android:text="2019-06-26"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/movieTitle" />
 
             <ProgressBar
                 android:id="@+id/popularity"
@@ -98,7 +113,7 @@
                 android:progress="69"
                 android:progressDrawable="@drawable/circle_progress_bar"
                 android:progressTint="@color/greenish"
-                app:layout_constraintBottom_toBottomOf="@+id/view"
+                app:layout_constraintBottom_toBottomOf="@+id/view2"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
@@ -208,12 +223,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginBottom="19dp"
+                android:layout_marginBottom="13dp"
                 android:button="@drawable/add_checkbox"
                 android:checked="false"
                 android:scaleX="0.9"
                 android:scaleY="0.9"
-                app:layout_constraintBottom_toTopOf="@+id/view"
+                app:layout_constraintBottom_toTopOf="@+id/view2"
                 app:layout_constraintStart_toEndOf="@+id/watched" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
@@ -221,12 +236,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="25dp"
+                android:layout_marginBottom="20dp"
                 android:button="@drawable/checkbox"
                 android:checked="false"
                 android:scaleX="1.2"
                 android:scaleY="1.2"
-                app:layout_constraintBottom_toTopOf="@+id/view"
+                app:layout_constraintBottom_toTopOf="@+id/view2"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
@@ -234,23 +249,55 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginBottom="25dp"
+                android:layout_marginBottom="20dp"
                 android:button="@drawable/fav_checkbox"
                 android:checked="false"
                 android:scaleX="1.2"
                 android:scaleY="1.2"
-                app:layout_constraintBottom_toTopOf="@+id/view"
+                app:layout_constraintBottom_toTopOf="@+id/view2"
                 app:layout_constraintStart_toEndOf="@+id/watchLater" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_marginTop="55dp"
+                android:background="@color/greenish"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
 
             <View
                 android:id="@+id/view"
                 android:layout_width="wrap_content"
                 android:layout_height="2dp"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="4dp"
                 android:background="@color/greenish"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/coverCardView" />
+                app:layout_constraintTop_toBottomOf="@+id/genreList" />
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/greenish"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/runtime" />
+
+            <TextView
+                android:id="@+id/informationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:text="Information"
+                android:textColor="@color/text"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@id/informationImageView"
+                app:layout_constraintTop_toBottomOf="@id/view2" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -276,45 +323,55 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/genreList"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/coverCardView"
-                app:layout_constraintStart_toEndOf="@+id/coverCardView"
-                app:layout_constraintTop_toBottomOf="@+id/description" />
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/posterCardView"
+                app:layout_constraintTop_toBottomOf="@id/posterCardView" />
 
             <TextView
                 android:id="@+id/actortext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginStart="4dp"
                 android:text="@string/actor"
+                android:layout_marginTop="8dp"
                 android:textColor="@color/text"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
+                app:layout_constraintStart_toEndOf="@id/actorsImageView"
+                app:layout_constraintTop_toBottomOf="@+id/view3" />
 
-            <TextView
-                android:id="@+id/description"
+            <ScrollView
+                android:id="@+id/descriptionScrollView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:text="While babysitting the daughter of Ed and Lorraine Warren, a teenager and her friend unknowingly awaken an evil spirit trapped in a doll."
-                android:textColor="@color/text"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="4dp"
+                android:fadeScrollbars="false"
+                android:fillViewport="true"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/posterCardView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/coverCardView"
-                app:layout_constraintTop_toBottomOf="@+id/releaseDate" />
+                app:layout_constraintStart_toEndOf="@id/posterCardView"
+                app:layout_constraintTop_toTopOf="@id/posterCardView">
 
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="false"
+                    android:text="While babysitting the daughter of Ed and Lorraine Warren, a teenager and her friend unknowingly awaken an evil spirit trapped in a doll."
+                    android:textColor="@color/text"
+                    android:textSize="14sp" />
+            </ScrollView>
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="@string/watched"
                 android:textColor="@color/text"
                 android:textSize="10sp"
@@ -345,22 +402,103 @@
                 android:id="@+id/commentsText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/comments"
                 android:textColor="@color/text"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/commentsImageView"
                 app:layout_constraintTop_toBottomOf="@id/view1" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/commentList"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/commentsText"
+                android:layout_marginTop="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/commentEdit"
                 tools:layout_editor_absoluteX="8dp" />
 
+            <EditText
+                android:id="@+id/commentEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="1dp"
+                android:hint="@string/comment_hint"
+                android:inputType="textMultiLine"
+                android:maxLines="8"
+                android:scrollbars="vertical"
+                android:textColor="@color/text"
+                app:layout_constraintBottom_toTopOf="@+id/commentList"
+                app:layout_constraintEnd_toStartOf="@+id/send"
+                app:layout_constraintStart_toEndOf="@+id/profile_picture"
+                app:layout_constraintTop_toTopOf="@id/profile_picture" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/default_profile_photo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/commentsText" />
+
+            <ImageView
+                android:id="@+id/send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/send"
+                app:layout_constraintBottom_toBottomOf="@id/commentEdit"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/informationImageView"
+                android:layout_width="6dp"
+                android:layout_height="0dp"
+                android:layout_marginRight="4dp"
+                android:background="@color/greenish"
+                app:layout_constraintBottom_toBottomOf="@id/informationText"
+                app:layout_constraintEnd_toStartOf="@id/informationText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/informationText" />
+
+            <ImageView
+                android:id="@+id/actorsImageView"
+                android:layout_width="6dp"
+                android:layout_height="0dp"
+                android:background="@color/greenish"
+                app:layout_constraintBottom_toBottomOf="@id/actortext"
+                app:layout_constraintEnd_toStartOf="@id/actortext"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/actortext" />
+
+            <ImageView
+                android:id="@+id/commentsImageView"
+                android:layout_width="6dp"
+                android:layout_height="0dp"
+                android:background="@color/greenish"
+                app:layout_constraintBottom_toBottomOf="@id/commentsText"
+                app:layout_constraintEnd_toStartOf="@id/commentsText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/commentsText" />
+
+
+            <TextView
+                android:id="@+id/runtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Runtime:"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/status"
+                app:layout_goneMarginStart="8dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

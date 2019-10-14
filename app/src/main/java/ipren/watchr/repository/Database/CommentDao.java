@@ -18,11 +18,14 @@ public interface CommentDao {
     LiveData<List<Comment>> getCommentsFromMovie(int movieID);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertComments(Comment... comments);
+    void insert(Comment... comments);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateComments(Comment... comments);
+    void update(Comment... comments);
 
     @Delete
-    void deleteComments(Comment... comments);
+    void delete(Comment... comments);
+
+    @Query("DELETE FROM comments")
+    void NUKE();
 }

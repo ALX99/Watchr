@@ -28,6 +28,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Put "API_KEY=YOUR_API_KEY" in gradle.properties
+        if (project.hasProperty("API_KEY"))
+            buildConfigField("String", "API_KEY", API_KEY)
+        else
+            buildConfigField("String", "API_KEY", System.getenv("API_KEY"))
+        
     }
     defaultConfig {
         javaCompileOptions {
@@ -57,14 +64,14 @@ android {
     lintOptions {
         // Disable Autofill "autofillHints" warnings, since they use API > 26,
         // we use 21.
-        disable 'SmallSp', 'Autofill'
+        disable 'SmallSp', 'Autofill', 'ContentDescription', "ClickableViewAccessibility"
     }
     dataBinding.enabled = true
 }
 
 dependencies {
 
-    def room_version = "2.2.0-rc01"
+    def room_version = "2.2.0"
 
 
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
