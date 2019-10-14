@@ -23,10 +23,10 @@ public class FireApiManager implements UserDataAPI {
 
     private LiveData<User> currentLoggedUser;
 
-    public static UserDataAPI getInstance(){
-            if(fireApiManager == null)
-                fireApiManager = new FireApiManager();
-            return fireApiManager;
+    public static UserDataAPI getInstance() {
+        if (fireApiManager == null)
+            fireApiManager = new FireApiManager();
+        return fireApiManager;
     }
 
     private FireApiManager() {
@@ -35,13 +35,12 @@ public class FireApiManager implements UserDataAPI {
         currentLoggedUser = firebaseAuthAPI.getUser();
 
         currentLoggedUser.observeForever(user -> {
-            if(user == null)
+            if (user == null)
                 return;
             else
                 firestoreDatabase.syncUserWithDatabase(user);
         });
     }
-
 
     //Fire Auth
 
@@ -52,7 +51,7 @@ public class FireApiManager implements UserDataAPI {
 
     @Override
     public void registerUser(String email, String password, OnCompleteListener callback) {
-        firebaseAuthAPI.registerUser(email,password,callback);
+        firebaseAuthAPI.registerUser(email, password, callback);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class FireApiManager implements UserDataAPI {
 
     @Override
     public void loginUser(String email, String password, OnCompleteListener callback) {
-        firebaseAuthAPI.loginUser(email,password,callback);
+        firebaseAuthAPI.loginUser(email, password, callback);
     }
 
     @Override
@@ -77,19 +76,19 @@ public class FireApiManager implements UserDataAPI {
 
     @Override
     public void updateProfile(String userName, Uri pictureUri) {
-        firebaseAuthAPI.updateProfile(userName,pictureUri);
+        firebaseAuthAPI.updateProfile(userName, pictureUri);
     }
 
     //Firestore
 
     @Override
     public LiveData<PublicProfile> getPublicProfile(String user_id) {
-       return firestoreDatabase.getPublicProfile(user_id);
+        return firestoreDatabase.getPublicProfile(user_id);
     }
 
     @Override
     public LiveData<FireComment[]> getComments(String id, int searchMethod) {
-        if(searchMethod == IMainRepository.SEARCH_METHOD_MOVIE_ID)
+        if (searchMethod == IMainRepository.SEARCH_METHOD_MOVIE_ID)
             return firestoreDatabase.getCommentByMovieID(id);
         else
             return firestoreDatabase.getCommentsByUserID(id);
@@ -97,10 +96,10 @@ public class FireApiManager implements UserDataAPI {
 
     @Override
     public LiveData<FireRating[]> getRatings(String id, int searchMethod) {
-        if(searchMethod == IMainRepository.SEARCH_METHOD_MOVIE_ID)
+        if (searchMethod == IMainRepository.SEARCH_METHOD_MOVIE_ID)
             return firestoreDatabase.getRatingByMovieID(id);
         else
-            return firestoreDatabase.getRatingByMovieID(id);
+            return firestoreDatabase.getRatingByUserID(id);
     }
 
     @Override
@@ -110,16 +109,16 @@ public class FireApiManager implements UserDataAPI {
 
     @Override
     public void removeMovieFromList(String list, String movie_id, String user_id) {
-            firestoreDatabase.deleteMovieFromList(list,movie_id, user_id);
+        firestoreDatabase.deleteMovieFromList(list, movie_id, user_id);
     }
 
     @Override
     public void rateMovie(int score, String movie_id, String user_id) {
-        if(score > 10)
+        if (score > 10)
             score = 10;
-        if(score < 0)
+        else if (score < 0)
             score = 0;
-            firestoreDatabase.addRating(score, movie_id, user_id, null);
+        firestoreDatabase.addRating(score, movie_id, user_id, null);
     }
 
     @Override

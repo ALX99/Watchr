@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import ipren.watchr.dataHolders.CurrentUser;
 import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.FireRating;
 import ipren.watchr.dataHolders.PublicProfile;
@@ -118,7 +119,7 @@ public class FirebaseDatabaseHelper {
     }
 
 
-    public void addComment( String text, String movie_id, String user_id, OnCompleteListener callback) {
+    void addComment(String text, String movie_id, String user_id, OnCompleteListener callback) {
         Map<String, String> comment = new HashMap<>();
 
         comment.put(USER_ID_FIELD, user_id);
@@ -129,11 +130,11 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void removeComment(String comment_id) {
+     void removeComment(String comment_id) {
         fireStore.collection(COMMENT_PATH).document(comment_id).delete();
     }
 
-    public void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
+     void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
         Map<String, String> comment = new HashMap<>();
 
         comment.put(USER_ID_FIELD, user_id);
@@ -143,28 +144,28 @@ public class FirebaseDatabaseHelper {
         fireStore.collection(RATING_PATH).add(comment).addOnCompleteListener(callback);
     }
 
-    public void removeRating(String rating_id) {
+     void removeRating(String rating_id) {
         fireStore.collection(RATING_PATH).document(rating_id).delete();
     }
 
 
     // that update rather than replace.
 
-    public LiveData<FireComment[]> getCommentByMovieID(String movie_id) {
+     LiveData<FireComment[]> getCommentByMovieID(String movie_id) {
         if (!commentsByMovie_id.containsKey(movie_id))
             commentsByMovie_id.put(movie_id, listenToResources(COMMENT_PATH, MOVIE_ID_FIELD, movie_id, FireComment.class));
 
         return commentsByMovie_id.get(movie_id);
     }
 
-    public LiveData<FireComment[]> getCommentsByUserID(String user_id) {
+     LiveData<FireComment[]> getCommentsByUserID(String user_id) {
         if (!commentsByUser_id.containsKey(user_id))
             commentsByUser_id.put(user_id, listenToResources(COMMENT_PATH, USER_ID_FIELD, user_id, FireComment.class));
 
         return commentsByUser_id.get(user_id);
     }
 
-    public LiveData<FireRating[]> getRatingByUserID(String user_id) {
+     LiveData<FireRating[]> getRatingByUserID(String user_id) {
 
         if (!ratingByUser_id.containsKey(user_id))
             ratingByUser_id.put(user_id, listenToResources(RATING_PATH, USER_ID_FIELD, user_id, FireRating.class));
@@ -173,14 +174,14 @@ public class FirebaseDatabaseHelper {
     }
 
 
-    public LiveData<FireRating[]> getRatingByMovieID(String movie_id) {
+     LiveData<FireRating[]> getRatingByMovieID(String movie_id) {
         if (!ratingByMovie_id.containsKey(movie_id))
             ratingByMovie_id.put(movie_id, listenToResources(RATING_PATH, USER_ID_FIELD, movie_id, FireRating.class));
 
         return ratingByMovie_id.get(movie_id);
     }
 
-    public LiveData<PublicProfile> getPublicProfile(String user_id) {
+     LiveData<PublicProfile> getPublicProfile(String user_id) {
         if (!publicProfiles.containsKey(user_id)) {
             MutableLiveData<PublicProfile> publicProfile = new MutableLiveData<>();
             fireStore.collection(USER_PATH).document(user_id).addSnapshotListener((results, error) -> {
@@ -221,13 +222,7 @@ public class FirebaseDatabaseHelper {
         return dataList;
     }
 
-
-    public void userDataTest(User user) {
-        new UserLiveData().postValue(user);
-    }
-
-
-    class UserLiveData extends MutableLiveData<User> {
+    class UserLiveData extends MutableLiveData<CurrentUser> {
 
         ListenerRegistration movieCollectionListener;
         ListenerRegistration commentListener;
@@ -235,12 +230,12 @@ public class FirebaseDatabaseHelper {
         HashMap<String, ListenerRegistration> movieListListener = new HashMap<>();
 
         HashMap<String, String[]> movieLists = new HashMap<>();
-        List<FireComment> fireComments = new LinkedList<>();
-        List<FireRating> fireRatings = new LinkedList<>();
+        FireComment[] fireComments = new FireComment[0];
+        FireRating[] fireRatings = new FireRating[0];
         User user;
 
         @Override
-        public void postValue(User user){
+        public void postValue(CurrentUser user){
             this.user = user;
             unregisterAllListener();
 
@@ -271,8 +266,8 @@ public class FirebaseDatabaseHelper {
                 for (QueryDocumentSnapshot doc : res) {
                     newSet.add(doc.toObject(FireComment.class));
                 }
-
-                fireComments = newSet;
+                FireComment[] comments = newSet.toArray(new FireComment[0]);
+                fireComments = comments;
                 updateUser();
             });
 
@@ -285,14 +280,14 @@ public class FirebaseDatabaseHelper {
                 for (QueryDocumentSnapshot doc : result) {
                     newSet.add(doc.toObject(FireRating.class));
                 }
-
-                fireRatings = newSet;
+                FireRating[] ratings = newSet.toArray(new FireRating[newSet.size()]);
+                fireRatings = ratings;
                 updateUser();
             });
 
         }
         private void updateUser() {
-            super.postValue(user);
+            super.postValue(new CurrentUser(user, fireRatings, fireComments, movieLists ));
         }
 
         void unregisterAllListener() {

@@ -27,13 +27,13 @@ public class FirebaseAuthAPI {
     }
 
     // The "reload()" method does not trigger the AuthstateListener so livedata must be updated manually
-    public void refreshUsr() {
+    void refreshUsr() {
         mAuth.getCurrentUser().reload().addOnCompleteListener(e -> {
             this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser()));
         });
     }
 
-    public void resendVerificationEmail() {
+    void resendVerificationEmail() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser == null || firebaseUser.isEmailVerified())
             return;
@@ -41,15 +41,15 @@ public class FirebaseAuthAPI {
         firebaseUser.sendEmailVerification();
     }
 
-    public LiveData<User> getUser() {
+     LiveData<User> getUser() {
         return this.userLiveData;
     }
 
-    public void loginUser(String email, String password, OnCompleteListener callback) {
+     void loginUser(String email, String password, OnCompleteListener callback) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(callback);
     }
 
-    public void registerUser(String email, String password, OnCompleteListener callback) {
+    void registerUser(String email, String password, OnCompleteListener callback) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful())
                 task.getResult().getUser().sendEmailVerification();
@@ -58,7 +58,7 @@ public class FirebaseAuthAPI {
         });
     }
 
-    public void signOut() {
+     void signOut() {
         mAuth.signOut();
     }
 
@@ -75,7 +75,7 @@ public class FirebaseAuthAPI {
         return new User(userName, email, profilePicture, UID, isVerified);
     }
 
-    public void updateProfile(String userName, Uri uri) {
+     void updateProfile(String userName, Uri uri) {
         if (uri != null) {
             uploadImage(uri, e -> {
                 if (e.isSuccessful()) ;
