@@ -7,6 +7,7 @@
 
     <!-- START LIST FRAGMENTS -->
 
+
     <fragment
         android:id="@+id/MovieListFragment"
         android:name="ipren.watchr.activities.fragments.MovieListFragment"
