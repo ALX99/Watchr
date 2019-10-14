@@ -46,6 +46,8 @@ public interface IMainRepository {
 
     void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
+    void getMovieList(String list, String user_id);
+
     void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
     void rateMovie(int score, String movie_id, String user_id, OnCompleteListener callback);

@@ -18,20 +18,20 @@ import ipren.watchr.dataHolders.User;
 public class FirebaseAuthAPI {
     private FirebaseAuth mAuth;
     private final MutableLiveData userLiveData = new MutableLiveData(null);
-    private final FirebaseDatabaseHelper fireDatabaseHelper;
 
     FirebaseAuthAPI() {
         mAuth = FirebaseAuth.getInstance();
-        fireDatabaseHelper = new FirebaseDatabaseHelper();
         mAuth.addAuthStateListener(e -> refreshUsr());
     }
 
     // The "reload()" method does not trigger the AuthstateListener so livedata must be updated manually
     void refreshUsr() {
-        if(mAuth.getCurrentUser() != null )
-            mAuth.getCurrentUser().reload().addOnCompleteListener(e -> {
-            this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser()));
-        });
+        if (mAuth.getCurrentUser() != null)
+            mAuth.getCurrentUser().reload().addOnCompleteListener(e ->
+                    this.userLiveData.postValue(buildUserObject(mAuth.getCurrentUser())));
+        else
+            this.userLiveData.postValue(null);
+
     }
 
     void resendVerificationEmail() {
@@ -42,11 +42,11 @@ public class FirebaseAuthAPI {
         firebaseUser.sendEmailVerification();
     }
 
-     LiveData<User> getUser() {
+    LiveData<User> getUser() {
         return this.userLiveData;
     }
 
-     void loginUser(String email, String password, OnCompleteListener callback) {
+    void loginUser(String email, String password, OnCompleteListener callback) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(callback);
     }
 
@@ -59,7 +59,7 @@ public class FirebaseAuthAPI {
         });
     }
 
-     void signOut() {
+    void signOut() {
         mAuth.signOut();
     }
 
@@ -76,7 +76,7 @@ public class FirebaseAuthAPI {
         return new User(userName, email, profilePicture, UID, isVerified);
     }
 
-     void updateProfile(String userName, Uri uri) {
+    void updateProfile(String userName, Uri uri) {
         if (uri != null) {
             uploadImage(uri, e -> {
                 if (e.isSuccessful()) ;

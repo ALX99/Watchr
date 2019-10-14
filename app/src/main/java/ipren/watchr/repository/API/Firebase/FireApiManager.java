@@ -138,4 +138,9 @@ public class FireApiManager implements UserDataAPI {
     public void removeComment(String comment_id, OnCompleteListener callback) {
         firestoreDatabase.removeComment(comment_id, callback);
     }
+
+    @Override
+    public LiveData<String[]> getMovieListByUserId(String list, String user_id){
+        return firestoreDatabase.getMovieListByUserID(list, user_id);
+    }
 }

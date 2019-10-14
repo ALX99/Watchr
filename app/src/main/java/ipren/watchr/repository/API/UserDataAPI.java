@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import java.util.List;
+
 import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.FireRating;
 import ipren.watchr.dataHolders.PublicProfile;
@@ -53,6 +55,8 @@ public interface UserDataAPI {
     void commentMovie(String text, String movie_id, String user_id, OnCompleteListener callback);
 
     void removeComment(String comment_id, OnCompleteListener callback);
+
+    LiveData<String[]>  getMovieListByUserId(String list, String user_id);
 
 
 }
