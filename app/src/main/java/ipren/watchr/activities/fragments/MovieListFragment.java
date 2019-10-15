@@ -1,16 +1,14 @@
 package ipren.watchr.activities.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,16 +45,8 @@ public class MovieListFragment extends Fragment {
     @BindView(R.id.refreshLayout)
     SwipeRefreshLayout refreshLayout;
 
-
     public MovieListFragment() {
         movieListAdapter = new MovieListAdapter(new ArrayList<>());
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // So onCreateOptionsMenu gets called
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -73,17 +63,28 @@ public class MovieListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Toast.makeText(getContext(), this.getArguments().getString("listType"), Toast.LENGTH_SHORT).show();
+        connectSearchView();
+        connectFilterButton();
 
         String url = "";
 
         // For testing purposes
         switch (this.getArguments().getString("listType")) {
-            case "browse": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1"; break;
-            case "recommended": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=2"; break;
-            case "watchLater": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=3"; break;
-            case "watched": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=4"; break;
-            case "favorites": url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=5"; break;
+            case "browse":
+                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1";
+                break;
+            case "recommended":
+                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=2";
+                break;
+            case "watchLater":
+                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=3";
+                break;
+            case "watched":
+                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=4";
+                break;
+            case "favorites":
+                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=5";
+                break;
         }
 
         viewModel = ViewModelProviders.of(this).get(ListViewModel.class);
@@ -133,20 +134,22 @@ public class MovieListFragment extends Fragment {
     }
 
     /**
-     * Set up and create the search bar
+     * Find and setup the search bar
      */
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    private void connectSearchView() {
+        // Get the search view from toolbar and show
+        SearchView searchView = getActivity().findViewById(R.id.toolbar_search);
+        searchView.setVisibility(View.VISIBLE);
 
-        inflater.inflate(R.menu.search_bar, menu);
+        // Clear text and focus
+        searchView.setQuery("", false);
+        // TODO: @johan Make the clear focus work
+        searchView.clearFocus();
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-
-        // Get rid of magnifying glass on keyboard
+        // Get rid of magnifying glass on keyboard.
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
+        // Filter on input
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -158,6 +161,19 @@ public class MovieListFragment extends Fragment {
                 movieListAdapter.getFilter().filter(newText);
                 return false;
             }
+        });
+    }
+
+    /**
+     * Find and setup the filter button
+     */
+    private void connectFilterButton() {
+        // Get the filter button from toolbar and show
+        ImageButton filterBtn = getActivity().findViewById(R.id.toolbar_filter);
+        filterBtn.setVisibility(View.VISIBLE);
+
+        filterBtn.setOnClickListener(v -> {
+            Log.d("TEST", "Clicked the filter button");
         });
     }
 }

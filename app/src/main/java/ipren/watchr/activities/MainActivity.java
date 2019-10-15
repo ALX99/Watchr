@@ -7,8 +7,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar(findViewById(R.id.toolbar_menu));
+        setSupportActionBar(findViewById(R.id.toolbar));
 
         // Set up navigation
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         // Get model
         mainViewModel = getViewModel();
 
+        connectProfileButton();
     }
 
     //This method can be overridden and allows us to inject a ViewModel for testing
@@ -60,12 +63,36 @@ public class MainActivity extends AppCompatActivity {
         return ViewModelProviders.of(this).get(MainViewModel.class);
     }
 
+    private void connectProfileButton() {
+        ImageButton profileBtn = findViewById(R.id.toolbar_profile);
+
+        mainViewModel.getUser().observe(this, user -> {
+            if (user == null) {
+                profileBtn.setImageResource(R.drawable.ic_profile);
+            } else {
+                // Android just has to complicate things
+                Glide.with(this).asBitmap().load(user.getUserProfilePictureUri()).into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        Drawable drawable = new BitmapDrawable(getResources(), resource);
+                        findViewById(R.id.toolbar_profile).setBackground(drawable);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+            }
+        });
+
+        profileBtn.setOnClickListener(v -> handleProfileFragment());
+    }
 
 //    // This method is for setting the toolbar menu and registering respective listeners
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        //Setting our menu
-//        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+//        getMenuInflater().inflate(R.menu.toolbar_main, menu);
 //        //Syncing layout to model
 //        mainViewModel.getUser().observe(this, user -> {
 //            if (user == null) {
@@ -100,17 +127,15 @@ public class MainActivity extends AppCompatActivity {
 //        menu.findItem(R.id.user_profile_toolbar).setVisible(!show);
 //    }
 //
-//    //This method is for listening to menu onClick events
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        int currentID = navController.getCurrentDestination().getId();
-//        if (currentID == R.id.loginFragment || currentID == R.id.accountFragment)
-//            navController.popBackStack();
-//        else if (mainViewModel.getUser().getValue() == null)
-//            navController.navigate(R.id.action_global_loginFragment);
-//        else
-//            navController.navigate(R.id.action_global_accountFragment);
-//        return super.onOptionsItemSelected(item);
-//    }
+    //This method is for listening to menu onClick events
+    private void handleProfileFragment() {
+        int currentID = navController.getCurrentDestination().getId();
+        if (currentID == R.id.loginFragment || currentID == R.id.accountFragment)
+            navController.popBackStack();
+        else if (mainViewModel.getUser().getValue() == null)
+            navController.navigate(R.id.action_global_loginFragment);
+        else
+            navController.navigate(R.id.action_global_accountFragment);
+    }
 
 }

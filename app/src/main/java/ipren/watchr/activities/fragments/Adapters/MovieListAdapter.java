@@ -1,6 +1,5 @@
 package ipren.watchr.activities.fragments.Adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void updateMovieList(List<Movie> newMovieList) {
         movieList.clear();
         movieList.addAll(newMovieList);
-        // Create a copy of the list so we can filter the other
+        // Create a copy of the full list so we can filter the other
         movieListFull = new ArrayList<>(movieList);
         notifyDataSetChanged();
     }
@@ -90,7 +89,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void onFavoriteClicked(View v) {
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
         int id = getMovieId(parent);
-        // TODO: Fix multiple buttons being highlighted because ViewHolders is being reused
+        // TODO: @johan Fix multiple buttons being highlighted because ViewHolders is being reused
         changeButtonColor((ImageButton) v, R.color.colorAccent);
 
         Toast.makeText(v.getContext(), "Added id " + id + " to favorites", Toast.LENGTH_SHORT).show();
