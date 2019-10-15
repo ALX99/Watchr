@@ -7,6 +7,7 @@ apply plugin: 'androidx.navigation.safeargs'
 //be pushed to git
 Properties localProperties = new Properties()
 localProperties.load(rootProject.file("ipren.keys").newDataInputStream())
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 android {
 
     signingConfigs {
@@ -29,12 +30,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        // Put "API_KEY=YOUR_API_KEY" in gradle.properties
-        if (project.hasProperty("API_KEY"))
-            buildConfigField("String", "API_KEY", API_KEY)
+        // Put "API_KEY=YOUR_API_KEY" in local.properties
+        if (localProperties["API_KEY"] != null)
+            buildConfigField("String", "API_KEY", localProperties["API_KEY"])
         else
             buildConfigField("String", "API_KEY", System.getenv("API_KEY"))
-        
+
     }
     defaultConfig {
         javaCompileOptions {

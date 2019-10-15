@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
@@ -21,4 +22,6 @@ public interface IMovieViewModel {
     LiveData<FireComment[]> getComments();
 
     LiveData<List<Genre>> getGenres();
+
+    LiveData<List<Actor>> getActors();
 }

@@ -18,8 +18,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.Constants;
@@ -29,7 +27,6 @@ import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
-import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.viewModels.IMovieViewModel;
 import ipren.watchr.viewModels.MovieViewModel;
@@ -91,7 +88,6 @@ public class MovieDetails extends Fragment {
         // Bind stuff with ButterKnife
         ButterKnife.bind(this, view);
         Toast.makeText(getContext(), Integer.toString(movieID), Toast.LENGTH_SHORT).show(); // Debug
-        init();
         return view;
     }
 
@@ -113,9 +109,6 @@ public class MovieDetails extends Fragment {
         initCast();
         initGenres();
         initComments();
-    }
-
-    private void init() {
     }
 
     // Don't ask me why this boilerplate code is needed to setup a scrollable
@@ -161,15 +154,18 @@ public class MovieDetails extends Fragment {
             int pop = (int) Math.round(Movie.getPopularity());
             popularityText.setText(Integer.toString(pop));
             popularity.setProgress(pop);
-
-
         });
 
     }
     private void initCast() {
+
         cast.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        CastAdapter adapter = new CastAdapter(getParentFragment().getContext(), dummyData());
+        CastAdapter adapter = new CastAdapter();
         cast.setAdapter(adapter);
+
+        viewModel.getActors().observe(getViewLifecycleOwner(), actors -> {
+            adapter.setData(actors);
+        });
     }
 
     private void initComments() {
@@ -201,16 +197,6 @@ public class MovieDetails extends Fragment {
         viewModel.getGenres().observe(getViewLifecycleOwner(), genres -> {
             adapter.setData(genres);
         });
-    }
-
-    private ArrayList<Actor> dummyData() {
-        ArrayList x = new ArrayList<Actor>();
-        x.add(new Actor(0, "Patrick Wilson", "example", 1, "/djhTpbOvrfdDsWZFFintj2Uv47a.jpg"));
-        x.add(new Actor(0, "Vera Farmiga", "example", 1, "/oWZfxv4cK0h8Jcyz1MvvT2osoAP.jpg"));
-        x.add(new Actor(0, "Mckenna Grace", "example", 1, "/dX6QFwpAzAcXGgxSINwvDxujEgj.jpg"));
-        x.add(new Actor(0, "Madison Iseman", "example", 1, "/qkPW0nHQUlckRj3MRveVTzRpNR2.jpg"));
-        x.add(new Actor(0, "Katie Sarife", "example", 1, "/oQLQZ58uvGgpdtCUpOcoiF5zYJW.jpg"));
-        return x;
     }
 
 }

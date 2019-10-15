@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.MovieGenreJoin;
@@ -57,19 +58,23 @@ public class MovieRepository implements IMovieRepository {
     }
 
     public LiveData<Movie> getMovieByID(int movieID) {
-        Call<Movie> call = movieApi.getMovie(movieID);
-        call.enqueue(new Callback<Movie>() {
+        Call<Movie> movieCall = movieApi.getMovie(movieID);
+        movieCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 if (!response.isSuccessful())
                     return;
 
                 Movie movie = response.body();
+                // Insert stuff to db :)
                 new Thread(() -> {
                     movieDB.movieDao().insert(movie);
                     movieDB.genreDao().insert(movie.getGenres());
                     for (Genre g : movie.getGenres())
                         movieDB.movieGenreJoinDao().insert(new MovieGenreJoin(movie.id, g.getGenreID()));
+                    for (Actor a : movie.getActorList().getActors())
+                        if (a.getPictureLink() != null)
+                            movieDB.actorDao().insert(new Actor(movie.id, a));
                 }).start();
             }
 
@@ -78,7 +83,12 @@ public class MovieRepository implements IMovieRepository {
 
             }
         });
+
         return movieDB.movieDao().getMovieByID(movieID);
+    }
+
+    public LiveData<List<Actor>> getActorsFromMovie(int movieID) {
+        return movieDB.actorDao().getActorsFromMovie(movieID);
     }
 
 }
