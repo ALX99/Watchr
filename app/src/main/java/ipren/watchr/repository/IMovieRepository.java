@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 
@@ -14,5 +15,7 @@ public interface IMovieRepository {
     LiveData<List<Genre>> getGenresFromMovie(int id);
 
     LiveData<List<Movie>> getTrending();
+
+    LiveData<List<Actor>> getActorsFromMovie(int movieID);
 }
 

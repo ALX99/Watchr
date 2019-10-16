@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.Helpers.Util;
@@ -18,12 +19,10 @@ import ipren.watchr.dataHolders.Actor;
 
 public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
 
-    private ArrayList<Actor> actors;
-    private Context mContext;
+    private List<Actor> actors;
 
-    public CastAdapter(Context mContext, ArrayList<Actor> actors) {
-        this.actors = actors;
-        this.mContext = mContext;
+    public CastAdapter() {
+        this.actors = new ArrayList<>();
     }
 
     // Inflate our RecyclerView with the items it shall contain?
@@ -39,6 +38,11 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.name.setText(actors.get(position).getName());
         Util.loadImage(holder.image, actors.get(position).getPictureLink(), Util.getProgressDrawable(holder.image.getContext()));
+    }
+
+    public void setData(List<Actor> actors) {
+        this.actors = actors;
+        notifyDataSetChanged();
     }
 
     @Override

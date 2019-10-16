@@ -8,26 +8,65 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import ipren.watchr.dataHolders.Actor;
+import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataHolders.User;
+
 import ipren.watchr.repository.IMovieRepository;
+
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.repository.MovieRepository;
 
 public class MovieViewModel extends AndroidViewModel implements IMovieViewModel {
-    IMovieRepository movieRepository;
-
+    private int movieID;
+    private IMovieRepository movieRepository;
+    private IUserDataRepository mainRepository;
+    private LiveData<Movie> movie;
+    private LiveData<User> user;
+    private LiveData<FireComment[]> comments;
+    private LiveData<List<Actor>> actors;
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
         movieRepository = new MovieRepository(application.getApplicationContext());
+        mainRepository = IUserDataRepository.getInstance();
     }
 
-    public LiveData<Movie> getMovie(int id) {
-        return movieRepository.getMovieByID(id);
+    public void setMovieID(int movieID) {
+        this.movieID = movieID;
+        this.movie = movieRepository.getMovieByID(movieID);
+        this.comments = mainRepository.getComments(Integer.toString(movieID), IUserDataRepository.SEARCH_METHOD_MOVIE_ID);
+        this.user = mainRepository.getUserLiveData();
+        this.actors = movieRepository.getActorsFromMovie(movieID);
     }
 
-    public LiveData<List<Genre>> getGenres(int id) {
-        return movieRepository.getGenresFromMovie(id);
+    public LiveData<Movie> getMovie() {
+        return movieRepository.getMovieByID(movieID);
+    }
+
+    @Override
+    public LiveData<List<Actor>> getActors() {
+        return actors;
+    }
+
+    public LiveData<User> getUser() {
+        return user;
+    }
+
+    @Override
+    public void commentOnMovie(int movieID, String UID, String text) {
+        mainRepository.commentMovie(text, Integer.toString(movieID), UID, null);
+    }
+
+    @Override
+    public LiveData<FireComment[]> getComments() {
+        return comments;
+    }
+
+    public LiveData<List<Genre>> getGenres() {
+        return movieRepository.getGenresFromMovie(movieID);
     }
 
     @Override
