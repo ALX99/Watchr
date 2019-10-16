@@ -17,7 +17,7 @@ import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.MovieList;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.API.MovieApi;
-import ipren.watchr.repository.IMainRepository;
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.repository.IMovieRepository;
 
 /**
@@ -33,7 +33,7 @@ public class ListViewModel extends AndroidViewModel {
     private LiveData<User> user;
 
     private IMovieRepository movieRepository;
-    private IMainRepository userRepository;
+    private IUserDataRepository userRepository;
 
     private MovieApi movieService = new MovieApi();
     // Collects disposable single observers and disposes them
@@ -45,11 +45,7 @@ public class ListViewModel extends AndroidViewModel {
 
         // TODO: implementera mot repository
 //        movieRepository = IMovieRepository.getInstace();
-        userRepository = IMainRepository.getMainRepository();
-        user = userRepository.getUserLiveData();
-        String userId = user.getValue().getUID();
-        userRepository.getMovieList("favorites", userId);
-        user.getValue().
+        userRepository = IUserDataRepository.getInstance();
     }
 
     public MutableLiveData<List<Movie>> getMovies() {

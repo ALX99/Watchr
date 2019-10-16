@@ -11,18 +11,10 @@ public class FireComment {
     private String user_id;
     private String text;
     private Uri profilePic;
-    @DocumentId
-    String uID;
 
     public FireComment() {
     }
 
-    public FireComment(String movie_id, String user_id, String text, String uID) {
-        this.movie_id = movie_id;
-        this.user_id = user_id;
-        this.text = text;
-        this.uID = uID;
-    }
 
     public String getMovie_id() {
         return movie_id;

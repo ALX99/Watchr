@@ -16,12 +16,6 @@ public class MainViewModel extends ViewModel implements MainViewModelInterface {
 
     private LiveData<User> user;
 
-    //Allows Activity to sync with viewmodel
-    public LiveData<User> getUser() {
-        return user;
-    }
-
-
     public MainViewModel(IUserDataRepository mainRepository) {
         this.mainRepository = mainRepository;
         user = mainRepository.getUserLiveData();
