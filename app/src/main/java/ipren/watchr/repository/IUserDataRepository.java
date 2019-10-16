@@ -10,15 +10,18 @@ import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.FireRating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
+import ipren.watchr.repository.API.Firebase.FireRepositoryManager;
 
-public interface IMainRepository {
+public interface IUserDataRepository {
     int SEARCH_METHOD_MOVIE_ID = 0;
     int SEARCH_METHOD_USER_ID = 1;
+    String FAVORITES_LIST = "Favorites";
+    String WATCH_LATER_LIST = "Watch_Later";
+    String WATCHED_LIST = "Watched";
 
-    static IMainRepository getMainRepository() {
-        return MainRepository.getMainRepository();
+    static IUserDataRepository getInstance() {
+        return FireRepositoryManager.getInstance();
     }
-
 
     //Firebase auth functions
 
@@ -43,9 +46,9 @@ public interface IMainRepository {
 
     LiveData<FireRating[]> getRatings(String movie_id, int searchMethod);
 
-    void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback);
+    LiveData<String[]> getMovieList(String list, String user_id);
 
-    void getMovieList(String list, String user_id);
+    void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
     void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
