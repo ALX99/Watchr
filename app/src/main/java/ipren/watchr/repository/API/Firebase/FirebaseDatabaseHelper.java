@@ -85,26 +85,28 @@ public class FirebaseDatabaseHelper {
 
     public void saveMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback) {
 
-       fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
-               .document(list).update("movies", FieldValue.arrayUnion(movie_id))
-               .addOnCompleteListener( e -> {
-                   if(e.getException() != null && e.getException().getLocalizedMessage().startsWith("NOT_FOUND: No document to update: ")) {
-                       HashMap<String, List<String>> entry = new HashMap<>();
-                       List<String> data = new LinkedList<>();
-                       data.add(movie_id);
-                       entry.put("movies",data);
-                       fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
-                               .document(list).set(entry).addOnCompleteListener(callback);
-                   }else
-                       if(callback != null)
-                           callback.onComplete(e);
-               });
+        fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
+                .document(list).update("movies", FieldValue.arrayUnion(movie_id))
+                .addOnCompleteListener(e -> {
+                    if (e.getException() != null && e.getException().getLocalizedMessage().startsWith("NOT_FOUND: No document to update: ")) {
+                        HashMap<String, List<String>> entry = new HashMap<>();
+                        List<String> data = new LinkedList<>();
+                        data.add(movie_id);
+                        entry.put("movies", data);
+                        Task task = fireStore.collection(USER_PATH)
+                                .document(user_id)
+                                .collection(MOVIE_COLLECTION)
+                                .document(list)
+                                .set(entry);
+                       attachCallback(task, callback);
+                    } else if (callback != null)
+                        callback.onComplete(e);
+                });
     }
 
     public void deleteMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
         Task task = fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION).document(list).update("movies", FieldValue.arrayRemove(movie_id));
-        if (callback != null)
-            task.addOnCompleteListener(callback);
+        attachCallback(task, callback);
 
     }
 
@@ -141,15 +143,13 @@ public class FirebaseDatabaseHelper {
         comment.put(COMMENT_TXT_FIELD, text);
 
         Task task = fireStore.collection(COMMENT_PATH).add(comment);
-        if (callback != null)
-            task.addOnCompleteListener(callback);
+        attachCallback(task, callback);
 
     }
 
     void removeComment(String comment_id, OnCompleteListener callback) {
         Task task = fireStore.collection(COMMENT_PATH).document(comment_id).delete();
-        if (callback != null)
-            task.addOnCompleteListener(callback);
+        attachCallback(task, callback);
 
     }
 
@@ -161,14 +161,12 @@ public class FirebaseDatabaseHelper {
         comment.put("score", "" + score);
 
         Task task = fireStore.collection(RATING_PATH).add(comment);
-        if (callback != null)
-            task.addOnCompleteListener(callback);
+        attachCallback(task, callback);
     }
 
     void removeRating(String rating_id, OnCompleteListener callback) {
         Task task = fireStore.collection(RATING_PATH).document(rating_id).delete();
-        if (callback != null)
-            task.addOnCompleteListener(callback);
+        attachCallback(task, callback);
     }
 
 
@@ -244,6 +242,12 @@ public class FirebaseDatabaseHelper {
 
         return dataList;
     }
+
+    private void attachCallback(Task task, OnCompleteListener callback) {
+        if (callback != null)
+            task.addOnCompleteListener(callback);
+    }
+
 
     class UserLiveData extends MutableLiveData<CurrentUser> {
 
