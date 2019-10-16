@@ -5,18 +5,17 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.FireRating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.API.UserDataAPI;
-import ipren.watchr.repository.IMainRepository;
 
-public class FireApiManager implements UserDataAPI {
+import ipren.watchr.repository.IUserDataRepository;
 
-    private static UserDataAPI fireApiManager;
+public class FireRepositoryManager implements IUserDataRepository {
+
+    private static IUserDataRepository fireApiManager;
 
     private FirebaseAuthAPI firebaseAuthAPI;
 
@@ -24,13 +23,13 @@ public class FireApiManager implements UserDataAPI {
 
     private LiveData<User> currentLoggedUser;
 
-    public static UserDataAPI getInstance() {
+    public static IUserDataRepository getInstance() {
         if (fireApiManager == null)
-            fireApiManager = new FireApiManager();
+            fireApiManager = new FireRepositoryManager();
         return fireApiManager;
     }
 
-    private FireApiManager() {
+    private FireRepositoryManager() {
         firebaseAuthAPI = new FirebaseAuthAPI();
         firestoreDatabase = new FirebaseDatabaseHelper();
         currentLoggedUser = firebaseAuthAPI.getUser();
@@ -89,7 +88,7 @@ public class FireApiManager implements UserDataAPI {
 
     @Override
     public LiveData<FireComment[]> getComments(String id, int searchMethod) {
-        if (searchMethod == IMainRepository.SEARCH_METHOD_MOVIE_ID)
+        if (searchMethod == IUserDataRepository.SEARCH_METHOD_MOVIE_ID)
             return firestoreDatabase.getCommentByMovieID(id);
         else
             return firestoreDatabase.getCommentsByUserID(id);
@@ -97,7 +96,7 @@ public class FireApiManager implements UserDataAPI {
 
     @Override
     public LiveData<FireRating[]> getRatings(String id, int searchMethod) {
-        if (searchMethod == IMainRepository.SEARCH_METHOD_MOVIE_ID)
+        if (searchMethod == IUserDataRepository.SEARCH_METHOD_MOVIE_ID)
             return firestoreDatabase.getRatingByMovieID(id);
         else
             return firestoreDatabase.getRatingByUserID(id);
@@ -106,6 +105,11 @@ public class FireApiManager implements UserDataAPI {
     @Override
     public void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback) {
         firestoreDatabase.saveMovieToList(list, movie_id, user_id, callback);
+    }
+
+    @Override
+    public LiveData<String[]> getMovieList(String list, String user_id) {
+        return firestoreDatabase.getMovieListByUserID(list, user_id);
     }
 
     @Override
@@ -137,10 +141,5 @@ public class FireApiManager implements UserDataAPI {
     @Override
     public void removeComment(String comment_id, OnCompleteListener callback) {
         firestoreDatabase.removeComment(comment_id, callback);
-    }
-
-    @Override
-    public LiveData<String[]> getMovieListByUserId(String list, String user_id){
-        return firestoreDatabase.getMovieListByUserID(list, user_id);
     }
 }

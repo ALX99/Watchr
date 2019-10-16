@@ -5,29 +5,27 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import ipren.watchr.repository.IMainRepository;
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.util.*;
 import com.google.android.gms.tasks.Task;
 
 import ipren.watchr.dataHolders.AuthenticationResponse;
 import ipren.watchr.dataHolders.User;
 
-import ipren.watchr.repository.MainRepository;
-
 public class LoginViewModel extends ViewModel {
 
-    IMainRepository mainRepository;
+    IUserDataRepository mainRepository;
     MutableLiveData<AuthenticationResponse> signInResponse = new MutableLiveData();
     MutableLiveData<AuthenticationResponse> createUserResponse = new MutableLiveData();
     LiveData<User> user;
     @VisibleForTesting
-    public LoginViewModel(IMainRepository mainRepository){
+    public LoginViewModel(IUserDataRepository mainRepository){
         this.mainRepository = mainRepository;
         this.user = mainRepository.getUserLiveData();
     }
 
     public LoginViewModel(){
-        this.mainRepository = MainRepository.getMainRepository();
+        this.mainRepository = IUserDataRepository.getInstance();
         this.user = mainRepository.getUserLiveData();
     }
 

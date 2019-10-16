@@ -31,14 +31,14 @@ import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.IMainRepository;
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.IMovieViewModel;
 import ipren.watchr.viewModels.MovieViewModel;
 
 public class MovieDetails extends Fragment {
     private int movieID;
     private IMovieViewModel viewModel;
-    private IMainRepository mainRepository;
+    private IUserDataRepository mainRepository;
     private User user;
     @BindView(R.id.castList)
     RecyclerView cast;
@@ -100,7 +100,7 @@ public class MovieDetails extends Fragment {
 
     private void init(View v) {
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        mainRepository = IMainRepository.getMainRepository();
+        mainRepository = IUserDataRepository.getInstance();
         mainRepository.getUserLiveData().observe(this, user -> {
             this.user = user;
         });
@@ -177,7 +177,7 @@ public class MovieDetails extends Fragment {
         CommentAdapter adapter = new CommentAdapter(requireContext());
         comments.setAdapter(adapter);
 
-        mainRepository.getComments(Integer.toString(movieID), IMainRepository.SEARCH_METHOD_MOVIE_ID).observe(this, comments -> {
+        mainRepository.getComments(Integer.toString(movieID), IUserDataRepository.SEARCH_METHOD_MOVIE_ID).observe(this, comments -> {
             adapter.setData(comments);
         });
         // OnClickListener to send comments
