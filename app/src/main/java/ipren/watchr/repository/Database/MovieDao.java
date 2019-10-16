@@ -23,7 +23,7 @@ public interface MovieDao {
     @Query("SELECT * FROM movies WHERE id LIKE :movieID")
     LiveData<Movie> getMovieByID(int movieID);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Movie... movies);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

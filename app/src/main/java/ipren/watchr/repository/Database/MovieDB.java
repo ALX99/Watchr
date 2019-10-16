@@ -24,7 +24,7 @@ import ipren.watchr.repository.API.MovieApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
-@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 11)
+@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 12)
 @TypeConverters(DateConverter.class)
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance

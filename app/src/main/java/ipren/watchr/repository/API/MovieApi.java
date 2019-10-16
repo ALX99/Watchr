@@ -29,8 +29,8 @@ public class MovieApi implements IMovieApi {
     }
 
     @Override
-    public Call<MovieList> getTrending() {
-        return api.getTrending();
+    public Call<MovieList> getTrending(int page) {
+        return api.getTrending(page);
     }
 
     @Override
