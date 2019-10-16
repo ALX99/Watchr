@@ -81,7 +81,6 @@
                 android:layout_marginHorizontal="8dp"
                 android:fontFamily="sans-serif"
                 android:autoSizeTextType="uniform"
-                android:text="Annabelle Comes Home"
                 android:textColor="@color/text"
                 android:textSize="19sp"
                 app:layout_constraintEnd_toStartOf="@id/releaseDate"
@@ -96,7 +95,6 @@
                 app:layout_constraintBottom_toBottomOf="@id/movieTitle"
                 app:layout_constraintLeft_toRightOf="@id/movieTitle"
                 android:layout_height="wrap_content"
-                android:text="2019-06-26"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/movieTitle" />
 
@@ -361,7 +359,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:singleLine="false"
-                    android:text="While babysitting the daughter of Ed and Lorraine Warren, a teenager and her friend unknowingly awaken an evil spirit trapped in a doll."
                     android:textColor="@color/text"
                     android:textSize="14sp" />
             </ScrollView>
