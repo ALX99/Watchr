@@ -55,6 +55,9 @@ public class Movie {
     @Ignore
     @SerializedName("genres")
     private Genre[] genres;
+    @Ignore
+    @SerializedName("credits")
+    private ActorList actorList;
 
     public Movie(int id, String posterPath, String title, String overview, double popularity, int voteCount, boolean video, String status, boolean adult, String backdropPath, String originalLanguage, String originalTitle, double voteAverage, String releaseDate, String runtime, Genre[] genres) {
         this.id = id;
@@ -78,6 +81,10 @@ public class Movie {
     public Movie(int id, String title) {
         this.id = id;
         this.title = title;
+    }
+
+    public ActorList getActorList() {
+        return actorList;
     }
 
     public Genre[] getGenres() {

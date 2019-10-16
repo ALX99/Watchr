@@ -6,6 +6,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import static androidx.room.ForeignKey.CASCADE;
 
 // This tables entries is linked to columns in the movies table
@@ -14,21 +16,28 @@ import static androidx.room.ForeignKey.CASCADE;
         childColumns = "movie_id",
         onDelete = CASCADE))
 public class Actor {
-    @PrimaryKey(autoGenerate = true)
-    private int ID;
+    @PrimaryKey
+    @NonNull
+    @SerializedName("credit_id")
+    private String ID;
     @NonNull
     @ColumnInfo(name = "movie_id")
     private int movieID;
     @ColumnInfo(name = "name")
+    @SerializedName("name")
     private String name;
     @ColumnInfo(name = "character")
+    @SerializedName("character")
     private String character; // The character the actor plays
     @ColumnInfo(name = "picture_link")
+    @SerializedName("profile_path")
     private String pictureLink;
     @ColumnInfo(name = "order")
+    @SerializedName("order")
     private int order; // Some actors play more important roles than others
 
-    public Actor(int movieID, String name, String character, int order, String pictureLink) {
+    public Actor(String ID, int movieID, String name, String character, int order, String pictureLink) {
+        this.ID = ID;
         this.movieID = movieID;
         this.name = name;
         this.character = character;
@@ -36,11 +45,20 @@ public class Actor {
         this.pictureLink = new StringBuilder().append("https://image.tmdb.org/t/p/original").append(pictureLink).toString();
     }
 
-    public int getID() {
+    public Actor(int movieID, Actor a) {
+        this.movieID = movieID;
+        this.ID = a.getID();
+        name = a.getName();
+        character = a.getCharacter();
+        pictureLink = a.getPictureLink();
+        order = a.getOrder();
+    }
+
+    public String getID() {
         return ID;
     }
 
-    public void setID(int ID) {
+    public void setID(String ID) {
         this.ID = ID;
     }
 

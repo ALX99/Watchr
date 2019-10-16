@@ -20,9 +20,5 @@ public interface ActorDao {
 
     @Query("DELETE FROM actors")
     void NUKE();
-
-
-    // No update or delete since then we have to generate
-    // some kind of ID to find the actors we want to
-    // update or delete
+    
 }

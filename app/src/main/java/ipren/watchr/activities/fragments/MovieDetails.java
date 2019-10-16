@@ -20,8 +20,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.Constants;
@@ -31,13 +29,13 @@ import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
-import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.IMainRepository;
 import ipren.watchr.viewModels.IMovieViewModel;
 import ipren.watchr.viewModels.MovieViewModel;
 
 public class MovieDetails extends Fragment {
+    private int movieID;
+    private IMovieViewModel viewModel;
     @BindView(R.id.castList)
     RecyclerView cast;
     @BindView(R.id.genreList)
@@ -74,11 +72,7 @@ public class MovieDetails extends Fragment {
     ProgressBar popularity;
     @BindView(R.id.runtime)
     TextView runtime;
-    private int movieID;
-    private IMovieViewModel viewModel;
-    private IMainRepository mainRepository;
     private User user;
-
 
     public MovieDetails() {
         // Required empty public constructor
@@ -96,7 +90,6 @@ public class MovieDetails extends Fragment {
         // Bind stuff with ButterKnife
         ButterKnife.bind(this, view);
         Toast.makeText(getContext(), Integer.toString(movieID), Toast.LENGTH_SHORT).show(); // Debug
-        init(view);
         hideSearchAndFilter();
         return view;
     }
@@ -111,14 +104,17 @@ public class MovieDetails extends Fragment {
         filterBtn.setVisibility(View.GONE);
     }
 
-    private void init(View v) {
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setupScrolling();
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        mainRepository = IMainRepository.getMainRepository();
-        mainRepository.getUserLiveData().observe(this, user -> {
+        viewModel.setMovieID(movieID);
+        // Observer user
+        viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             this.user = user;
         });
 
-        setupScrolling();
         initMovie();
         // init methods below work the same way
         // They add a LinearLayoutManager, then optionally an
@@ -126,8 +122,6 @@ public class MovieDetails extends Fragment {
         initCast();
         initGenres();
         initComments();
-
-
     }
 
     // Don't ask me why this boilerplate code is needed to setup a scrollable
@@ -146,7 +140,7 @@ public class MovieDetails extends Fragment {
     }
 
     private void initMovie() {
-        viewModel.getMovie(movieID).observe(this, Movie -> {
+        viewModel.getMovie().observe(getViewLifecycleOwner(), Movie -> {
             // Don't try to set anything if the object is null.
             // Will result in fatal crash
             if (Movie == null || Movie.overview == null)
@@ -173,16 +167,19 @@ public class MovieDetails extends Fragment {
             int pop = (int) Math.round(Movie.getPopularity());
             popularityText.setText(Integer.toString(pop));
             popularity.setProgress(pop);
-
-
         });
 
     }
 
     private void initCast() {
+
         cast.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        CastAdapter adapter = new CastAdapter(getParentFragment().getContext(), dummyData());
+        CastAdapter adapter = new CastAdapter();
         cast.setAdapter(adapter);
+
+        viewModel.getActors().observe(getViewLifecycleOwner(), actors -> {
+            adapter.setData(actors);
+        });
     }
 
     private void initComments() {
@@ -191,19 +188,16 @@ public class MovieDetails extends Fragment {
         CommentAdapter adapter = new CommentAdapter(requireContext());
         comments.setAdapter(adapter);
 
-        mainRepository.getComments(Integer.toString(movieID), IMainRepository.SEARCH_METHOD_MOVIE_ID).observe(this, comments -> {
+        viewModel.getComments().observe(getViewLifecycleOwner(), comments -> {
             adapter.setData(comments);
         });
+
         // OnClickListener to send comments
         send.setOnClickListener((View v) -> {
             // TODO
-            String text = comment.getText().toString();
+            viewModel.commentOnMovie(movieID, user.getUID(), comment.getText().toString());
             comment.setText("");
             comment.clearFocus();
-            if (user != null)
-                mainRepository.commentMovie(text, Integer.toString(movieID), user.getUID(), null);
-            else
-                Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -213,23 +207,10 @@ public class MovieDetails extends Fragment {
         GenreAdapter adapter = new GenreAdapter();
         genres.setAdapter(adapter);
 
-        // Observe LiveData
-        // If the Lifecycle object is not in an active state, then the observer isn't called even if the value changes.
-        // After the Lifecycle object is destroyed, the observer is automatically removed.
-        // So no need to unsub?
-        viewModel.getGenres(movieID).observe(this, genres -> {
+
+        viewModel.getGenres().observe(getViewLifecycleOwner(), genres -> {
             adapter.setData(genres);
         });
-    }
-
-    private ArrayList<Actor> dummyData() {
-        ArrayList x = new ArrayList<Actor>();
-        x.add(new Actor(0, "Patrick Wilson", "example", 1, "/djhTpbOvrfdDsWZFFintj2Uv47a.jpg"));
-        x.add(new Actor(0, "Vera Farmiga", "example", 1, "/oWZfxv4cK0h8Jcyz1MvvT2osoAP.jpg"));
-        x.add(new Actor(0, "Mckenna Grace", "example", 1, "/dX6QFwpAzAcXGgxSINwvDxujEgj.jpg"));
-        x.add(new Actor(0, "Madison Iseman", "example", 1, "/qkPW0nHQUlckRj3MRveVTzRpNR2.jpg"));
-        x.add(new Actor(0, "Katie Sarife", "example", 1, "/oQLQZ58uvGgpdtCUpOcoiF5zYJW.jpg"));
-        return x;
     }
 
 }

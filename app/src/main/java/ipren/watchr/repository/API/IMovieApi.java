@@ -16,6 +16,6 @@ public interface IMovieApi {
     @GET("trending/movie/week?api_key=" + Constants.API_KEY)
     Call<MovieList> getTrending();
 
-    @GET("movie/{id}?api_key=" + Constants.API_KEY + "&language=en-US" + Constants.API_KEY)
+    @GET("movie/{id}?api_key=" + Constants.API_KEY + "&language=en-US&append_to_response=credits")
     Call<Movie> getMovie(@Path("id") int movieID);
 }
