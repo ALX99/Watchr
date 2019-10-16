@@ -68,7 +68,7 @@ public class MockMainRepository implements IUserDataRepository {
     }
 
     @Override
-    public void reSendVerificationEmail() {
+    public void reSendVerificationEmail(OnCompleteListener callback) {
 
     }
 
