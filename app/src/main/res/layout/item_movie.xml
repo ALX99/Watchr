@@ -38,7 +38,7 @@
                 android:layout_height="159dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:imageUrl="@{`https://image.tmdb.org/t/p//w500` + movie.posterPath}" />
+                android:imageUrl="@{`https://image.tmdb.org/t/p//w154` + movie.posterPath}" />
 
             <TextView
                 android:id="@+id/movieTitle"
@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/ic_favorites"
+                android:background="@null"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/addButton"
                 app:layout_constraintTop_toTopOf="@+id/bottomContainer"

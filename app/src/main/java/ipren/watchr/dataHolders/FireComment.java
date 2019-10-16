@@ -5,14 +5,16 @@ import android.net.Uri;
 import com.google.firebase.firestore.DocumentId;
 
 public class FireComment {
+    @DocumentId
+    String uID;
     private String movie_id;
     private String user_id;
     private String text;
     private Uri profilePic;
-    @DocumentId
-    String uID;
 
-    public FireComment(){ }
+    public FireComment() {
+    }
+
 
     public String getMovie_id() {
         return movie_id;
@@ -25,7 +27,6 @@ public class FireComment {
     public String getText() {
         return text;
     }
-
 
     public String getuID() {
         return uID;

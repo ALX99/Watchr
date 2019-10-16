@@ -104,7 +104,6 @@ public class Movie {
         this.status = status;
     }
 
-
     public void setPopularity(double popularity) {
         this.popularity = popularity;
     }
@@ -117,9 +116,6 @@ public class Movie {
         this.video = video;
     }
 
-    public void setAdult(boolean adult) {
-        this.adult = adult;
-    }
 
     public void setBackdropPath(String backdropPath) {
         this.backdropPath = backdropPath;
@@ -173,6 +169,7 @@ public class Movie {
         return popularity;
     }
 
+
     public int getVoteCount() {
         return voteCount;
     }
@@ -185,17 +182,24 @@ public class Movie {
         return adult;
     }
 
+    public void setAdult(boolean adult) {
+        this.adult = adult;
+    }
+
     public String getBackdropPath() {
         return backdropPath;
     }
+
 
     public String getOriginalLanguage() {
         return originalLanguage;
     }
 
+
     public String getOriginalTitle() {
         return originalTitle;
     }
+
 
     public double getVoteAverage() {
         return voteAverage;
@@ -204,4 +208,6 @@ public class Movie {
     public String getReleaseDate() {
         return releaseDate;
     }
+
+
 }

@@ -17,16 +17,17 @@ public class AccountViewModel extends ViewModel {
         mainRepository = iMainRepository;
         this.user = mainRepository.getUserLiveData();
     }
+
     public AccountViewModel() {
         mainRepository = IUserDataRepository.getInstance();
         this.user = mainRepository.getUserLiveData();
     }
 
-    public void signOut(){
+    public void signOut() {
         mainRepository.signOutUser();
     }
 
-    public LiveData<User> getUser(){
+    public LiveData<User> getUser() {
         return this.user;
     }
 }

@@ -1,6 +1,5 @@
 package ipren.watchr.dataHolders;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 
 import ipren.watchr.BuildConfig;
@@ -16,19 +15,19 @@ public class User {
     private Uri userProfilePictureUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.default_profile_photo);
 
 
-    public User(String userName, String email,  Uri userProfilePictureUri, String UID, boolean isVerified){
-        if(userName != null)
+    public User(String userName, String email, Uri userProfilePictureUri, String UID, boolean isVerified) {
+        if (userName != null)
             this.userName = userName;
-        if(email != null)
+        if (email != null)
             this.email = email;
-        if(userProfilePictureUri != null)
+        if (userProfilePictureUri != null)
             this.userProfilePictureUri = userProfilePictureUri;
-        if(UID != null)
+        if (UID != null)
             this.UID = UID;
         this.isVerified = isVerified;
     }
 
-    public User(User user){
+    public User(User user) {
         this.userName = user.email;
         this.email = user.email;
         this.isVerified = user.isVerified;
@@ -38,9 +37,13 @@ public class User {
     }
 
 
-    public String getUID(){return UID;}
+    public String getUID() {
+        return UID;
+    }
 
-    public boolean isVerified(){return  isVerified; }
+    public boolean isVerified() {
+        return isVerified;
+    }
 
     public String getUserName() {
         return userName;

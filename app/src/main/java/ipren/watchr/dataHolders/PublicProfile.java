@@ -10,7 +10,8 @@ public class PublicProfile {
     private Uri profilePhotoUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.default_profile_photo);
     private String username = "Not set";
 
-    public PublicProfile() { }
+    public PublicProfile() {
+    }
 
     public PublicProfile(Uri profilePhotoUri, String username) {
         if (profilePhotoUri != null)

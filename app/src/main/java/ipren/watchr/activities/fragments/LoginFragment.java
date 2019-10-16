@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
-
 import ipren.watchr.R;
 import ipren.watchr.viewModels.LoginViewModel;
 
@@ -26,10 +25,10 @@ import static android.content.Context.VIBRATOR_SERVICE;
 
 public class LoginFragment extends Fragment {
 
+    LoginViewModel loginViewModel;
+
     public LoginFragment() {
     }
-
-    LoginViewModel loginViewModel;
 
     @Nullable
     @Override
@@ -54,7 +53,7 @@ public class LoginFragment extends Fragment {
         View fragmentView = getView();
         EditText passwordTextField = fragmentView.findViewById(R.id.password_text_input);
         EditText emailTextField = fragmentView.findViewById(R.id.email_text_input);
-    //Displays an error if the email is badly formatted
+        //Displays an error if the email is badly formatted
         emailTextField.addTextChangedListener(new EmailFormatListener(emailTextField));
 
         //Used to make the phone vibrate when wrong password is entered.
@@ -67,9 +66,10 @@ public class LoginFragment extends Fragment {
             //If the values pass the test a login is attempted, if it fails it will show an error message
             if (!userPasswordTxt.isEmpty() && isEmailFormat(userEmailTxt)) {
                 loginViewModel.signIn(userEmailTxt, userPasswordTxt);
-            }else {
-                if (userPasswordTxt.isEmpty()) passwordTextField.setError("Please enter your password");
-                if (userEmailTxt.isEmpty() ) emailTextField.setError("Please enter your email");
+            } else {
+                if (userPasswordTxt.isEmpty())
+                    passwordTextField.setError("Please enter your password");
+                if (userEmailTxt.isEmpty()) emailTextField.setError("Please enter your email");
                 shakeButton((Button) e);
             }
         });
@@ -131,21 +131,23 @@ public class LoginFragment extends Fragment {
                 exitLoginFragment(true);
                 Navigation.findNavController(getView()).navigate(R.id.action_global_account_settings);
             } else {
-                displayAuthError(e.getErrorMsg(), newUserEmail, password,reTypedPassword);
+                displayAuthError(e.getErrorMsg(), newUserEmail, password, reTypedPassword);
                 shakeButton(getView().findViewById(R.id.register_user_btn));
             }
         });
     }
+
     //TODO rework error parsing
-    private void displayAuthError(String error, EditText email, EditText ... passwords){
+    private void displayAuthError(String error, EditText email, EditText... passwords) {
         String msg = error.replace("ERROR_", "").toLowerCase();
-        if(msg.contains("email")) email.setError(msg);
-        else for(EditText field : passwords) field.setError(msg);
+        if (msg.contains("email")) email.setError(msg);
+        else for (EditText field : passwords) field.setError(msg);
 
     }
-    private void exitLoginFragment(boolean loginSucess){
+
+    private void exitLoginFragment(boolean loginSucess) {
         Navigation.findNavController(getView()).popBackStack();
-        if(loginSucess)
+        if (loginSucess)
             Toast.makeText(getContext(), "Welcome, you are logged in", Toast.LENGTH_SHORT).show();
     }
 
@@ -165,10 +167,14 @@ public class LoginFragment extends Fragment {
         public EmailFormatListener(EditText inputTextField) {
             this.inputTextField = inputTextField;
         }
+
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
 
         @Override
         public void afterTextChanged(Editable editable) {

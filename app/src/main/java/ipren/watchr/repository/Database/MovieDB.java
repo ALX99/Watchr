@@ -23,17 +23,6 @@ import ipren.watchr.dataHolders.MovieList;
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance
     private static String DB_NAME = "Ipren-Database";
-
-    public abstract ActorDao actorDao();
-
-    public abstract MovieDao movieDao();
-
-    public abstract CommentDao commentDao();
-
-    public abstract GenreDao genreDao();
-
-    public abstract MovieGenreJoinDao movieGenreJoinDao();
-
     private static Callback dbCallback = new Callback() {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
@@ -56,6 +45,16 @@ public abstract class MovieDB extends RoomDatabase {
         return INSTANCE;
 
     }
+
+    public abstract ActorDao actorDao();
+
+    public abstract MovieDao movieDao();
+
+    public abstract CommentDao commentDao();
+
+    public abstract GenreDao genreDao();
+
+    public abstract MovieGenreJoinDao movieGenreJoinDao();
 
     public abstract MovieListDao movieListDao();
 
