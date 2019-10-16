@@ -2,6 +2,7 @@ package ipren.watchr.repository.API.Firebase;
 
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -87,12 +88,22 @@ public class FirebaseDatabaseHelper {
     }
 
 
-    public void saveMovieToList(String movie_id, String user_id, String list, OnCompleteListener callback) {
-       Task task =  fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
-               .document(list).update("movies", FieldValue.arrayUnion(movie_id));
+    public void saveMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback) {
 
-        if(callback != null)
-            task.addOnCompleteListener(callback);
+       fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
+               .document(list).update("movies", FieldValue.arrayUnion(movie_id))
+               .addOnCompleteListener( e -> {
+                   if(e.getException() != null && e.getException().getLocalizedMessage().startsWith("NOT_FOUND: No document to update: ")) {
+                       HashMap<String, List<String>> entry = new HashMap<>();
+                       List<String> data = new LinkedList<>();
+                       data.add(movie_id);
+                       entry.put("movies",data);
+                       fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
+                               .document(list).set(entry).addOnCompleteListener(callback);
+                   }else
+                       if(callback != null)
+                           callback.onComplete(e);
+               });
     }
 
     public void deleteMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
