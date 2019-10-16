@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
@@ -14,16 +15,25 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.MovieList;
+import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.API.MovieApi;
+import ipren.watchr.repository.IMainRepository;
+import ipren.watchr.repository.IMovieRepository;
 
 /**
  *
  */
 public class ListViewModel extends AndroidViewModel {
 
-    public MutableLiveData<List<Movie>> movies = new MutableLiveData<>();
-    public MutableLiveData<Boolean> movieLoadError = new MutableLiveData<>();
-    public MutableLiveData<Boolean> loading = new MutableLiveData<>();
+    private MutableLiveData<List<Movie>> movies = new MutableLiveData<>();
+    private MutableLiveData<Boolean> movieLoadError = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> loading = new MutableLiveData<>();
+
+    private LiveData<User> user;
+
+    private IMovieRepository movieRepository;
+    private IMainRepository userRepository;
 
     private MovieApi movieService = new MovieApi();
     // Collects disposable single observers and disposes them
@@ -32,6 +42,26 @@ public class ListViewModel extends AndroidViewModel {
     // We use AndroidViewModel to get access to a context for storing data
     public ListViewModel(@NonNull Application application) {
         super(application);
+
+        // TODO: implementera mot repository
+//        movieRepository = IMovieRepository.getInstace();
+        userRepository = IMainRepository.getMainRepository();
+        user = userRepository.getUserLiveData();
+        String userId = user.getValue().getUID();
+        userRepository.getMovieList("favorites", userId);
+        user.getValue().
+    }
+
+    public MutableLiveData<List<Movie>> getMovies() {
+        return movies;
+    }
+
+    public MutableLiveData<Boolean> getMovieLoadError() {
+        return movieLoadError;
+    }
+
+    public MutableLiveData<Boolean> getLoading() {
+        return loading;
     }
 
     public void refresh(String url) {

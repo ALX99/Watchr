@@ -24,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ipren.watchr.BuildConfig;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
 import ipren.watchr.viewModels.ListViewModel;
@@ -64,22 +65,26 @@ public class MovieListFragment extends Fragment {
 
         String url = "";
 
+        // Get API key
+        String key = BuildConfig.API_KEY;
+
+        // TODO: @johan Check if logged in to access all lists beside browse
         // For testing purposes
         switch (this.getArguments().getString("listType")) {
             case "browse":
-                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1";
+                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=1";
                 break;
             case "recommended":
-                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=2";
+                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=2";
                 break;
             case "watchLater":
-                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=3";
+                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=3";
                 break;
             case "watched":
-                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=4";
+                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=4";
                 break;
             case "favorites":
-                url = "movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=5";
+                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=5";
                 break;
         }
 
@@ -94,7 +99,7 @@ public class MovieListFragment extends Fragment {
             movieList.setVisibility(View.GONE);
             listError.setVisibility(View.GONE);
             loadingView.setVisibility(View.VISIBLE);
-            listViewModel.refresh("movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1");
+            listViewModel.refresh("movie/top_rated?api_key=" + key + "&language=en-US&page=1");
             refreshLayout.setRefreshing(false);
         });
 
@@ -105,20 +110,20 @@ public class MovieListFragment extends Fragment {
      * Makes the fragment listen to the live data in the view model
      */
     private void observeViewModel() {
-        listViewModel.movies.observe(this, movies -> {
+        listViewModel.getMovies().observe(this, movies -> {
             if (movies != null && movies instanceof List) {
                 movieList.setVisibility(View.VISIBLE);
                 movieListAdapter.updateMovieList(movies);
             }
         });
 
-        listViewModel.movieLoadError.observe(this, isError -> {
+        listViewModel.getMovieLoadError().observe(this, isError -> {
             if (isError != null && isError instanceof Boolean) {
                 listError.setVisibility(isError ? View.VISIBLE : View.GONE);
             }
         });
 
-        listViewModel.loading.observe(this, isLoading -> {
+        listViewModel.getLoading().observe(this, isLoading -> {
             if (isLoading != null && isLoading instanceof Boolean) {
                 loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 if (isLoading) {
@@ -139,7 +144,6 @@ public class MovieListFragment extends Fragment {
 
         // Clear text and focus
         searchView.setQuery("", false);
-        // TODO: @johan Make the clear focus work
         searchView.clearFocus();
 
         // Get rid of magnifying glass on keyboard.
