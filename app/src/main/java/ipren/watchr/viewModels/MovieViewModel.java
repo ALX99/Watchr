@@ -23,7 +23,6 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
     private int movieID;
     private IMovieRepository movieRepository;
     private IUserDataRepository mainRepository;
-    private LiveData<Movie> movie;
     private LiveData<User> user;
     private LiveData<FireComment[]> comments;
     private LiveData<List<Actor>> actors;
@@ -36,7 +35,6 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
 
     public void setMovieID(int movieID) {
         this.movieID = movieID;
-        this.movie = movieRepository.getMovieByID(movieID);
         this.comments = mainRepository.getComments(Integer.toString(movieID), IUserDataRepository.SEARCH_METHOD_MOVIE_ID);
         this.user = mainRepository.getUserLiveData();
         this.actors = movieRepository.getActorsFromMovie(movieID);
