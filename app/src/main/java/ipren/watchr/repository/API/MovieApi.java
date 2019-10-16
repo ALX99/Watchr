@@ -1,9 +1,7 @@
 package ipren.watchr.repository.API;
 
-import android.util.Log;
-
 import io.reactivex.Single;
-import ipren.watchr.Constants;
+import ipren.watchr.dataHolders.GenreList;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.MovieList;
 import retrofit2.Call;
@@ -38,5 +36,10 @@ public class MovieApi implements IMovieApi {
     @Override
     public Call<Movie> getMovie(int movieID) {
         return api.getMovie(movieID);
+    }
+
+    @Override
+    public Call<GenreList> getAllGenres() {
+        return api.getAllGenres();
     }
 }

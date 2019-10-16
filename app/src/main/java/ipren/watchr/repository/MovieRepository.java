@@ -91,7 +91,6 @@ public class MovieRepository implements IMovieRepository {
                 new Thread(() -> {
                     movie.setUpdateDate(new Date());
                     movieDB.movieDao().insert(movie);
-                    movieDB.genreDao().insert(movie.getGenres());
                     for (Genre g : movie.getGenres())
                         movieDB.movieGenreJoinDao().insert(new MovieGenreJoin(movie.id, g.getGenreID()));
                     for (Actor a : movie.getActorList().getActors())
