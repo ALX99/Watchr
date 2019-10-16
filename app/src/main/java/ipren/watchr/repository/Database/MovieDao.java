@@ -23,6 +23,10 @@ public interface MovieDao {
     @Query("SELECT * FROM movies WHERE id LIKE :movieID")
     LiveData<Movie> getMovieByID(int movieID);
 
+
+    @Query("SELECT * FROM movies WHERE id IN(:movieID)")
+    LiveData<List<Movie>> getMoviesByID(int... movieID);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Movie... movies);
 

@@ -9,8 +9,13 @@ import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 
 public interface IMovieRepository {
-    final String TRENDING_LIST = "Trending";
+    String TRENDING_LIST = "Trending";
     LiveData<Movie> getMovieByID(int id);
+
+    // will probably have to be used when wanting
+    // to gather movies from a list from FireBase
+    // since they only contain movieIDs
+    LiveData<List<Movie>> getMoviesByID(int[] ids);
 
     LiveData<List<Genre>> getGenresFromMovie(int id);
 

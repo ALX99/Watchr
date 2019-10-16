@@ -88,6 +88,13 @@ public class MovieRepository implements IMovieRepository {
         });
     }
 
+    public LiveData<List<Movie>> getMoviesByID(int[] ids) {
+        // We have to fetch the movies if they don't already exist
+        for (int id : ids)
+            getMovieByID(id);
+        return movieDB.movieDao().getMoviesByID(ids);
+    }
+
     public LiveData<Movie> getMovieByID(int movieID) {
         new Thread(() -> {
             Movie m = movieDB.movieDao().getMovieByIDNonLiveObject(movieID);
