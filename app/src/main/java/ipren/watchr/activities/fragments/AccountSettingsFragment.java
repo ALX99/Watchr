@@ -57,10 +57,9 @@ public class AccountSettingsFragment extends Fragment {
 
         //Syncing to Livedata<User>
         settingsViewModel.getUser().observe(this, e -> {
-            if (e == null) {
-                Navigation.findNavController(getView()).popBackStack();
+            if (e == null)
                 return;
-            }
+
             showEmailVerifiedLayout(e.isVerified());
 
             // set Image here getView().findViewById(R.id.profile_img_acc)
