@@ -18,6 +18,9 @@ public interface MovieDao {
     LiveData<List<Movie>> getAllMovies();
 
     @Query("SELECT * FROM movies WHERE id LIKE :movieID")
+    Movie getMovieByIDNonLiveObject(int movieID);
+
+    @Query("SELECT * FROM movies WHERE id LIKE :movieID")
     LiveData<Movie> getMovieByID(int movieID);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

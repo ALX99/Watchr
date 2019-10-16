@@ -7,8 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import ipren.watchr.Helpers.DateConverter;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Genre;
@@ -16,7 +18,8 @@ import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.MovieGenreJoin;
 import ipren.watchr.dataHolders.MovieList;
 
-@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 9)
+@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 11)
+@TypeConverters(DateConverter.class)
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance
     private static String DB_NAME = "Ipren-Database";

@@ -1,12 +1,14 @@
 package ipren.watchr.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import ipren.watchr.Constants;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
@@ -59,6 +61,24 @@ public class MovieRepository implements IMovieRepository {
     }
 
     public LiveData<Movie> getMovieByID(int movieID) {
+        new Thread(() -> {
+            Movie m = movieDB.movieDao().getMovieByIDNonLiveObject(movieID);
+            if (m == null)
+                insertMovie(movieID);
+            else {
+                long diff = new Date().getTime() - m.getUpdateDate().getTime();
+                if (TimeUnit.MILLISECONDS.toDays(diff) > 1) {
+                    Log.d("MOVIE", "The movie " + movieID + " has to be updated!");
+                    insertMovie(movieID);
+                } else
+                    Log.d("MOVIE", "The movie " + movieID + " does not have to be updated. It is " + TimeUnit.MILLISECONDS.toMinutes(diff) + " minutes old");
+            }
+        }).start();
+
+        return movieDB.movieDao().getMovieByID(movieID);
+    }
+
+    private void insertMovie(int movieID) {
         Call<Movie> movieCall = movieApi.getMovie(movieID);
         movieCall.enqueue(new Callback<Movie>() {
             @Override
@@ -69,6 +89,7 @@ public class MovieRepository implements IMovieRepository {
                 Movie movie = response.body();
                 // Insert stuff to db :)
                 new Thread(() -> {
+                    movie.setUpdateDate(new Date());
                     movieDB.movieDao().insert(movie);
                     movieDB.genreDao().insert(movie.getGenres());
                     for (Genre g : movie.getGenres())
@@ -84,8 +105,6 @@ public class MovieRepository implements IMovieRepository {
 
             }
         });
-
-        return movieDB.movieDao().getMovieByID(movieID);
     }
 
     public LiveData<List<Actor>> getActorsFromMovie(int movieID) {

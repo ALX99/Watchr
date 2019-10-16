@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 @Entity(tableName = "movies")
 public class Movie {
     @PrimaryKey
@@ -52,6 +54,8 @@ public class Movie {
     @ColumnInfo(name = "runtime")
     @SerializedName("runtime")
     private String runtime;
+    @ColumnInfo(name = "update_date")
+    private Date updateDate;
     @Ignore
     @SerializedName("genres")
     private Genre[] genres;
@@ -59,23 +63,17 @@ public class Movie {
     @SerializedName("credits")
     private ActorList actorList;
 
-    public Movie(int id, String posterPath, String title, String overview, double popularity, int voteCount, boolean video, String status, boolean adult, String backdropPath, String originalLanguage, String originalTitle, double voteAverage, String releaseDate, String runtime, Genre[] genres) {
+    public Movie(int id, String title) {
         this.id = id;
-        this.posterPath = posterPath;
         this.title = title;
-        this.overview = overview;
-        this.popularity = popularity;
-        this.voteCount = voteCount;
-        this.video = video;
-        this.status = status;
-        this.adult = adult;
-        this.backdropPath = backdropPath;
-        this.originalLanguage = originalLanguage;
-        this.originalTitle = originalTitle;
-        this.voteAverage = voteAverage;
-        this.releaseDate = releaseDate;
-        this.runtime = runtime;
-        this.genres = genres;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 
     public ActorList getActorList() {
@@ -106,10 +104,6 @@ public class Movie {
         this.status = status;
     }
 
-    public Movie(int id, String title) {
-        this.id = id;
-        this.title = title;
-    }
 
     public void setPopularity(double popularity) {
         this.popularity = popularity;
