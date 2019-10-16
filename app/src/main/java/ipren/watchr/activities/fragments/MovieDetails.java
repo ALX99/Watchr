@@ -43,8 +43,6 @@ import ipren.watchr.viewModels.MovieViewModel;
 public class MovieDetails extends Fragment {
     private int movieID;
     private IMovieViewModel viewModel;
-
-    private IUserDataRepository mainRepository;
     private User user;
 
     @BindView(R.id.castList)

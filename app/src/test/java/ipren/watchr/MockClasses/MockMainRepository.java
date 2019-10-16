@@ -8,6 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import ipren.watchr.dataHolders.FireComment;
+import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 //TODO remake this test
@@ -71,6 +74,56 @@ public class MockMainRepository implements IUserDataRepository {
 
     @Override
     public void updateProfile(String userName, Uri pictureUri) {
+
+    }
+
+    @Override
+    public LiveData<PublicProfile> getPublicProfile(String user_id) {
+        return null;
+    }
+
+    @Override
+    public LiveData<FireComment[]> getComments(String movie_id, int searchMethod) {
+        return null;
+    }
+
+    @Override
+    public LiveData<FireRating[]> getRatings(String movie_id, int searchMethod) {
+        return null;
+    }
+
+    @Override
+    public LiveData<String[]> getMovieList(String list, String user_id) {
+        return null;
+    }
+
+    @Override
+    public void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback) {
+
+    }
+
+    @Override
+    public void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
+
+    }
+
+    @Override
+    public void rateMovie(int score, String movie_id, String user_id, OnCompleteListener callback) {
+
+    }
+
+    @Override
+    public void removeRating(String rating_id, OnCompleteListener callback) {
+
+    }
+
+    @Override
+    public void commentMovie(String text, String movie_id, String user_id, OnCompleteListener callback) {
+
+    }
+
+    @Override
+    public void removeComment(String comment_id, OnCompleteListener callback) {
 
     }
 }
