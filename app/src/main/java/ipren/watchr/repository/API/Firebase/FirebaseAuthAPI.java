@@ -5,7 +5,6 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,8 +15,8 @@ import com.google.firebase.storage.StorageReference;
 import ipren.watchr.dataHolders.User;
 
 public class FirebaseAuthAPI {
-    private FirebaseAuth mAuth;
     private final MutableLiveData userLiveData = new MutableLiveData(null);
+    private FirebaseAuth mAuth;
 
     FirebaseAuthAPI() {
         mAuth = FirebaseAuth.getInstance();

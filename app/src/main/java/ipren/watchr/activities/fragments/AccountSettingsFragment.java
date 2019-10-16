@@ -33,11 +33,10 @@ import static android.app.Activity.RESULT_OK;
 //TODO This class is not finnished
 public class AccountSettingsFragment extends Fragment {
 
-    AccountSettingsViewModel settingsViewModel;
-
     private final int IMAGE_SRC_GALLERY = 0;
     private final int IMAGE_SRC_CAMERA = 1;
     private final String TMP_IMG_FILENAME = "JPEG_PROFILE_PICTURE";
+    AccountSettingsViewModel settingsViewModel;
     private Uri uriToTempFile = null;
 
     private Uri newProfileImgUri = null;
@@ -110,18 +109,18 @@ public class AccountSettingsFragment extends Fragment {
 
         getView().findViewById(R.id.save_user_config_btn).setOnClickListener(e -> {
 
-             String oldImage = settingsViewModel.getUser().getValue().getUserProfilePictureUri().toString();
-             Uri newImage = newProfileImgUri != null && !oldImage.equals(newProfileImgUri.toString()) ? newProfileImgUri : null;
+            String oldImage = settingsViewModel.getUser().getValue().getUserProfilePictureUri().toString();
+            Uri newImage = newProfileImgUri != null && !oldImage.equals(newProfileImgUri.toString()) ? newProfileImgUri : null;
 
 
-             String oldText = settingsViewModel.getUser().getValue().getUserName();
-             String newText = ((EditText)getView().findViewById(R.id.username_Input)).getText().toString();
-             String username = !newText.isEmpty() && !oldText.equals(newText) ? newText : null;
+            String oldText = settingsViewModel.getUser().getValue().getUserName();
+            String newText = ((EditText) getView().findViewById(R.id.username_Input)).getText().toString();
+            String username = !newText.isEmpty() && !oldText.equals(newText) ? newText : null;
 
-             if(username == null && newImage==null)
-                 return;
+            if (username == null && newImage == null)
+                return;
 
-             settingsViewModel.updateUserProfile(username,newImage);
+            settingsViewModel.updateUserProfile(username, newImage);
         });
 
         getView().findViewById(R.id.profile_img_acc).setOnClickListener(e -> chooseGalleryOrCamera());

@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -112,7 +114,18 @@ public class MovieDetails extends Fragment {
         // Bind stuff with ButterKnife
         ButterKnife.bind(this, view);
         Toast.makeText(getContext(), Integer.toString(movieID), Toast.LENGTH_SHORT).show(); // Debug
+        hideSearchAndFilter();
         return view;
+    }
+
+    private void hideSearchAndFilter() {
+        // Get the search view from toolbar and hide
+        SearchView searchView = getActivity().findViewById(R.id.toolbar_search);
+        searchView.setVisibility(View.GONE);
+
+        // Get the filter button from toolbar and show
+        ImageButton filterBtn = getActivity().findViewById(R.id.toolbar_filter);
+        filterBtn.setVisibility(View.GONE);
     }
 
     @Override
@@ -230,6 +243,7 @@ public class MovieDetails extends Fragment {
                 watchLaterCheckbox.setChecked(!isChecked);
         });
     }
+
     private void initCast() {
 
         cast.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));

@@ -15,15 +15,13 @@ import ipren.watchr.R;
 
 public class HomeFragment extends Fragment {
 
+    SearchView searchView;
+    View fragment;
     private String TAG = getClass().getName();
-
+    private Activity activity;
     public HomeFragment() {
         // Required empty public constructor
     }
-
-    SearchView searchView;
-    View fragment;
-    private Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +31,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         activity = getActivity();
@@ -57,8 +55,6 @@ public class HomeFragment extends Fragment {
 
 
     }
-
-
 
 
 }

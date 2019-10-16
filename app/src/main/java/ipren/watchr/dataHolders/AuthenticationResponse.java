@@ -13,10 +13,11 @@ public class AuthenticationResponse {
         this.successful = successful;
     }
 
-    public boolean isSuccessful(){
+    public boolean isSuccessful() {
         return successful;
     }
-    public String getErrorMsg(){
+
+    public String getErrorMsg() {
         return errorMsg;
     }
 

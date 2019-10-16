@@ -18,6 +18,7 @@ public class LoginViewModel extends ViewModel {
     MutableLiveData<AuthenticationResponse> signInResponse = new MutableLiveData();
     MutableLiveData<AuthenticationResponse> createUserResponse = new MutableLiveData();
     LiveData<User> user;
+
     @VisibleForTesting
     public LoginViewModel(IUserDataRepository mainRepository) {
         this.mainRepository = mainRepository;
@@ -29,32 +30,32 @@ public class LoginViewModel extends ViewModel {
         this.user = mainRepository.getUserLiveData();
     }
 
-    public LiveData<User> getUser(){
+    public LiveData<User> getUser() {
         return this.user;
     }
 
-    public LiveData<AuthenticationResponse> getSignInResponse(){
+    public LiveData<AuthenticationResponse> getSignInResponse() {
         return this.signInResponse;
     }
 
-    public LiveData<AuthenticationResponse> getCreateUserResponse(){
+    public LiveData<AuthenticationResponse> getCreateUserResponse() {
         return this.createUserResponse;
     }
 
-    public void registerUser(String email, String password){
-        mainRepository.registerUser(email,password, res -> updateCreateUserResponse(res) );
+    public void registerUser(String email, String password) {
+        mainRepository.registerUser(email, password, res -> updateCreateUserResponse(res));
     }
 
-    public void signIn(String email, String password){
+    public void signIn(String email, String password) {
         mainRepository.loginUser(email, password, res -> updateSignInResponse(res));
     }
 
-    private void updateSignInResponse(Task task){
+    private void updateSignInResponse(Task task) {
         String error = LoginErrorParser.parseAuthError(task.getException());
         signInResponse.postValue(new AuthenticationResponse(task.isSuccessful(), error));
     }
 
-    private void updateCreateUserResponse(Task task){
+    private void updateCreateUserResponse(Task task) {
         String error = LoginErrorParser.parseAuthError(task.getException());
         createUserResponse.postValue(new AuthenticationResponse(task.isSuccessful(), error));
     }
