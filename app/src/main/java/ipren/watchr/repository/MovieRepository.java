@@ -21,12 +21,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class MovieRepository implements IMovieRepository {
     private MovieDB movieDB;
     private IMovieApi movieApi;
     private static final int INSERT = 1;
     private static final int UPDATE = 2;
 
+    /**
+     * Instantiates a new Movie repository.
+     *
+     * @param context the context
+     */
     public MovieRepository(Context context) {
         movieDB = MovieDB.getInstance(context);
         movieApi = new MovieApi();
@@ -37,12 +43,22 @@ public class MovieRepository implements IMovieRepository {
         return movieDB.movieGenreJoinDao().getGenresFromMovie(id);
     }
 
+    /**
+     * @param list       The list to be returned
+     * @param page       The page in the list
+     * @param forceFetch Should data be forced to be gathered from the API?
+     * @return Returns the movie list
+     */
     public LiveData<List<Movie>> getMovieList(String list, int page, boolean forceFetch) {
         if (list == IMovieRepository.TRENDING_LIST)
             getTrendingList(page, forceFetch);
         return movieDB.movieListDao().getMoviesFromList(list, page);
     }
 
+    /**
+     * @param page       The page number of the trending list
+     * @param forceFetch Force fetching from the API?
+     */
     private void getTrendingList(int page, boolean forceFetch) {
         new Thread(() -> {
             List<Movie> movies = movieDB.movieListDao().getMoviesFromListNonLiveData(IMovieRepository.TRENDING_LIST, page);
@@ -59,6 +75,11 @@ public class MovieRepository implements IMovieRepository {
         }).start();
     }
 
+    /**
+     * Inserts trending movies into the DB
+     *
+     * @param page The page number of the trending list to be fetched
+     */
     private void insertTrendingMovies(int page) {
         Log.d("MOVIE", "Fetching trending movies");
         Call<MovieList> call = movieApi.getTrending(page);
@@ -88,6 +109,11 @@ public class MovieRepository implements IMovieRepository {
         });
     }
 
+    /**
+     *
+     * @param ids The array of IDs of movies to get
+     * @return The movie list
+     */
     public LiveData<List<Movie>> getMoviesByID(int[] ids) {
         // We have to fetch the movies if they don't already exist
         for (int id : ids)
@@ -95,6 +121,11 @@ public class MovieRepository implements IMovieRepository {
         return movieDB.movieDao().getMoviesByID(ids);
     }
 
+    /**
+     *
+     * @param movieID The ID of the movie
+     * @return The movie
+     */
     public LiveData<Movie> getMovieByID(int movieID) {
         new Thread(() -> {
             Movie m = movieDB.movieDao().getMovieByIDNonLiveObject(movieID);
@@ -118,6 +149,11 @@ public class MovieRepository implements IMovieRepository {
         return movieDB.movieDao().getMovieByID(movieID);
     }
 
+    /**
+     *
+     * @param movieID The ID of the movie
+     * @param method The method to be used, (inserting or updating)
+     */
     private void insertMovie(int movieID, int method) {
         Log.d("MOVIE", "Fetching the movie " + movieID);
         Call<Movie> movieCall = movieApi.getMovie(movieID);
@@ -126,7 +162,6 @@ public class MovieRepository implements IMovieRepository {
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 if (!response.isSuccessful())
                     return;
-
                 Movie movie = response.body();
                 // Insert stuff to db :)
                 new Thread(() -> {
@@ -158,6 +193,11 @@ public class MovieRepository implements IMovieRepository {
         });
     }
 
+    /**
+     *
+     * @param movieID The movie ID
+     * @return The list of actors from the movie
+     */
     public LiveData<List<Actor>> getActorsFromMovie(int movieID) {
         return movieDB.actorDao().getActorsFromMovie(movieID);
     }

@@ -80,8 +80,12 @@ public abstract class MovieDB extends RoomDatabase {
             return null;
         }
 
+        /**
+         * Gathers the genreList from the API when the DB is created.
+         * This makes things easier since when getting a movie list form the API
+         * the list only contains the genre IDs and not the name of genres
+         */
         private void insertGenres() {
-            // Download the full genrelist
             movieApi.getAllGenres().enqueue(new retrofit2.Callback<GenreList>() {
                 @Override
                 public void onResponse(Call<GenreList> call, Response<GenreList> response) {

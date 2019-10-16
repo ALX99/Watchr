@@ -53,8 +53,8 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
     }
 
     @Override
-    public LiveData<FireRating[]> getRatings(int movie_id, int searchMethod) {
-        return mainRepository.getRatings(Integer.toString(movie_id), searchMethod);
+    public LiveData<FireRating[]> getRatings(int searchMethod) {
+        return mainRepository.getRatings(Integer.toString(movieID), searchMethod);
     }
 
     public LiveData<Movie> getMovie() {
@@ -71,6 +71,7 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
         return mainRepository.getMovieList(list, UID);
     }
 
+    @Override
     public LiveData<User> getUser() {
         return user;
     }
@@ -85,6 +86,7 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
         return comments;
     }
 
+    @Override
     public LiveData<List<Genre>> getGenres() {
         return movieRepository.getGenresFromMovie(movieID);
     }
