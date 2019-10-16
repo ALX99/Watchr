@@ -6,12 +6,19 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 import java.util.List;
+
+import javax.security.auth.callback.Callback;
 
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.FireComment;
+import ipren.watchr.dataHolders.FireRating;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IMainRepository;
 import ipren.watchr.repository.IMovieRepository;
@@ -41,6 +48,21 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
         this.actors = movieRepository.getActorsFromMovie(movieID);
     }
 
+    @Override
+    public void addMovieToList(int movieID, String list, String UID) {
+        mainRepository.addMovieToList(list, Integer.toString(movieID), UID, null);
+    }
+
+    @Override
+    public void removeMovieFromList(int movieID, String list, String UID) {
+        mainRepository.removeMovieFromList(list, Integer.toString(movieID), UID, null);
+    }
+
+    @Override
+    public LiveData<FireRating[]> getRatings(int movie_id, int searchMethod) {
+        return mainRepository.getRatings(Integer.toString(movie_id), searchMethod);
+    }
+
     public LiveData<Movie> getMovie() {
         return movieRepository.getMovieByID(movieID);
     }
@@ -48,6 +70,11 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
     @Override
     public LiveData<List<Actor>> getActors() {
         return actors;
+    }
+
+    @Override
+    public LiveData<String[]> getUserList(String list, String UID) {
+        return mainRepository.getMovieList(list, UID);
     }
 
     public LiveData<User> getUser() {
@@ -66,6 +93,11 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
 
     public LiveData<List<Genre>> getGenres() {
         return movieRepository.getGenresFromMovie(movieID);
+    }
+
+    @Override
+    public LiveData<PublicProfile> getPublicProfile(String user_id) {
+        return mainRepository.getPublicProfile(user_id);
     }
 
     @Override

@@ -14,6 +14,9 @@ import ipren.watchr.dataHolders.User;
 public interface IMainRepository {
     int SEARCH_METHOD_MOVIE_ID = 0;
     int SEARCH_METHOD_USER_ID = 1;
+    String FAVORITES_LIST = "Favorites";
+    String WATCH_LATER_LIST = "Watch_Later";
+    String WATCHED_LIST = "Watched";
 
     static IMainRepository getMainRepository() {
         return MainRepository.getMainRepository();
@@ -46,7 +49,7 @@ public interface IMainRepository {
 
     void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
-    void getMovieList(String list, String user_id);
+    LiveData<String[]> getMovieList(String list, String user_id);
 
     void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback);
 

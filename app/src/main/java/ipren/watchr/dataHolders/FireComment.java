@@ -1,11 +1,14 @@
 package ipren.watchr.dataHolders;
 
+import android.net.Uri;
+
 import com.google.firebase.firestore.DocumentId;
 
 public class FireComment {
     private String movie_id;
     private String user_id;
     private String text;
+    private Uri profilePic;
     @DocumentId
     String uID;
 
@@ -33,5 +36,13 @@ public class FireComment {
         this.user_id = user_id;
         this.text = text;
         this.uID = uID;
+    }
+
+    public Uri getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(Uri profilePic) {
+        this.profilePic = profilePic;
     }
 }

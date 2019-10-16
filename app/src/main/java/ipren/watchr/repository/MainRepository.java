@@ -79,8 +79,8 @@ public class MainRepository implements IMainRepository{
     }
 
     @Override
-    public void getMovieList(String list, String user_id) {
-        userDataApi.getMovieListByUserId(list, user_id);
+    public LiveData<String[]> getMovieList(String list, String user_id) {
+        return userDataApi.getMovieListByUserId(list, user_id);
     }
 
     @Override
