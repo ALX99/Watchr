@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -59,6 +61,7 @@ public class LoginFragment extends Fragment {
         //Used to make the phone vibrate when wrong password is entered.
         //This callback loggs the user in or displays error messages
         fragmentView.findViewById(R.id.login_button).setOnClickListener(e -> {
+
             String userEmailTxt = emailTextField.getText().toString();
             String userPasswordTxt = passwordTextField.getText().toString();
 
@@ -66,6 +69,7 @@ public class LoginFragment extends Fragment {
             //If the values pass the test a login is attempted, if it fails it will show an error message
             if (!userPasswordTxt.isEmpty() && isEmailFormat(userEmailTxt)) {
                 loginViewModel.signIn(userEmailTxt, userPasswordTxt);
+                loadingButtonEnabled((Button) e, getView().findViewById(R.id.login_spinner), true, "Signing in...");
             } else {
                 if (userPasswordTxt.isEmpty())
                     passwordTextField.setError("Please enter your password");
@@ -75,6 +79,7 @@ public class LoginFragment extends Fragment {
         });
         //Response from the model regarding the login attempt
         loginViewModel.getSignInResponse().observe(this, e -> {
+            loadingButtonEnabled(getView().findViewById(R.id.login_button), getView().findViewById(R.id.login_spinner), false, "Login");
             if (e.isSuccessful()) {
                 exitLoginFragment(true);
             } else {
@@ -120,6 +125,7 @@ public class LoginFragment extends Fragment {
                 reTypedPassword.setError("Please re-enter password");
 
             } else if (isEmailFormat(email)) {
+                loadingButtonEnabled(getView().findViewById(R.id.register_user_btn), getView().findViewById(R.id.register_user_spinner), true, "registering...");
                 loginViewModel.registerUser(email, passwordTxt);
                 return;
             }
@@ -127,6 +133,7 @@ public class LoginFragment extends Fragment {
         });
 
         loginViewModel.getCreateUserResponse().observe(this, e -> {
+            loadingButtonEnabled(getView().findViewById(R.id.register_user_btn), getView().findViewById(R.id.register_user_spinner), false, "Register");
             if (e.isSuccessful()) {
                 exitLoginFragment(true);
                 Navigation.findNavController(getView()).navigate(R.id.action_global_account_settings);
@@ -182,6 +189,12 @@ public class LoginFragment extends Fragment {
             if (!(isEmailFormat(newValue)))
                 inputTextField.setError("Not an email address");
         }
+    }
+
+    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text){
+        button.setEnabled(!on);
+        button.setText(text);
+        spinner.setVisibility(on ?  View.VISIBLE : View.GONE );
     }
 }
 

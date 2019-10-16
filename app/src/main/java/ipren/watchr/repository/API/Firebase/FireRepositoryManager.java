@@ -69,8 +69,8 @@ public class FireRepositoryManager implements IUserDataRepository {
     }
 
     @Override
-    public void reSendVerificationEmail() {
-        firebaseAuthAPI.resendVerificationEmail();
+    public void reSendVerificationEmail(OnCompleteListener callback) {
+        firebaseAuthAPI.resendVerificationEmail(callback);
     }
 
     @Override

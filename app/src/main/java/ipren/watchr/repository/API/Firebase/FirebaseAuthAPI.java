@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -33,12 +34,14 @@ public class FirebaseAuthAPI {
 
     }
 
-    void resendVerificationEmail() {
+    void resendVerificationEmail(OnCompleteListener callback) {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser == null || firebaseUser.isEmailVerified())
+        if (firebaseUser == null || firebaseUser.isEmailVerified()) {
+            callback.onComplete(null);
             return;
+        }
 
-        firebaseUser.sendEmailVerification();
+        attachCallback(firebaseUser.sendEmailVerification(), callback);
     }
 
     LiveData<User> getUser() {
@@ -112,5 +115,9 @@ public class FirebaseAuthAPI {
         });
     }
 
+    private void attachCallback(Task task, OnCompleteListener callback){
+        if(callback != null)
+            task.addOnCompleteListener(callback);
 
+    }
 }
