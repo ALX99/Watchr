@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
-import java.util.List;
-
 import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.FireRating;
 import ipren.watchr.dataHolders.PublicProfile;
@@ -17,7 +15,7 @@ import ipren.watchr.repository.API.Firebase.FireApiManager;
 public interface UserDataAPI {
 
     static UserDataAPI getInstance() {
-            return FireApiManager.getInstance();
+        return FireApiManager.getInstance();
     }
 
     //Firebase auth functions
@@ -48,7 +46,7 @@ public interface UserDataAPI {
 
     void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
-    void rateMovie(int score, String movie_id, String user_id,OnCompleteListener callback);
+    void rateMovie(int score, String movie_id, String user_id, OnCompleteListener callback);
 
     void removeRating(String rating_id, OnCompleteListener callback);
 
@@ -56,7 +54,7 @@ public interface UserDataAPI {
 
     void removeComment(String comment_id, OnCompleteListener callback);
 
-    LiveData<String[]>  getMovieListByUserId(String list, String user_id);
+    LiveData<String[]> getMovieListByUserId(String list, String user_id);
 
 
 }

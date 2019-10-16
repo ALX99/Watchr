@@ -20,7 +20,6 @@ public interface IMainRepository {
     }
 
 
-
     //Firebase auth functions
 
     LiveData<User> getUserLiveData();

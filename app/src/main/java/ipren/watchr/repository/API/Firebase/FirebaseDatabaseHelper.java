@@ -7,9 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,14 +16,10 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.rpc.Help;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -88,16 +82,16 @@ public class FirebaseDatabaseHelper {
 
 
     public void saveMovieToList(String movie_id, String user_id, String list, OnCompleteListener callback) {
-       Task task =  fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
-               .document(list).update("movies", FieldValue.arrayUnion(movie_id));
+        Task task = fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
+                .document(list).update("movies", FieldValue.arrayUnion(movie_id));
 
-        if(callback != null)
+        if (callback != null)
             task.addOnCompleteListener(callback);
     }
 
     public void deleteMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
-       Task task =  fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION).document(list).update("movies", FieldValue.arrayRemove(movie_id));
-        if(callback != null)
+        Task task = fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION).document(list).update("movies", FieldValue.arrayRemove(movie_id));
+        if (callback != null)
             task.addOnCompleteListener(callback);
 
     }
@@ -135,54 +129,54 @@ public class FirebaseDatabaseHelper {
         comment.put(COMMENT_TXT_FIELD, text);
 
         Task task = fireStore.collection(COMMENT_PATH).add(comment);
-        if(callback != null)
+        if (callback != null)
             task.addOnCompleteListener(callback);
 
     }
 
-     void removeComment(String comment_id, OnCompleteListener callback) {
-       Task task =  fireStore.collection(COMMENT_PATH).document(comment_id).delete();
-         if(callback != null)
-             task.addOnCompleteListener(callback);
+    void removeComment(String comment_id, OnCompleteListener callback) {
+        Task task = fireStore.collection(COMMENT_PATH).document(comment_id).delete();
+        if (callback != null)
+            task.addOnCompleteListener(callback);
 
     }
 
-     void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
+    void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
         Map<String, String> comment = new HashMap<>();
 
         comment.put(USER_ID_FIELD, user_id);
         comment.put(MOVIE_ID_FIELD, movie_id);
         comment.put("score", "" + score);
 
-       Task task = fireStore.collection(RATING_PATH).add(comment);
-       if(callback != null)
-           task.addOnCompleteListener(callback);
+        Task task = fireStore.collection(RATING_PATH).add(comment);
+        if (callback != null)
+            task.addOnCompleteListener(callback);
     }
 
-     void removeRating(String rating_id, OnCompleteListener callback) {
+    void removeRating(String rating_id, OnCompleteListener callback) {
         Task task = fireStore.collection(RATING_PATH).document(rating_id).delete();
-         if(callback != null)
-             task.addOnCompleteListener(callback);
+        if (callback != null)
+            task.addOnCompleteListener(callback);
     }
 
 
     // that update rather than replace.
 
-     LiveData<FireComment[]> getCommentByMovieID(String movie_id) {
+    LiveData<FireComment[]> getCommentByMovieID(String movie_id) {
         if (!commentsByMovie_id.containsKey(movie_id))
             commentsByMovie_id.put(movie_id, listenToResources(COMMENT_PATH, MOVIE_ID_FIELD, movie_id, FireComment.class));
 
         return commentsByMovie_id.get(movie_id);
     }
 
-     LiveData<FireComment[]> getCommentsByUserID(String user_id) {
+    LiveData<FireComment[]> getCommentsByUserID(String user_id) {
         if (!commentsByUser_id.containsKey(user_id))
             commentsByUser_id.put(user_id, listenToResources(COMMENT_PATH, USER_ID_FIELD, user_id, FireComment.class));
 
         return commentsByUser_id.get(user_id);
     }
 
-     LiveData<FireRating[]> getRatingByUserID(String user_id) {
+    LiveData<FireRating[]> getRatingByUserID(String user_id) {
 
         if (!ratingByUser_id.containsKey(user_id))
             ratingByUser_id.put(user_id, listenToResources(RATING_PATH, USER_ID_FIELD, user_id, FireRating.class));
@@ -191,14 +185,14 @@ public class FirebaseDatabaseHelper {
     }
 
 
-     LiveData<FireRating[]> getRatingByMovieID(String movie_id) {
+    LiveData<FireRating[]> getRatingByMovieID(String movie_id) {
         if (!ratingByMovie_id.containsKey(movie_id))
             ratingByMovie_id.put(movie_id, listenToResources(RATING_PATH, USER_ID_FIELD, movie_id, FireRating.class));
 
         return ratingByMovie_id.get(movie_id);
     }
 
-     LiveData<PublicProfile> getPublicProfile(String user_id) {
+    LiveData<PublicProfile> getPublicProfile(String user_id) {
         if (!publicProfiles.containsKey(user_id)) {
             MutableLiveData<PublicProfile> publicProfile = new MutableLiveData<>();
             fireStore.collection(USER_PATH).document(user_id).addSnapshotListener((results, error) -> {
@@ -252,7 +246,7 @@ public class FirebaseDatabaseHelper {
         User user;
 
         @Override
-        public void postValue(CurrentUser user){
+        public void postValue(CurrentUser user) {
             this.user = user;
             unregisterAllListener();
 
@@ -303,8 +297,9 @@ public class FirebaseDatabaseHelper {
             });
 
         }
+
         private void updateUser() {
-            super.postValue(new CurrentUser(user, fireRatings, fireComments, movieLists ));
+            super.postValue(new CurrentUser(user, fireRatings, fireComments, movieLists));
         }
 
         void unregisterAllListener() {

@@ -4,9 +4,6 @@ package ipren.watchr.viewModels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.util.List;
-
-import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IMainRepository;
 import ipren.watchr.repository.MainRepository;
@@ -20,20 +17,20 @@ public class MainViewModel extends ViewModel implements MainViewModelInterface {
 
     private LiveData<User> user;
 
-    //Allows Activity to sync with viewmodel
-    public LiveData<User> getUser() {
-        return user;
-    }
-
-
-
-    public MainViewModel(IMainRepository mainRepository){
+    public MainViewModel(IMainRepository mainRepository) {
         this.mainRepository = mainRepository;
         user = mainRepository.getUserLiveData();
     }
-    public MainViewModel(){
+
+
+    public MainViewModel() {
         mainRepository = MainRepository.getMainRepository();
         user = mainRepository.getUserLiveData();
+    }
+
+    //Allows Activity to sync with viewmodel
+    public LiveData<User> getUser() {
+        return user;
     }
 
 

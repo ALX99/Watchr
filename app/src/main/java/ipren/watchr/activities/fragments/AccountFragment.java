@@ -1,7 +1,5 @@
 package ipren.watchr.activities.fragments;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
@@ -16,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.viewModels.AccountViewModel;
@@ -54,17 +51,15 @@ public class AccountFragment extends Fragment {
         getView().findViewById(R.id.configure_acc_btn).setOnClickListener(e ->
                 Navigation.findNavController(getView()).navigate(R.id.action_global_account_settings));
 
-        accountViewModel.getUser().observe(this, e ->{
-            ((TextView)getView().findViewById(R.id.username_text_field_acc)).setText(e.getUserName());
-            ((TextView)getView().findViewById(R.id.email_text_field_acc)).setText(e.getEmail());
+        accountViewModel.getUser().observe(this, e -> {
+            ((TextView) getView().findViewById(R.id.username_text_field_acc)).setText(e.getUserName());
+            ((TextView) getView().findViewById(R.id.email_text_field_acc)).setText(e.getEmail());
             Util.loadImage(
                     (getView().findViewById(R.id.profile_img_acc)),
                     e.getUserProfilePictureUri().toString(),
                     Util.getProgressDrawable(getContext()));
 
         });
-
-
 
 
     }

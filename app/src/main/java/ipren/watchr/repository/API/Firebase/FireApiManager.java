@@ -5,7 +5,6 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import ipren.watchr.dataHolders.FireComment;
 import ipren.watchr.dataHolders.FireRating;
@@ -24,12 +23,6 @@ public class FireApiManager implements UserDataAPI {
 
     private LiveData<User> currentLoggedUser;
 
-    public static UserDataAPI getInstance() {
-        if (fireApiManager == null)
-            fireApiManager = new FireApiManager();
-        return fireApiManager;
-    }
-
     private FireApiManager() {
         firebaseAuthAPI = new FirebaseAuthAPI();
         firestoreDatabase = new FirebaseDatabaseHelper();
@@ -41,6 +34,12 @@ public class FireApiManager implements UserDataAPI {
             else
                 firestoreDatabase.syncUserWithDatabase(user);
         });
+    }
+
+    public static UserDataAPI getInstance() {
+        if (fireApiManager == null)
+            fireApiManager = new FireApiManager();
+        return fireApiManager;
     }
 
     //Fire Auth
@@ -120,7 +119,7 @@ public class FireApiManager implements UserDataAPI {
         else if (score < 0)
             score = 0;
 
-       firestoreDatabase.addRating(score, movie_id, user_id, callback);
+        firestoreDatabase.addRating(score, movie_id, user_id, callback);
 
     }
 
@@ -140,7 +139,7 @@ public class FireApiManager implements UserDataAPI {
     }
 
     @Override
-    public LiveData<String[]> getMovieListByUserId(String list, String user_id){
+    public LiveData<String[]> getMovieListByUserId(String list, String user_id) {
         return firestoreDatabase.getMovieListByUserID(list, user_id);
     }
 }

@@ -38,10 +38,6 @@ import ipren.watchr.viewModels.IMovieViewModel;
 import ipren.watchr.viewModels.MovieViewModel;
 
 public class MovieDetails extends Fragment {
-    private int movieID;
-    private IMovieViewModel viewModel;
-    private IMainRepository mainRepository;
-    private User user;
     @BindView(R.id.castList)
     RecyclerView cast;
     @BindView(R.id.genreList)
@@ -78,6 +74,10 @@ public class MovieDetails extends Fragment {
     ProgressBar popularity;
     @BindView(R.id.runtime)
     TextView runtime;
+    private int movieID;
+    private IMovieViewModel viewModel;
+    private IMainRepository mainRepository;
+    private User user;
 
 
     public MovieDetails() {
@@ -178,6 +178,7 @@ public class MovieDetails extends Fragment {
         });
 
     }
+
     private void initCast() {
         cast.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         CastAdapter adapter = new CastAdapter(getParentFragment().getContext(), dummyData());

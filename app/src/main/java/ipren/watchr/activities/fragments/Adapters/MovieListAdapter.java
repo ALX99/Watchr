@@ -33,6 +33,47 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     private List<Movie> movieListFull;
 
     /**
+     * Search and filter handling
+     */
+    private Filter filter = new Filter() {
+        /**
+         * Filters all the movies in the current list according to the filter constraint.
+         * This is done in a background thread.
+         */
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Movie> filteredMovieList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredMovieList.addAll(movieListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Movie movie : movieListFull) {
+                    if (movie.title.toLowerCase().contains(filterPattern)) {
+                        filteredMovieList.add(movie);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredMovieList;
+
+            return results;
+        }
+
+        /**
+         * Displays the filter results on the main thread.
+         */
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            movieList.clear();
+            movieList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+    /**
      * Creates a movie adapter with a list of movies
      */
     public MovieListAdapter(List<Movie> movieList) {
@@ -152,48 +193,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public Filter getFilter() {
         return filter;
     }
-
-    /**
-     * Search and filter handling
-     */
-    private Filter filter = new Filter() {
-
-        /**
-         * Filters all the movies in the current list according to the filter constraint.
-         * This is done in a background thread.
-         */
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<Movie> filteredMovieList = new ArrayList<>();
-
-            if (constraint == null || constraint.length() == 0) {
-                filteredMovieList.addAll(movieListFull);
-            } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
-
-                for (Movie movie : movieListFull) {
-                    if (movie.title.toLowerCase().contains(filterPattern)) {
-                        filteredMovieList.add(movie);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredMovieList;
-
-            return results;
-        }
-
-        /**
-         * Displays the filter results on the main thread.
-         */
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            movieList.clear();
-            movieList.addAll((List) results.values);
-            notifyDataSetChanged();
-        }
-    };
 
     /**
      * Class for holding a movie view layout

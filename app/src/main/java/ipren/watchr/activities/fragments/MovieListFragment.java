@@ -30,20 +30,16 @@ import ipren.watchr.viewModels.ListViewModel;
 
 public class MovieListFragment extends Fragment {
 
-    private ListViewModel viewModel;
-    private MovieListAdapter movieListAdapter;
-
     @BindView(R.id.movieList)
     RecyclerView movieList;
-
     @BindView(R.id.listError)
     TextView listError;
-
     @BindView(R.id.loadingView)
     ProgressBar loadingView;
-
     @BindView(R.id.refreshLayout)
     SwipeRefreshLayout refreshLayout;
+    private ListViewModel listViewModel;
+    private MovieListAdapter movieListAdapter;
 
     public MovieListFragment() {
         movieListAdapter = new MovieListAdapter(new ArrayList<>());
@@ -63,8 +59,8 @@ public class MovieListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        connectSearchView();
         connectFilterButton();
+        connectSearchView();
 
         String url = "";
 
@@ -87,8 +83,8 @@ public class MovieListFragment extends Fragment {
                 break;
         }
 
-        viewModel = ViewModelProviders.of(this).get(ListViewModel.class);
-        viewModel.refresh(url);
+        listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
+        listViewModel.refresh(url);
 
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
         movieList.setAdapter(movieListAdapter);
@@ -98,7 +94,7 @@ public class MovieListFragment extends Fragment {
             movieList.setVisibility(View.GONE);
             listError.setVisibility(View.GONE);
             loadingView.setVisibility(View.VISIBLE);
-            viewModel.refresh("movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1");
+            listViewModel.refresh("movie/top_rated?api_key=75e28ea896c86e2d5ef78b91e8500e22&language=en-US&page=1");
             refreshLayout.setRefreshing(false);
         });
 
@@ -109,20 +105,20 @@ public class MovieListFragment extends Fragment {
      * Makes the fragment listen to the live data in the view model
      */
     private void observeViewModel() {
-        viewModel.movies.observe(this, movies -> {
+        listViewModel.movies.observe(this, movies -> {
             if (movies != null && movies instanceof List) {
                 movieList.setVisibility(View.VISIBLE);
                 movieListAdapter.updateMovieList(movies);
             }
         });
 
-        viewModel.movieLoadError.observe(this, isError -> {
+        listViewModel.movieLoadError.observe(this, isError -> {
             if (isError != null && isError instanceof Boolean) {
                 listError.setVisibility(isError ? View.VISIBLE : View.GONE);
             }
         });
 
-        viewModel.loading.observe(this, isLoading -> {
+        listViewModel.loading.observe(this, isLoading -> {
             if (isLoading != null && isLoading instanceof Boolean) {
                 loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 if (isLoading) {

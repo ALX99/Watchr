@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
         android:elevation="4dp"
+        android:focusableInTouchMode="true"
         app:itemIconTint="@color/text"
         app:itemTextColor="@color/text"
         app:layout_constraintEnd_toEndOf="parent"

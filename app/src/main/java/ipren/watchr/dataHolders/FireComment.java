@@ -3,13 +3,21 @@ package ipren.watchr.dataHolders;
 import com.google.firebase.firestore.DocumentId;
 
 public class FireComment {
+    @DocumentId
+    String uID;
     private String movie_id;
     private String user_id;
     private String text;
-    @DocumentId
-    String uID;
 
-    public FireComment(){ }
+    public FireComment() {
+    }
+
+    public FireComment(String movie_id, String user_id, String text, String uID) {
+        this.movie_id = movie_id;
+        this.user_id = user_id;
+        this.text = text;
+        this.uID = uID;
+    }
 
     public String getMovie_id() {
         return movie_id;
@@ -23,15 +31,7 @@ public class FireComment {
         return text;
     }
 
-
     public String getuID() {
         return uID;
-    }
-
-    public FireComment(String movie_id, String user_id, String text, String uID){
-        this.movie_id = movie_id;
-        this.user_id = user_id;
-        this.text = text;
-        this.uID = uID;
     }
 }

@@ -13,33 +13,33 @@ import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.API.UserDataAPI;
 
-public class MainRepository implements IMainRepository{
+public class MainRepository implements IMainRepository {
 
     private static final IMainRepository MAIN_REPOSITORY = new MainRepository();
-    public static IMainRepository getMainRepository(){
-        return MAIN_REPOSITORY;
-    }
-
     UserDataAPI userDataApi;
 
-    private  MainRepository(){
+    private MainRepository() {
         userDataApi = UserDataAPI.getInstance();
 
     }
 
-    public LiveData<User> getUserLiveData(){
+    public static IMainRepository getMainRepository() {
+        return MAIN_REPOSITORY;
+    }
+
+    public LiveData<User> getUserLiveData() {
         return userDataApi.getUserLiveData();
     }
 
-    public void registerUser(String email, String password, OnCompleteListener callback){
-        userDataApi.registerUser(email,password, callback);
+    public void registerUser(String email, String password, OnCompleteListener callback) {
+        userDataApi.registerUser(email, password, callback);
     }
 
-    public void signOutUser(){
-       userDataApi.signOutUser();
+    public void signOutUser() {
+        userDataApi.signOutUser();
     }
 
-    public void loginUser(String email, String password, OnCompleteListener callback){
+    public void loginUser(String email, String password, OnCompleteListener callback) {
         userDataApi.loginUser(email, password, callback);
     }
 
@@ -100,11 +100,11 @@ public class MainRepository implements IMainRepository{
 
     @Override
     public void commentMovie(String text, String movie_id, String user_id, OnCompleteListener callback) {
-            userDataApi.commentMovie(text,movie_id, user_id, callback);
+        userDataApi.commentMovie(text, movie_id, user_id, callback);
     }
 
     @Override
     public void removeComment(String comment_id, OnCompleteListener callback) {
-            userDataApi.removeComment(comment_id, callback);
+        userDataApi.removeComment(comment_id, callback);
     }
 }
