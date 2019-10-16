@@ -36,13 +36,17 @@ import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.IMainRepository;
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.IMovieViewModel;
 import ipren.watchr.viewModels.MovieViewModel;
 
 public class MovieDetails extends Fragment {
     private int movieID;
     private IMovieViewModel viewModel;
+
+    private IUserDataRepository mainRepository;
+    private User user;
+
     @BindView(R.id.castList)
     RecyclerView cast;
     @BindView(R.id.genreList)
@@ -91,7 +95,6 @@ public class MovieDetails extends Fragment {
     ProgressBar ourRating;
     @BindView(R.id.profile_picture)
     CircleImageView profilePicture;
-    private User user;
 
     public MovieDetails() {
         // Required empty public constructor
@@ -117,11 +120,13 @@ public class MovieDetails extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setupScrolling();
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+
         viewModel.setMovieID(movieID);
 
 
         // Observer user
         viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+
             this.user = user;
             if (checkLoggedIn()) {
                 String pic = user.getUserProfilePictureUri().toString();
@@ -131,7 +136,7 @@ public class MovieDetails extends Fragment {
                         .into(profilePicture);
 
 
-                viewModel.getUserList(IMainRepository.FAVORITES_LIST, user.getUID()).observe(getViewLifecycleOwner(), result -> {
+                viewModel.getUserList(IUserDataRepository.FAVORITES_LIST, user.getUID()).observe(getViewLifecycleOwner(), result -> {
                     if (result != null)
                         Log.d("INFO", Arrays.toString(result));
                 });
@@ -194,38 +199,33 @@ public class MovieDetails extends Fragment {
             popularity.setProgress(pop);
             // Our Rating
         });
-        // TODO
-        viewModel.getRatings(movieID, IMainRepository.SEARCH_METHOD_MOVIE_ID).observe(getViewLifecycleOwner(), rating -> {
-            if (rating != null && rating[0] != null)
-                Log.d("INFO", rating[0].getRating_id());
-        });
     }
 
     private void initCheckBoxes() {
         favoriteCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (checkLoggedIn()) {
                 if (isChecked)
-                    viewModel.addMovieToList(movieID, IMainRepository.FAVORITES_LIST, user.getUID());
+                    viewModel.addMovieToList(movieID, IUserDataRepository.FAVORITES_LIST, user.getUID());
                 else
-                    viewModel.removeMovieFromList(movieID, IMainRepository.FAVORITES_LIST, user.getUID());
+                    viewModel.removeMovieFromList(movieID, IUserDataRepository.FAVORITES_LIST, user.getUID());
             } else
                 favoriteCheckbox.setChecked(!isChecked);
         });
         watchedCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (checkLoggedIn()) {
                 if (isChecked)
-                    viewModel.addMovieToList(movieID, IMainRepository.WATCHED_LIST, user.getUID());
+                    viewModel.addMovieToList(movieID, IUserDataRepository.WATCHED_LIST, user.getUID());
                 else
-                    viewModel.removeMovieFromList(movieID, IMainRepository.WATCHED_LIST, user.getUID());
+                    viewModel.removeMovieFromList(movieID, IUserDataRepository.WATCHED_LIST, user.getUID());
             } else
                 watchedCheckbox.setChecked(!isChecked);
         });
         watchLaterCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (checkLoggedIn()) {
                 if (isChecked)
-                    viewModel.addMovieToList(movieID, IMainRepository.WATCH_LATER_LIST, user.getUID());
+                    viewModel.addMovieToList(movieID, IUserDataRepository.WATCH_LATER_LIST, user.getUID());
                 else
-                    viewModel.removeMovieFromList(movieID, IMainRepository.WATCH_LATER_LIST, user.getUID());
+                    viewModel.removeMovieFromList(movieID, IUserDataRepository.WATCH_LATER_LIST, user.getUID());
             } else
                 watchLaterCheckbox.setChecked(!isChecked);
         });
@@ -247,7 +247,9 @@ public class MovieDetails extends Fragment {
         CommentAdapter adapter = new CommentAdapter(requireContext(), viewModel, getViewLifecycleOwner());
         comments.setAdapter(adapter);
 
+
         viewModel.getComments().observe(getViewLifecycleOwner(), comments -> {
+
             adapter.setData(comments);
         });
 

@@ -9,10 +9,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.IMainRepository;
+import ipren.watchr.repository.IUserDataRepository;
 //TODO remake this test
 
-public class MockMainRepository implements IMainRepository {
+public class MockMainRepository implements IUserDataRepository {
 
     private Task authResponse;
     /**

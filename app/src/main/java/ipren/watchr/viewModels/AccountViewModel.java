@@ -5,21 +5,20 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.IMainRepository;
-import ipren.watchr.repository.MainRepository;
+import ipren.watchr.repository.IUserDataRepository;
 
 public class AccountViewModel extends ViewModel {
 
     LiveData<User> user;
 
-    private IMainRepository mainRepository;
+    private IUserDataRepository mainRepository;
     @VisibleForTesting
-    public AccountViewModel(IMainRepository iMainRepository){
+    public AccountViewModel(IUserDataRepository iMainRepository) {
         mainRepository = iMainRepository;
         this.user = mainRepository.getUserLiveData();
     }
     public AccountViewModel() {
-        mainRepository = MainRepository.getMainRepository();
+        mainRepository = IUserDataRepository.getInstance();
         this.user = mainRepository.getUserLiveData();
     }
 

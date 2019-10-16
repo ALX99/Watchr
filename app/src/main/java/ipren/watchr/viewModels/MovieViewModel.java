@@ -6,12 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
 import java.util.List;
-
-import javax.security.auth.callback.Callback;
 
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.FireComment;
@@ -20,15 +15,14 @@ import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.IMainRepository;
 import ipren.watchr.repository.IMovieRepository;
-import ipren.watchr.repository.MainRepository;
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.repository.MovieRepository;
 
 public class MovieViewModel extends AndroidViewModel implements IMovieViewModel {
     private int movieID;
     private IMovieRepository movieRepository;
-    private IMainRepository mainRepository;
+    private IUserDataRepository mainRepository;
     private LiveData<Movie> movie;
     private LiveData<User> user;
     private LiveData<FireComment[]> comments;
@@ -37,13 +31,13 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
     public MovieViewModel(@NonNull Application application) {
         super(application);
         movieRepository = new MovieRepository(application.getApplicationContext());
-        mainRepository = IMainRepository.getMainRepository();
+        mainRepository = IUserDataRepository.getInstance();
     }
 
     public void setMovieID(int movieID) {
         this.movieID = movieID;
         this.movie = movieRepository.getMovieByID(movieID);
-        this.comments = mainRepository.getComments(Integer.toString(movieID), MainRepository.SEARCH_METHOD_MOVIE_ID);
+        this.comments = mainRepository.getComments(Integer.toString(movieID), IUserDataRepository.SEARCH_METHOD_MOVIE_ID);
         this.user = mainRepository.getUserLiveData();
         this.actors = movieRepository.getActorsFromMovie(movieID);
     }

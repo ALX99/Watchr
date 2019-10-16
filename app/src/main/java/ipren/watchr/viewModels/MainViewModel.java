@@ -4,17 +4,13 @@ package ipren.watchr.viewModels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.util.List;
-
-import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.IMainRepository;
-import ipren.watchr.repository.MainRepository;
+import ipren.watchr.repository.IUserDataRepository;
 
 
 public class MainViewModel extends ViewModel implements MainViewModelInterface {
 
-    private final IMainRepository mainRepository;
+    private final IUserDataRepository mainRepository;
     //If you don't set a value the LiveData object wont broadcast any initial value, not even null
     //Setting user to null to signal that no user is logged in
 
@@ -26,13 +22,12 @@ public class MainViewModel extends ViewModel implements MainViewModelInterface {
     }
 
 
-
-    public MainViewModel(IMainRepository mainRepository){
+    public MainViewModel(IUserDataRepository mainRepository) {
         this.mainRepository = mainRepository;
         user = mainRepository.getUserLiveData();
     }
     public MainViewModel(){
-        mainRepository = MainRepository.getMainRepository();
+        mainRepository = IUserDataRepository.getInstance();
         user = mainRepository.getUserLiveData();
     }
 
