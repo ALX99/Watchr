@@ -13,7 +13,7 @@
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:contentScrim="@color/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -22,8 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/movie_cover"
-                android:scaleType="centerCrop"
-                android:src="@drawable/cover" />
+                android:scaleType="centerCrop" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -58,8 +57,7 @@
                     android:layout_height="match_parent"
                     android:background="@color/endGradient"
                     android:contentDescription="@string/movie_poster"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/poster" />
+                    android:scaleType="fitXY" />
             </androidx.cardview.widget.CardView>
 
             <TextView
