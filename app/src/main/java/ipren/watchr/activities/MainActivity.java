@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void handleProfileFragment() {
         int currentID = navController.getCurrentDestination().getId();
-        if (currentID == R.id.loginFragment || currentID == R.id.accountFragment)
+        if (currentID == R.id.loginFragment || currentID == R.id.accountFragment || currentID == R.id.accountSettingsFragment)
             navController.popBackStack();
         else if (mainViewModel.getUser().getValue() == null)
             navController.navigate(R.id.action_global_loginFragment);

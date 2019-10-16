@@ -5,9 +5,34 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/MovieListFragment">
 
+
+    <action
+        android:id="@+id/action_global_account_settings"
+        app:destination="@id/accountSettingsFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:launchSingleTop="true"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"
+         />
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/loginFragment"
+        app:enterAnim="@animator/enter_from_top"
+        app:exitAnim="@animator/exit_to_bottom"
+        app:launchSingleTop="true"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    <action
+        android:id="@+id/action_global_accountFragment"
+        app:destination="@id/accountFragment"
+        app:enterAnim="@animator/enter_from_bottom"
+        app:exitAnim="@animator/exit_to_top"
+        app:launchSingleTop="true"
+        app:popEnterAnim="@animator/enter_from_top"
+        app:popExitAnim="@animator/exit_to_bottom" />
+
     <!-- START LIST FRAGMENTS -->
-
-
     <fragment
         android:id="@+id/MovieListFragment"
         android:name="ipren.watchr.activities.fragments.MovieListFragment"
@@ -16,14 +41,15 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@animator/enter_from_right"
+            app:exitAnim="@animator/exit_to_left"
+            app:popEnterAnim="@animator/enter_from_left"
+            app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="browse" />
     </fragment>
+
     <fragment
         android:id="@+id/recommendedFragment"
         android:name="ipren.watchr.activities.fragments.MovieListFragment"
@@ -31,14 +57,17 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@animator/enter_from_right"
+            app:exitAnim="@animator/exit_to_left"
+            app:popEnterAnim="@animator/enter_from_left"
+            app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="recommended" />
     </fragment>
+
+    <!-- END LIST FRAGMENTS -->
+
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="ipren.watchr.activities.fragments.MovieListFragment"
@@ -47,10 +76,10 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@animator/enter_from_right"
+            app:exitAnim="@animator/exit_to_left"
+            app:popEnterAnim="@animator/enter_from_left"
+            app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="favorites" />
@@ -63,15 +92,14 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@animator/enter_from_right"
+            app:exitAnim="@animator/exit_to_left"
+            app:popEnterAnim="@animator/enter_from_left"
+            app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="watchLater" />
     </fragment>
-
     <fragment
         android:id="@+id/watchedFragment"
         android:name="ipren.watchr.activities.fragments.MovieListFragment"
@@ -80,22 +108,21 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@animator/enter_from_right"
+            app:exitAnim="@animator/exit_to_left"
+            app:popEnterAnim="@animator/enter_from_left"
+            app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="watched" />
     </fragment>
-
-    <!-- END LIST FRAGMENTS -->
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="ipren.watchr.activities.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
+
     <fragment
         android:id="@+id/accountFragment"
         android:name="ipren.watchr.activities.fragments.AccountFragment"
@@ -106,20 +133,6 @@
         android:name="ipren.watchr.activities.fragments.AccountSettingsFragment"
         android:label="fragment_account_settings"
         tools:layout="@layout/account_settings_fragment" />
-
-    <action
-        android:id="@+id/action_global_account_settings"
-        app:destination="@id/accountSettingsFragment"
-        app:enterAnim="@animator/slide_down" />
-
-    <action
-            android:id="@+id/action_global_loginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@animator/slide_down" />
-    <action
-        android:id="@+id/action_global_accountFragment"
-        app:destination="@id/accountFragment"
-        app:enterAnim="@animator/slide_up" />
     <fragment
         android:id="@+id/detailFragment"
         android:name="ipren.watchr.activities.fragments.MovieDetails"

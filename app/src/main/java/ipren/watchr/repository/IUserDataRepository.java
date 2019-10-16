@@ -35,7 +35,7 @@ public interface IUserDataRepository {
 
     void refreshUsr();
 
-    void reSendVerificationEmail();
+    void reSendVerificationEmail(OnCompleteListener callback);
 
     void updateProfile(String userName, Uri pictureUri);
 
