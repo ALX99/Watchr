@@ -1,7 +1,6 @@
 package ipren.watchr.activities.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,8 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -135,26 +134,7 @@ public class MovieDetails extends Fragment {
         viewModel.setMovieID(movieID);
 
 
-        // Observer user
-        viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-
-            this.user = user;
-            if (checkLoggedIn()) {
-                String pic = user.getUserProfilePictureUri().toString();
-                Glide.with(getContext())
-                        .load(pic)
-                        .error(ContextCompat.getDrawable(getContext(), getView().getResources().getIdentifier("default_profile_photo", "drawable", "ipren.watchr")))
-                        .into(profilePicture);
-
-
-                viewModel.getUserList(IUserDataRepository.FAVORITES_LIST, user.getUID()).observe(getViewLifecycleOwner(), result -> {
-                    if (result != null)
-                        Log.d("INFO", Arrays.toString(result));
-                });
-            } else
-                profilePicture.setImageDrawable(ContextCompat.getDrawable(getContext(), getContext().getResources().getIdentifier("default_profile_photo", "drawable", "ipren.watchr")));
-        });
-
+        initUser();
         initMovie();
         initCheckBoxes();
         // init methods below work the same way
@@ -167,6 +147,38 @@ public class MovieDetails extends Fragment {
 
     }
 
+    private void initUser() {
+        // Observer user
+        viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            this.user = user;
+            if (user != null) {
+                // Load pic
+                Glide.with(getContext())
+                        .load(user.getUserProfilePictureUri().toString())
+                        .error(ContextCompat.getDrawable(getContext(), getView().getResources().getIdentifier("default_profile_photo", "drawable", "ipren.watchr")))
+                        .into(profilePicture);
+
+                // Set checkboxes to match data from firebase
+                viewModel.getUserList(IUserDataRepository.FAVORITES_LIST, user.getUID()).observe(getViewLifecycleOwner(), result -> {
+                    if (Arrays.asList(result).contains(Integer.toString(movieID)))
+                        favoriteCheckbox.setChecked(true);
+                });
+                viewModel.getUserList(IUserDataRepository.WATCHED_LIST, user.getUID()).observe(getViewLifecycleOwner(), result -> {
+                    if (Arrays.asList(result).contains(Integer.toString(movieID)))
+                        watchedCheckbox.setChecked(true);
+                });
+                viewModel.getUserList(IUserDataRepository.WATCH_LATER_LIST, user.getUID()).observe(getViewLifecycleOwner(), result -> {
+                    if (Arrays.asList(result).contains(Integer.toString(movieID)))
+                        watchLaterCheckbox.setChecked(true);
+                });
+            } else {
+                profilePicture.setImageDrawable(ContextCompat.getDrawable(getContext(), getContext().getResources().getIdentifier("default_profile_photo", "drawable", "ipren.watchr")));
+                favoriteCheckbox.setChecked(false);
+                watchedCheckbox.setChecked(false);
+                watchLaterCheckbox.setChecked(false);
+            }
+        });
+    }
     // Don't ask me why this boilerplate code is needed to setup a scrollable
     // TextView inside a nested scrollview. But if this isn't added scrolling
     // inside descriptionScrollView is near impossible
@@ -220,7 +232,7 @@ public class MovieDetails extends Fragment {
                 else
                     viewModel.removeMovieFromList(movieID, IUserDataRepository.FAVORITES_LIST, user.getUID());
             } else
-                favoriteCheckbox.setChecked(!isChecked);
+                favoriteCheckbox.setChecked(false);
         });
         watchedCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (checkLoggedIn()) {
@@ -229,7 +241,7 @@ public class MovieDetails extends Fragment {
                 else
                     viewModel.removeMovieFromList(movieID, IUserDataRepository.WATCHED_LIST, user.getUID());
             } else
-                watchedCheckbox.setChecked(!isChecked);
+                watchedCheckbox.setChecked(false);
         });
         watchLaterCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (checkLoggedIn()) {
@@ -238,7 +250,7 @@ public class MovieDetails extends Fragment {
                 else
                     viewModel.removeMovieFromList(movieID, IUserDataRepository.WATCH_LATER_LIST, user.getUID());
             } else
-                watchLaterCheckbox.setChecked(!isChecked);
+                watchLaterCheckbox.setChecked(false);
         });
     }
 

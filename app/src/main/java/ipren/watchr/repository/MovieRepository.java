@@ -67,7 +67,7 @@ public class MovieRepository implements IMovieRepository {
                 insertMovie(movieID);
             else {
                 long diff = new Date().getTime() - m.getUpdateDate().getTime();
-                if (TimeUnit.MILLISECONDS.toDays(diff) > 1) {
+                if (TimeUnit.MILLISECONDS.toDays(diff) > 7) {
                     Log.d("MOVIE", "The movie " + movieID + " has to be updated!");
                     insertMovie(movieID);
                 } else
