@@ -62,7 +62,7 @@ public class MovieRepository implements IMovieRepository {
     private void getTrendingList(int page, boolean forceFetch) {
         new Thread(() -> {
             List<Movie> movies = movieDB.movieListDao().getMoviesFromListNonLiveData(IMovieRepository.TRENDING_LIST, page);
-            if (movies == null || movies.size() == 0 || forceFetch)
+            if (movies == null || movies.size() == 0 || movies.get(0).getUpdateDate() == null || forceFetch)
                 insertTrendingMovies(page);
             else {
                 long diff = new Date().getTime() - movies.get(0).getUpdateDate().getTime();
