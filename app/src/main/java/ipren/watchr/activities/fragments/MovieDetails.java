@@ -41,6 +41,9 @@ import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.IMovieViewModel;
 import ipren.watchr.viewModels.MovieViewModel;
 
+/**
+ * The type Movie details.
+ */
 public class MovieDetails extends Fragment {
     private int movieID;
     private IMovieViewModel viewModel;
@@ -105,13 +108,23 @@ public class MovieDetails extends Fragment {
                              Bundle savedInstanceState) {
         // Get movieID argument
         this.movieID = getArguments().getInt("movieId");
-
         // Our view for this fragment
         View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
         // Bind stuff with ButterKnife
         ButterKnife.bind(this, view);
         Toast.makeText(getContext(), Integer.toString(movieID), Toast.LENGTH_SHORT).show(); // Debug
-        hideSearchAndFilter();
+
+        // Gets viewModel and sets the movieID
+        viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        viewModel.setMovieID(movieID);
+        // Inits stuff
+        initUser();
+        initMovie();
+        initCheckBoxes();
+        initCast();
+        initGenres();
+        initComments();
+
         return view;
     }
 
@@ -129,24 +142,12 @@ public class MovieDetails extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupScrolling();
-        viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-
-        viewModel.setMovieID(movieID);
-
-
-        initUser();
-        initMovie();
-        initCheckBoxes();
-        // init methods below work the same way
-        // They add a LinearLayoutManager, then optionally an
-        // ItemDecoration and then inits the adapter and associated it with the RecycleView.
-        initCast();
-        initGenres();
-        initComments();
-
-
+        hideSearchAndFilter();
     }
 
+    /**
+     * Starts observing the user object and sets stuff according according to the user object
+     */
     private void initUser() {
         // Observer user
         viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
@@ -179,6 +180,7 @@ public class MovieDetails extends Fragment {
             }
         });
     }
+
     // Don't ask me why this boilerplate code is needed to setup a scrollable
     // TextView inside a nested scrollview. But if this isn't added scrolling
     // inside descriptionScrollView is near impossible
@@ -192,6 +194,9 @@ public class MovieDetails extends Fragment {
         });
     }
 
+    /**
+     * Observes the movie and displays all the information
+     */
     private void initMovie() {
         viewModel.getMovie().observe(getViewLifecycleOwner(), Movie -> {
             // Don't try to set anything if the object is null.
@@ -224,6 +229,9 @@ public class MovieDetails extends Fragment {
         });
     }
 
+    /**
+     * Sets onCheckedChangeListeners to the checkboxes
+     */
     private void initCheckBoxes() {
         favoriteCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (checkLoggedIn()) {
@@ -254,8 +262,10 @@ public class MovieDetails extends Fragment {
         });
     }
 
+    /**
+     * Sets up the recyclerView with some style and its adapter, then start observing the actors
+     */
     private void initCast() {
-
         cast.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         CastAdapter adapter = new CastAdapter();
         cast.setAdapter(adapter);
@@ -265,6 +275,9 @@ public class MovieDetails extends Fragment {
         });
     }
 
+    /**
+     * Sets up the recyclerView with some style and its adapter, then start observing the comments
+     */
     private void initComments() {
         comments.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         comments.addItemDecoration(new ItemOffsetDecoration(genres.getContext(), R.dimen.comment_list_margin));
@@ -280,13 +293,16 @@ public class MovieDetails extends Fragment {
         // OnClickListener to send comments
         send.setOnClickListener((View v) -> {
             if (checkLoggedIn()) {
-            viewModel.commentOnMovie(movieID, user.getUID(), comment.getText().toString());
-            comment.setText("");
+                viewModel.commentOnMovie(movieID, user.getUID(), comment.getText().toString());
+                comment.setText("");
                 comment.clearFocus();
             }
         });
     }
 
+    /**
+     * Sets up the recyclerView with some style and its adapter, then start observing the genres
+     */
     private void initGenres() {
         genres.setLayoutManager(new GridLayoutManager(requireContext(), 1, LinearLayoutManager.HORIZONTAL, false));
         genres.addItemDecoration(new ItemOffsetDecoration(genres.getContext(), R.dimen.genre_list_margin));
@@ -299,6 +315,11 @@ public class MovieDetails extends Fragment {
         });
     }
 
+    /**
+     * checks if a user is logged in
+     *
+     * @return true if a user is logged in, false otherwise
+     */
     private boolean checkLoggedIn() {
         if (user != null) return true;
         Toast.makeText(getContext(), "You need to be logged in to use this feature!", Toast.LENGTH_LONG).show(); // Debug

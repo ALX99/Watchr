@@ -2,6 +2,7 @@ package ipren.watchr.activities.fragments;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,7 +10,9 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,11 +60,17 @@ public class AccountSettingsFragment extends Fragment {
 
         //Syncing to Livedata<User>
         settingsViewModel.getUser().observe(this, e -> {
-            if (e == null) {
-                Navigation.findNavController(getView()).popBackStack();
+            if (e == null)
                 return;
-            }
+
             showEmailVerifiedLayout(e.isVerified());
+
+            if(!getView().findViewById(R.id.usr_verif_btn).isEnabled()) {
+                ((TextView)getView().findViewById(R.id.is_user_verified_text)).setText("User not verified!");
+                ((TextView)getView().findViewById(R.id.is_user_verified_text)).setTextColor(Color.RED);
+                (getView().findViewById(R.id.is_user_verified_text)).setVisibility(View.VISIBLE);
+               loadingButtonEnabled(getView().findViewById(R.id.usr_verif_btn), getView().findViewById(R.id.user_veri_check_spinner), false , "CLICK WHEN VERIFIED");
+            }
 
             // set Image here getView().findViewById(R.id.profile_img_acc)
             ((TextView) getView().findViewById(R.id.email_input_field)).setText(String.format(getResources().getString(R.string.email), e.getEmail()));
@@ -100,9 +109,36 @@ public class AccountSettingsFragment extends Fragment {
 
     private void initEmailVerificationLayout() {
 
-        getView().findViewById(R.id.send_ver_email_btn).setOnClickListener(e -> settingsViewModel.resendVerificationEmail());
+        getView().findViewById(R.id.send_ver_email_btn).setOnClickListener(e ->{
+            loadingButtonEnabled(getView().findViewById(R.id.send_ver_email_btn), getView().findViewById(R.id.email_veri_spinner), true, "Sending...");
+            ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setVisibility(View.INVISIBLE);
+            ((TextView)getView().findViewById(R.id.is_user_verified_text)).setVisibility(View.INVISIBLE);
+            settingsViewModel.resendVerificationEmail();
 
-        getView().findViewById(R.id.usr_verif_btn).setOnClickListener(e -> settingsViewModel.refreshUsr());
+        });
+
+        getView().findViewById(R.id.usr_verif_btn).setOnClickListener(e -> {
+            loadingButtonEnabled(getView().findViewById(R.id.usr_verif_btn), getView().findViewById(R.id.user_veri_check_spinner), true, "Checking");
+            ((TextView)getView().findViewById(R.id.is_user_verified_text)).setVisibility(View.INVISIBLE);
+            settingsViewModel.refreshUsr();
+
+        });
+
+        settingsViewModel.getVerificationResponse().observe(this, e -> {
+            loadingButtonEnabled(getView().findViewById(R.id.send_ver_email_btn), getView().findViewById(R.id.email_veri_spinner), false, "RE-SEND VERIFICATION");
+            if(e == null)
+                return;
+            ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setVisibility(View.VISIBLE);
+            if(e.isSuccessful()){
+                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setText("Email sent!");
+                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setTextColor(Color.GREEN);
+            }else {
+                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setText(e.getErrorMsg());
+                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setTextColor(Color.RED);
+            }
+        });
+
+
     }
 
     private void initUserConfigurationLayout() {
@@ -176,5 +212,11 @@ public class AccountSettingsFragment extends Fragment {
             return null;
         }
 
+    }
+
+    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text){
+        button.setEnabled(!on);
+        button.setText(text);
+        spinner.setVisibility(on ?  View.VISIBLE : View.GONE );
     }
 }

@@ -1,5 +1,6 @@
 package ipren.watchr.dataHolders;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -7,6 +8,7 @@ import androidx.room.Ignore;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
 import java.util.List;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -26,15 +28,35 @@ public class MovieList {
     @Ignore
     @SerializedName("results")
     private List<Movie> movies;
-
     @ColumnInfo(name = "movie_id")
     private int movieID;
+    @NonNull
     @ColumnInfo(name = "list_id")
-    private int listID;
+    private String listName;
+    @ColumnInfo(name = "page")
+    private int page;
+    @ColumnInfo(name = "update_date")
+    private Date updateDate;
 
-    public MovieList(int movieID, int listID) {
+
+    public MovieList(int movieID, @NonNull String listName, int page, Date updateDate) {
         this.movieID = movieID;
-        this.listID = listID;
+        this.listName = listName;
+        this.page = page;
+        this.updateDate = updateDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    @NonNull
+    public String getListName() {
+        return listName;
+    }
+
+    public int getPage() {
+        return page;
     }
 
     public List<Movie> getMovies() {
@@ -45,7 +67,4 @@ public class MovieList {
         return movieID;
     }
 
-    public int getListID() {
-        return listID;
-    }
 }

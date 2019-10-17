@@ -24,7 +24,7 @@ public interface GenreDao {
     LiveData<List<Genre>> getAllGenres();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Genre... genres);
+    void insert(List<Genre> genres);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(Genre... genres);

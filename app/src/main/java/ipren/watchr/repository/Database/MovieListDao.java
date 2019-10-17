@@ -20,7 +20,21 @@ public interface MovieListDao {
             "INNER JOIN movie_lists " +
             " ON movies.id =movie_lists.movie_id " +
             "WHERE movie_lists.list_id = :listID")
-    LiveData<List<Movie>> getMoviesFromList(int listID);
+    LiveData<List<Movie>> getAllMoviesFromList(String listID);
+
+    @Query("SELECT * FROM movies " +
+            "INNER JOIN movie_lists " +
+            " ON movies.id =movie_lists.movie_id " +
+            "WHERE movie_lists.list_id = :listID " +
+            "AND movie_lists.page =:page")
+    List<Movie> getMoviesFromListNonLiveData(String listID, int page);
+
+    @Query("SELECT * FROM movies " +
+            "INNER JOIN movie_lists " +
+            " ON movies.id =movie_lists.movie_id " +
+            "WHERE movie_lists.list_id = :listID " +
+            "AND movie_lists.page =:page")
+    LiveData<List<Movie>> getMoviesFromList(String listID, int page);
 
     @Query("DELETE FROM movie_lists WHERE movie_id = :movieID AND list_id = :listID")
     void removeMovieFromList(int movieID, int listID);

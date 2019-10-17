@@ -2,6 +2,7 @@ package ipren.watchr.repository.Database;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -14,18 +15,24 @@ import ipren.watchr.Helpers.DateConverter;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Genre;
+import ipren.watchr.dataHolders.GenreList;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.MovieGenreJoin;
 import ipren.watchr.dataHolders.MovieList;
+import ipren.watchr.repository.API.IMovieApi;
+import ipren.watchr.repository.API.MovieApi;
+import retrofit2.Call;
+import retrofit2.Response;
 
-@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 11)
+@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 12)
 @TypeConverters(DateConverter.class)
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance
     private static String DB_NAME = "Ipren-Database";
+    // This callback is called when the DB is created.
     private static Callback dbCallback = new Callback() {
         @Override
-        public void onOpen(@NonNull SupportSQLiteDatabase db) {
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
             new PopulateDbAsync(INSTANCE).execute();
         }
@@ -39,8 +46,7 @@ public abstract class MovieDB extends RoomDatabase {
         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                 MovieDB.class, DB_NAME)
                 .fallbackToDestructiveMigration()
-                // USED FOR TESTING PURPOSES. REMOVE IN PRODUCTION CODE. TODO
-                // .addCallback(dbCallback)
+                .addCallback(dbCallback)
                 .build();
         return INSTANCE;
 
@@ -58,37 +64,45 @@ public abstract class MovieDB extends RoomDatabase {
 
     public abstract MovieListDao movieListDao();
 
-    // TESTING PURPOSES
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
 
-        private final MovieDao movieDao;
         private final GenreDao genreDao;
-        private final MovieGenreJoinDao movieGenreJoinDao;
-        private final CommentDao commentDao;
+        private final IMovieApi movieApi;
 
         PopulateDbAsync(MovieDB db) {
-            movieDao = db.movieDao();
             genreDao = db.genreDao();
-            movieGenreJoinDao = db.movieGenreJoinDao();
-            commentDao = db.commentDao();
-            NUKE();
-        }
-
-        private void NUKE() {
-            movieDao.NUKE();
-            genreDao.NUKE();
-            movieGenreJoinDao.NUKE();
-            commentDao.NUKE();
+            movieApi = new MovieApi();
         }
 
         @Override
         protected Void doInBackground(final Void... params) {
-            movieDao.insert(new Movie(475557, "ayy lmao"));
-            genreDao.insert(new Genre(1, "Action"));
-            genreDao.insert(new Genre(2, "Horror"));
-            movieGenreJoinDao.insert(new MovieGenreJoin(475557, 1));
-            movieGenreJoinDao.insert(new MovieGenreJoin(475557, 2));
+            insertGenres();
             return null;
+        }
+
+        /**
+         * Gathers the genreList from the API when the DB is created.
+         * This makes things easier since when getting a movie list form the API
+         * the list only contains the genre IDs and not the name of genres
+         */
+        private void insertGenres() {
+            movieApi.getAllGenres().enqueue(new retrofit2.Callback<GenreList>() {
+                @Override
+                public void onResponse(Call<GenreList> call, Response<GenreList> response) {
+                    if (!response.isSuccessful()) {
+                        Log.d("MOVIE", "Error getting genrelist!");
+                        return;
+                    }
+                    new Thread(() -> {
+                        genreDao.insert(response.body().getGenres());
+                    }).start();
+                }
+
+                @Override
+                public void onFailure(Call<GenreList> call, Throwable t) {
+
+                }
+            });
         }
     }
 }
