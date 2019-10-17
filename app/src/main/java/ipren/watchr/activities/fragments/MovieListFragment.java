@@ -91,26 +91,37 @@ public class MovieListFragment extends Fragment {
      * Makes the fragment listen to the live data in the view model
      */
     private void observeViewModel() {
-        listViewModel.getMovies().observe(this, movies -> {
+        listViewModel.movies.observe(this, movies -> {
             if (movies != null && movies instanceof List) {
                 movieList.setVisibility(View.VISIBLE);
                 movieListAdapter.updateMovieList(movies);
             }
         });
 
-        listViewModel.getMovieLoadError().observe(this, isError -> {
+        listViewModel.movieLoadError.observe(this, isError -> {
             if (isError != null && isError instanceof Boolean) {
                 listError.setVisibility(isError ? View.VISIBLE : View.GONE);
             }
         });
 
-        listViewModel.getLoading().observe(this, isLoading -> {
+        listViewModel.loading.observe(this, isLoading -> {
             if (isLoading != null && isLoading instanceof Boolean) {
                 loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 if (isLoading) {
                     listError.setVisibility(View.GONE);
                     movieList.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        listViewModel.getUser().observe(this, user -> {
+            if (user == null) {
+                // Block the lists
+                Log.d("TEST", "User not logged in");
+            } else {
+                // Fetch the list ids
+                Log.d("TEST", "User is logged in");
+                loadingView.setVisibility(View.VISIBLE);
             }
         });
     }

@@ -1,6 +1,7 @@
 package ipren.watchr.viewModels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -25,8 +26,16 @@ public class ListViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> movieLoadError = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
+=======
+    public MutableLiveData<List<Movie>> movies = new MutableLiveData<>();
+    public MutableLiveData<Boolean> movieLoadError = new MutableLiveData<>();
+    public MutableLiveData<Boolean> loading = new MutableLiveData<>();
+>>>>>>> Stashed changes
 
     private LiveData<User> user;
+    private LiveData<String[]> watchLaterIds;
+    private LiveData<String[]> watchedIds;
+    private LiveData<String[]> favoritesIds;
 
     private IMovieRepository movieRepository;
     private IUserDataRepository userRepository;
@@ -40,6 +49,7 @@ public class ListViewModel extends AndroidViewModel {
         // TODO: implementera mot repository
         movieRepository = new MovieRepository(application.getApplicationContext());
         userRepository = IUserDataRepository.getInstance();
+        user = userRepository.getUserLiveData();
     }
 
     public void getList(String list, int page) {
