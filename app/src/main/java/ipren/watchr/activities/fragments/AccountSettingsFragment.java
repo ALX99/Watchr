@@ -21,7 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,11 +64,11 @@ public class AccountSettingsFragment extends Fragment {
 
             showEmailVerifiedLayout(e.isVerified());
 
-            if(!getView().findViewById(R.id.usr_verif_btn).isEnabled()) {
-                ((TextView)getView().findViewById(R.id.is_user_verified_text)).setText("User not verified!");
-                ((TextView)getView().findViewById(R.id.is_user_verified_text)).setTextColor(Color.RED);
+            if (!getView().findViewById(R.id.usr_verif_btn).isEnabled()) {
+                ((TextView) getView().findViewById(R.id.is_user_verified_text)).setText("User not verified!");
+                ((TextView) getView().findViewById(R.id.is_user_verified_text)).setTextColor(Color.RED);
                 (getView().findViewById(R.id.is_user_verified_text)).setVisibility(View.VISIBLE);
-               loadingButtonEnabled(getView().findViewById(R.id.usr_verif_btn), getView().findViewById(R.id.user_veri_check_spinner), false , "CLICK WHEN VERIFIED");
+                loadingButtonEnabled(getView().findViewById(R.id.usr_verif_btn), getView().findViewById(R.id.user_veri_check_spinner), false, "CLICK WHEN VERIFIED");
             }
 
             // set Image here getView().findViewById(R.id.profile_img_acc)
@@ -109,32 +108,32 @@ public class AccountSettingsFragment extends Fragment {
 
     private void initEmailVerificationLayout() {
 
-        getView().findViewById(R.id.send_ver_email_btn).setOnClickListener(e ->{
+        getView().findViewById(R.id.send_ver_email_btn).setOnClickListener(e -> {
             loadingButtonEnabled(getView().findViewById(R.id.send_ver_email_btn), getView().findViewById(R.id.email_veri_spinner), true, "Sending...");
-            ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setVisibility(View.INVISIBLE);
-            ((TextView)getView().findViewById(R.id.is_user_verified_text)).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.email_veri_resp_txt).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.is_user_verified_text).setVisibility(View.INVISIBLE);
             settingsViewModel.resendVerificationEmail();
 
         });
 
         getView().findViewById(R.id.usr_verif_btn).setOnClickListener(e -> {
             loadingButtonEnabled(getView().findViewById(R.id.usr_verif_btn), getView().findViewById(R.id.user_veri_check_spinner), true, "Checking");
-            ((TextView)getView().findViewById(R.id.is_user_verified_text)).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.is_user_verified_text).setVisibility(View.INVISIBLE);
             settingsViewModel.refreshUsr();
 
         });
 
         settingsViewModel.getVerificationResponse().observe(this, e -> {
             loadingButtonEnabled(getView().findViewById(R.id.send_ver_email_btn), getView().findViewById(R.id.email_veri_spinner), false, "RE-SEND VERIFICATION");
-            if(e == null)
+            if (e == null)
                 return;
-            ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setVisibility(View.VISIBLE);
-            if(e.isSuccessful()){
-                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setText("Email sent!");
-                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setTextColor(Color.GREEN);
-            }else {
-                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setText(e.getErrorMsg());
-                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setTextColor(Color.RED);
+            getView().findViewById(R.id.email_veri_resp_txt).setVisibility(View.VISIBLE);
+            if (e.isSuccessful()) {
+                ((TextView) getView().findViewById(R.id.email_veri_resp_txt)).setText("Email sent!");
+                ((TextView) getView().findViewById(R.id.email_veri_resp_txt)).setTextColor(Color.GREEN);
+            } else {
+                ((TextView) getView().findViewById(R.id.email_veri_resp_txt)).setText(e.getErrorMsg());
+                ((TextView) getView().findViewById(R.id.email_veri_resp_txt)).setTextColor(Color.RED);
             }
         });
 
@@ -214,9 +213,9 @@ public class AccountSettingsFragment extends Fragment {
 
     }
 
-    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text){
+    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text) {
         button.setEnabled(!on);
         button.setText(text);
-        spinner.setVisibility(on ?  View.VISIBLE : View.GONE );
+        spinner.setVisibility(on ? View.VISIBLE : View.GONE);
     }
 }

@@ -123,7 +123,7 @@ public class FireRepositoryManager implements IUserDataRepository {
         else if (score < 0)
             score = 0;
 
-       firestoreDatabase.addRating(score, movie_id, user_id, callback);
+        firestoreDatabase.addRating(score, movie_id, user_id, callback);
 
     }
 

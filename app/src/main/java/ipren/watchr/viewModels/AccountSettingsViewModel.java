@@ -19,14 +19,14 @@ public class AccountSettingsViewModel extends ViewModel {
 
     MutableLiveData<AuthenticationResponse> sendVerEmailResponse = new MutableLiveData<>(null);
 
-   public AccountSettingsViewModel(){
-       mainRepository = IUserDataRepository.getInstance();
-       this.liveUser = mainRepository.getUserLiveData();
+    public AccountSettingsViewModel() {
+        mainRepository = IUserDataRepository.getInstance();
+        this.liveUser = mainRepository.getUserLiveData();
 
     }
 
-    public LiveData<AuthenticationResponse> getVerificationResponse(){
-       return  sendVerEmailResponse;
+    public LiveData<AuthenticationResponse> getVerificationResponse() {
+        return sendVerEmailResponse;
     }
 
     public LiveData<User> getUser() {
@@ -43,11 +43,11 @@ public class AccountSettingsViewModel extends ViewModel {
 
     public void resendVerificationEmail() {
         mainRepository.reSendVerificationEmail(e -> {
-            if(e == null){
+            if (e == null) {
                 sendVerEmailResponse.postValue(new AuthenticationResponse(false, "Email Already verified"));
-            }else{
+            } else {
                 Exception exc = e.getException();
-                sendVerEmailResponse.postValue(new AuthenticationResponse(e.isSuccessful(),exc !=null ? exc.getMessage() : "" ));
+                sendVerEmailResponse.postValue(new AuthenticationResponse(e.isSuccessful(), exc != null ? exc.getMessage() : ""));
             }
         });
     }

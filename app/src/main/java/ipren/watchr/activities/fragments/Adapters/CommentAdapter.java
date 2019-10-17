@@ -66,7 +66,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     // Method to update the data
     public void setData(FireComment[] comments) {
         if (comments == null) return;
-            this.commments = Arrays.asList(comments);
+        this.commments = Arrays.asList(comments);
         notifyDataSetChanged();
     }
 

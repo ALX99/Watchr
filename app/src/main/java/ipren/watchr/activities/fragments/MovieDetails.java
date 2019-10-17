@@ -45,10 +45,6 @@ import ipren.watchr.viewModels.MovieViewModel;
  * The type Movie details.
  */
 public class MovieDetails extends Fragment {
-    private int movieID;
-    private IMovieViewModel viewModel;
-    private User user;
-
     @BindView(R.id.castList)
     RecyclerView cast;
     @BindView(R.id.genreList)
@@ -97,6 +93,9 @@ public class MovieDetails extends Fragment {
     ProgressBar ourRating;
     @BindView(R.id.profile_picture)
     CircleImageView profilePicture;
+    private int movieID;
+    private IMovieViewModel viewModel;
+    private User user;
 
     public MovieDetails() {
         // Required empty public constructor

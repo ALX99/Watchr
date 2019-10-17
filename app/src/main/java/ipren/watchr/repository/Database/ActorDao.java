@@ -20,5 +20,5 @@ public interface ActorDao {
 
     @Query("DELETE FROM actors")
     void NUKE();
-    
+
 }

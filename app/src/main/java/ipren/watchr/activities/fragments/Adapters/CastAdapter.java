@@ -1,6 +1,5 @@
 package ipren.watchr.activities.fragments.Adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

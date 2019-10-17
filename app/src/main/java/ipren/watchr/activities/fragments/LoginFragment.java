@@ -11,7 +11,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -168,6 +167,12 @@ public class LoginFragment extends Fragment {
         button.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.shake));
     }
 
+    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text) {
+        button.setEnabled(!on);
+        button.setText(text);
+        spinner.setVisibility(on ? View.VISIBLE : View.GONE);
+    }
+
     class EmailFormatListener implements TextWatcher {
         private EditText inputTextField;
 
@@ -189,12 +194,6 @@ public class LoginFragment extends Fragment {
             if (!(isEmailFormat(newValue)))
                 inputTextField.setError("Not an email address");
         }
-    }
-
-    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text){
-        button.setEnabled(!on);
-        button.setText(text);
-        spinner.setVisibility(on ?  View.VISIBLE : View.GONE );
     }
 }
 

@@ -20,7 +20,8 @@ public class MainViewModel extends ViewModel implements MainViewModelInterface {
         this.mainRepository = mainRepository;
         user = mainRepository.getUserLiveData();
     }
-    public MainViewModel(){
+
+    public MainViewModel() {
         mainRepository = IUserDataRepository.getInstance();
         user = mainRepository.getUserLiveData();
     }

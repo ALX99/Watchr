@@ -24,9 +24,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ipren.watchr.BuildConfig;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
-import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.viewModels.ListViewModel;
 
 public class MovieListFragment extends Fragment {
@@ -35,6 +35,8 @@ public class MovieListFragment extends Fragment {
     RecyclerView movieList;
     @BindView(R.id.listError)
     TextView listError;
+    @BindView(R.id.notLoggedInError)
+    TextView notLoggedInError;
     @BindView(R.id.loadingView)
     ProgressBar loadingView;
     @BindView(R.id.refreshLayout)
@@ -63,10 +65,14 @@ public class MovieListFragment extends Fragment {
         connectFilterButton();
         connectSearchView();
 
-
-        // TODO: @johan Check if logged in to access all lists beside browse
-
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
+        listViewModel.initData();
+        String listType = this.getArguments().getString("listType");
+        listViewModel.setListType(listType);
+
+        // Get API key and list type
+        String key = BuildConfig.API_KEY;
+        String url;
 
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
         movieList.setAdapter(movieListAdapter);
@@ -74,54 +80,84 @@ public class MovieListFragment extends Fragment {
         // Fetch fresh data from API on refresh
         refreshLayout.setOnRefreshListener(() -> {
             movieList.setVisibility(View.GONE);
+            listError.setVisibility(View.GONE);
             loadingView.setVisibility(View.VISIBLE);
-            listViewModel.refresh(IMovieRepository.TRENDING_LIST, 1);
-            observeViewModel();
-            loadingView.setVisibility(View.GONE);
-
+            listViewModel.refresh("movie/top_rated?api_key=" + key + "&language=en-US&page=1");
             refreshLayout.setRefreshing(false);
         });
 
-        listViewModel.getList(IMovieRepository.TRENDING_LIST, 1);
         observeViewModel();
-        loadingView.setVisibility(View.GONE);
+
+        // TODO: Refactor this, UUUUUGLY
+        if (listViewModel.getUser().getValue() != null) {
+            Log.d("TEST", "Logged in");
+            switch (listType) {
+                case "browse":
+                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=1";
+                    listViewModel.refresh(url);
+                    break;
+                case "recommended":
+                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=2";
+                    listViewModel.refresh(url);
+                    break;
+                case "watchLater":
+                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=3";
+                    listViewModel.refresh(url);
+                    break;
+                case "watched":
+                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=4";
+                    listViewModel.refresh(url);
+                    break;
+                case "favorites":
+                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=5";
+                    listViewModel.refresh(url);
+                    break;
+            }
+        } else {
+            Log.d("TEST", "Logged out");
+            switch (listType) {
+                case "browse":
+                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=1";
+                    listViewModel.refresh(url);
+                    break;
+                case "recommended":
+                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=2";
+                    listViewModel.refresh(url);
+                    break;
+                default:
+                    listError.setVisibility(View.GONE);
+                    movieList.setVisibility(View.GONE);
+                    loadingView.setVisibility(View.GONE);
+                    notLoggedInError.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
     }
 
     /**
      * Makes the fragment listen to the live data in the view model
      */
     private void observeViewModel() {
-        listViewModel.movies.observe(this, movies -> {
+        listViewModel.getMovies().observe(this, movies -> {
             if (movies != null && movies instanceof List) {
                 movieList.setVisibility(View.VISIBLE);
                 movieListAdapter.updateMovieList(movies);
             }
         });
 
-        listViewModel.movieLoadError.observe(this, isError -> {
+        listViewModel.getMovieLoadError().observe(this, isError -> {
             if (isError != null && isError instanceof Boolean) {
                 listError.setVisibility(isError ? View.VISIBLE : View.GONE);
             }
         });
 
-        listViewModel.loading.observe(this, isLoading -> {
+        listViewModel.getLoading().observe(this, isLoading -> {
             if (isLoading != null && isLoading instanceof Boolean) {
                 loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 if (isLoading) {
                     listError.setVisibility(View.GONE);
                     movieList.setVisibility(View.GONE);
                 }
-            }
-        });
-
-        listViewModel.getUser().observe(this, user -> {
-            if (user == null) {
-                // Block the lists
-                Log.d("TEST", "User not logged in");
-            } else {
-                // Fetch the list ids
-                Log.d("TEST", "User is logged in");
-                loadingView.setVisibility(View.VISIBLE);
             }
         });
     }

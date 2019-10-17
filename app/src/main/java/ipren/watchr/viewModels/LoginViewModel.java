@@ -25,7 +25,7 @@ public class LoginViewModel extends ViewModel {
         this.user = mainRepository.getUserLiveData();
     }
 
-    public LoginViewModel(){
+    public LoginViewModel() {
         this.mainRepository = IUserDataRepository.getInstance();
         this.user = mainRepository.getUserLiveData();
     }

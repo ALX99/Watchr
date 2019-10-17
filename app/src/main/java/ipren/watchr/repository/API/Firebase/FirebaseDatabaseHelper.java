@@ -2,7 +2,6 @@ package ipren.watchr.repository.API.Firebase;
 
 import android.net.Uri;
 import android.util.Log;
-import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -98,7 +97,7 @@ public class FirebaseDatabaseHelper {
                                 .collection(MOVIE_COLLECTION)
                                 .document(list)
                                 .set(entry);
-                       attachCallback(task, callback);
+                        attachCallback(task, callback);
                     } else if (callback != null)
                         callback.onComplete(e);
                 });

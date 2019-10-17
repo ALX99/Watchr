@@ -115,8 +115,8 @@ public class FirebaseAuthAPI {
         });
     }
 
-    private void attachCallback(Task task, OnCompleteListener callback){
-        if(callback != null)
+    private void attachCallback(Task task, OnCompleteListener callback) {
+        if (callback != null)
             task.addOnCompleteListener(callback);
 
     }

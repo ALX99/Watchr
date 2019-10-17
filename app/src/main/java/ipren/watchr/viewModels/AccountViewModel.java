@@ -12,6 +12,7 @@ public class AccountViewModel extends ViewModel {
     LiveData<User> user;
 
     private IUserDataRepository mainRepository;
+
     @VisibleForTesting
     public AccountViewModel(IUserDataRepository iMainRepository) {
         mainRepository = iMainRepository;
