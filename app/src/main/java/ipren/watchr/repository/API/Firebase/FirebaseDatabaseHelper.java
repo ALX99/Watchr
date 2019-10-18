@@ -153,11 +153,11 @@ public class FirebaseDatabaseHelper {
     }
 
     void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
-        Map<String, String> comment = new HashMap<>();
+        Map<String, Object> comment = new HashMap<>();
 
         comment.put(USER_ID_FIELD, user_id);
         comment.put(MOVIE_ID_FIELD, movie_id);
-        comment.put("score", "" + score);
+        comment.put("score", new Integer(score));
 
         Task task = fireStore.collection(RATING_PATH).add(comment);
         attachCallback(task, callback);
@@ -196,7 +196,7 @@ public class FirebaseDatabaseHelper {
 
     LiveData<FireRating[]> getRatingByMovieID(String movie_id) {
         if (!ratingByMovie_id.containsKey(movie_id))
-            ratingByMovie_id.put(movie_id, listenToResources(RATING_PATH, USER_ID_FIELD, movie_id, FireRating.class));
+            ratingByMovie_id.put(movie_id, listenToResources(RATING_PATH, MOVIE_ID_FIELD, movie_id, FireRating.class));
 
         return ratingByMovie_id.get(movie_id);
     }
@@ -207,7 +207,8 @@ public class FirebaseDatabaseHelper {
             fireStore.collection(USER_PATH).document(user_id).addSnapshotListener((results, error) -> {
                 if (error != null)
                     return;
-                publicProfile.postValue(results.toObject(PublicProfile.class));
+                Object object = results.get("photoUri");
+                publicProfile.postValue(new PublicProfile(object != null ? Uri.parse((String) object) : null, results.get("username", String.class)));
             });
             publicProfiles.put(user_id, publicProfile);
         }
