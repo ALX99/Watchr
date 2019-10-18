@@ -6,14 +6,13 @@ import com.google.firebase.firestore.DocumentId;
 
 public class FireComment {
     @DocumentId
-    String uID;
+    private String uID;
     private String movie_id;
     private String user_id;
     private String text;
-    private Uri profilePic;
 
-    public FireComment() {
-    }
+    //This is needed to enable firebase to initiate the object
+    public FireComment() { }
 
 
     public String getMovie_id() {
@@ -37,13 +36,5 @@ public class FireComment {
         this.user_id = user_id;
         this.text = text;
         this.uID = uID;
-    }
-
-    public Uri getProfilePic() {
-        return profilePic;
-    }
-
-    public void setProfilePic(Uri profilePic) {
-        this.profilePic = profilePic;
     }
 }

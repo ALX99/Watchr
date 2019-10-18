@@ -154,11 +154,11 @@ public class FirebaseDatabaseHelper {
     }
 
     void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
-        Map<String, String> comment = new HashMap<>();
+        Map<String, Object> comment = new HashMap<>();
 
         comment.put(USER_ID_FIELD, user_id);
         comment.put(MOVIE_ID_FIELD, movie_id);
-        comment.put("score", "" + score);
+        comment.put("score", new Integer(score));
 
         Task task = fireStore.collection(RATING_PATH).add(comment);
         attachCallback(task, callback);
