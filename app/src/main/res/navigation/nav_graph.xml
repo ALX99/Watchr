@@ -47,7 +47,7 @@
             app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="browse" />
+            android:defaultValue="Browse" />
     </fragment>
 
     <fragment
@@ -63,10 +63,8 @@
             app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="recommended" />
+            android:defaultValue="Recommended" />
     </fragment>
-
-    <!-- END LIST FRAGMENTS -->
 
     <fragment
         android:id="@+id/favoritesFragment"
@@ -82,7 +80,7 @@
             app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="favorites" />
+            android:defaultValue="Favorites" />
     </fragment>
     <fragment
         android:id="@+id/watchLaterFragment"
@@ -98,7 +96,7 @@
             app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="watchLater" />
+            android:defaultValue="Watch_Later" />
     </fragment>
     <fragment
         android:id="@+id/watchedFragment"
@@ -114,8 +112,10 @@
             app:popExitAnim="@animator/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="watched" />
+            android:defaultValue="Watched" />
     </fragment>
+
+    <!-- END LIST FRAGMENTS -->
 
     <fragment
         android:id="@+id/loginFragment"

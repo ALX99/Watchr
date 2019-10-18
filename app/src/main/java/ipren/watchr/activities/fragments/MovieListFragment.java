@@ -24,7 +24,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ipren.watchr.BuildConfig;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
 import ipren.watchr.viewModels.ListViewModel;
@@ -41,6 +40,8 @@ public class MovieListFragment extends Fragment {
     ProgressBar loadingView;
     @BindView(R.id.refreshLayout)
     SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.emptyListView)
+    TextView emptyListView;
     private ListViewModel listViewModel;
     private MovieListAdapter movieListAdapter;
 
@@ -58,6 +59,9 @@ public class MovieListFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Sets up the list, decides which list to display.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -66,72 +70,29 @@ public class MovieListFragment extends Fragment {
         connectSearchView();
 
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
-        listViewModel.initData();
         String listType = this.getArguments().getString("listType");
-        listViewModel.setListType(listType);
-
-        // Get API key and list type
-        String key = BuildConfig.API_KEY;
-        String url;
 
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
         movieList.setAdapter(movieListAdapter);
+
+        // Navigate based on list and login status
+        if (listType.equals("Browse") || listType.equals("Recommended") || listViewModel.getUser().getValue() != null) {
+            listViewModel.refresh(listType);
+            observeViewModel();
+        } else {
+            listError.setVisibility(View.GONE);
+            movieList.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
+            notLoggedInError.setVisibility(View.VISIBLE);
+        }
 
         // Fetch fresh data from API on refresh
         refreshLayout.setOnRefreshListener(() -> {
             movieList.setVisibility(View.GONE);
             listError.setVisibility(View.GONE);
-            loadingView.setVisibility(View.VISIBLE);
-            listViewModel.refresh("movie/top_rated?api_key=" + key + "&language=en-US&page=1");
+            listViewModel.refresh(listType);
             refreshLayout.setRefreshing(false);
         });
-
-        observeViewModel();
-
-        // TODO: Refactor this, UUUUUGLY
-        if (listViewModel.getUser().getValue() != null) {
-            Log.d("TEST", "Logged in");
-            switch (listType) {
-                case "browse":
-                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=1";
-                    listViewModel.refresh(url);
-                    break;
-                case "recommended":
-                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=2";
-                    listViewModel.refresh(url);
-                    break;
-                case "watchLater":
-                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=3";
-                    listViewModel.refresh(url);
-                    break;
-                case "watched":
-                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=4";
-                    listViewModel.refresh(url);
-                    break;
-                case "favorites":
-                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=5";
-                    listViewModel.refresh(url);
-                    break;
-            }
-        } else {
-            Log.d("TEST", "Logged out");
-            switch (listType) {
-                case "browse":
-                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=1";
-                    listViewModel.refresh(url);
-                    break;
-                case "recommended":
-                    url = "movie/top_rated?api_key=" + key + "&language=en-US&page=2";
-                    listViewModel.refresh(url);
-                    break;
-                default:
-                    listError.setVisibility(View.GONE);
-                    movieList.setVisibility(View.GONE);
-                    loadingView.setVisibility(View.GONE);
-                    notLoggedInError.setVisibility(View.VISIBLE);
-                    break;
-            }
-        }
     }
 
     /**
@@ -157,7 +118,16 @@ public class MovieListFragment extends Fragment {
                 if (isLoading) {
                     listError.setVisibility(View.GONE);
                     movieList.setVisibility(View.GONE);
+                    emptyListView.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        listViewModel.getEmptyListStatus().observe(this, isEmptyList -> {
+            if (isEmptyList != null && isEmptyList instanceof Boolean) {
+                listError.setVisibility(View.GONE);
+                movieList.setVisibility(View.GONE);
+                emptyListView.setVisibility(View.VISIBLE);
             }
         });
     }
