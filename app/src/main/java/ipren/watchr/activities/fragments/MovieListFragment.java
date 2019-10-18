@@ -45,8 +45,13 @@ public class MovieListFragment extends Fragment {
     private ListViewModel listViewModel;
     private MovieListAdapter movieListAdapter;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     public MovieListFragment() {
-        movieListAdapter = new MovieListAdapter(new ArrayList<>());
+
     }
 
     @Override
@@ -70,6 +75,7 @@ public class MovieListFragment extends Fragment {
         connectSearchView();
 
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
+        movieListAdapter = new MovieListAdapter(new ArrayList<>(), listViewModel);
         String listType = this.getArguments().getString("listType");
 
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -125,9 +131,7 @@ public class MovieListFragment extends Fragment {
 
         listViewModel.getEmptyListStatus().observe(this, isEmptyList -> {
             if (isEmptyList != null && isEmptyList instanceof Boolean) {
-                listError.setVisibility(View.GONE);
-                movieList.setVisibility(View.GONE);
-                emptyListView.setVisibility(View.VISIBLE);
+                emptyListView.setVisibility(isEmptyList ? View.VISIBLE : View.GONE);
             }
         });
     }

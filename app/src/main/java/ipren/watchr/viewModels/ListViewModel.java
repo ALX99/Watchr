@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.Arrays;
 import java.util.IllegalFormatConversionException;
 import java.util.List;
 
@@ -50,11 +51,9 @@ public class ListViewModel extends AndroidViewModel {
         movieLoadError = new MutableLiveData<>();
         loading = new MutableLiveData<>();
         emptyListStatus = new MutableLiveData<>();
-        movies = movieRepository.getMovieList(MovieRepository.TRENDING_LIST, 1, true);
+        movies = new MutableLiveData<>();
     }
 
-
-    // ----------------NYA--------------------------------------------------------------
     public LiveData<User> getUser() {
         return user;
     }
@@ -73,6 +72,28 @@ public class ListViewModel extends AndroidViewModel {
 
     public MutableLiveData<Boolean> getEmptyListStatus() { return emptyListStatus; }
 
+    /**
+     * Returns 1 if user is logged in and movie not in list
+     * Returns 0 if user is not logged in
+     * Returns -1 if user is logged in and movie is in list
+     */
+    public int updateMovieInList(int movieId, String listType) {
+        if (user.getValue() != null) {
+            LiveData<String[]> ids = userRepository.getMovieList(listType, user.getValue().getUID());
+            if (Arrays.asList(ids.getValue()).contains(movieId)) {
+                userRepository.removeMovieFromList(listType, "" + movieId, user.getValue().getUID(), v -> Log.d("TEST", "Removed movie with id " + movieId + " to " + listType));
+                return -1;
+            } else {
+                userRepository.addMovieToList(listType, "" + movieId, user.getValue().getUID(), v -> Log.d("TEST", "Added movie with id " + movieId + " to " + listType));
+            }
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
+     * Fetches the correct list and updates the corresponding live data
+     */
     public void refresh(String listType) {
         loading.setValue(true);
 
@@ -85,7 +106,7 @@ public class ListViewModel extends AndroidViewModel {
         } else {
             // Get list ids
             movieIds = userRepository.getMovieList(listType, user.getValue().getUID());
-            if (movieIds.getValue() == null) {
+            if (movieIds.getValue() == null || movieIds.getValue().length == 0) {
                 emptyListStatus.setValue(true);
             } else {
                 int[] movieIdsInt = convertStringArrayToIntArray(movieIds.getValue());
