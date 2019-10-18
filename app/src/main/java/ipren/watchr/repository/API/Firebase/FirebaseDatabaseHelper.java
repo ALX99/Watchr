@@ -208,7 +208,8 @@ public class FirebaseDatabaseHelper {
             fireStore.collection(USER_PATH).document(user_id).addSnapshotListener((results, error) -> {
                 if (error != null)
                     return;
-                publicProfile.postValue(results.toObject(PublicProfile.class));
+                Object object = results.get("photoUri");
+                publicProfile.postValue(new PublicProfile(object != null ? Uri.parse((String) object) : null, results.get("username", String.class)));
             });
             publicProfiles.put(user_id, publicProfile);
         }
