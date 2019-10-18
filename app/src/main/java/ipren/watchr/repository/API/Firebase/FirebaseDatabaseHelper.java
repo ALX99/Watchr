@@ -77,7 +77,7 @@ public class FirebaseDatabaseHelper {
         Uri uri = user.getUserProfilePictureUri();
         Map<String, Object> userData = new HashMap<>();
         userData.put("username", user.getUserName());
-        userData.put("photoUri", uri != null ? uri.toString() : null);
+        userData.put("photoUri", uri != null && !isUriLocal(user.getUserProfilePictureUri()) ? uri.toString() : null);
         fireStore.collection("users").document(user.getUID()).set(userData, SetOptions.merge());
     }
 
@@ -247,6 +247,15 @@ public class FirebaseDatabaseHelper {
             task.addOnCompleteListener(callback);
     }
 
+    private boolean isUriLocal(Uri uri) {
+        if (uri == null)
+            return false;
+        if (uri.toString().startsWith("android.resource://"))
+            return true;
+        return false;
+
+    }
+
 
     class UserLiveData extends MutableLiveData<CurrentUser> {
 
@@ -331,6 +340,8 @@ public class FirebaseDatabaseHelper {
             if (movieRatingListener != null)
                 movieRatingListener.remove();
         }
+
+
     }
 
 }
