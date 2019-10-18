@@ -197,7 +197,7 @@ public class FirebaseDatabaseHelper {
 
     LiveData<FireRating[]> getRatingByMovieID(String movie_id) {
         if (!ratingByMovie_id.containsKey(movie_id))
-            ratingByMovie_id.put(movie_id, listenToResources(RATING_PATH, USER_ID_FIELD, movie_id, FireRating.class));
+            ratingByMovie_id.put(movie_id, listenToResources(RATING_PATH, MOVIE_ID_FIELD, movie_id, FireRating.class));
 
         return ratingByMovie_id.get(movie_id);
     }
