@@ -24,9 +24,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ipren.watchr.BuildConfig;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
+import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.viewModels.ListViewModel;
 
 public class MovieListFragment extends Fragment {
@@ -63,33 +63,10 @@ public class MovieListFragment extends Fragment {
         connectFilterButton();
         connectSearchView();
 
-        String url = "";
-
-        // Get API key
-        String key = BuildConfig.API_KEY;
 
         // TODO: @johan Check if logged in to access all lists beside browse
-        // For testing purposes
-        switch (this.getArguments().getString("listType")) {
-            case "browse":
-                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=1";
-                break;
-            case "recommended":
-                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=2";
-                break;
-            case "watchLater":
-                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=3";
-                break;
-            case "watched":
-                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=4";
-                break;
-            case "favorites":
-                url = "movie/top_rated?api_key=" + key + "&language=en-US&page=5";
-                break;
-        }
 
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
-        listViewModel.refresh(url);
 
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
         movieList.setAdapter(movieListAdapter);
@@ -97,13 +74,17 @@ public class MovieListFragment extends Fragment {
         // Fetch fresh data from API on refresh
         refreshLayout.setOnRefreshListener(() -> {
             movieList.setVisibility(View.GONE);
-            listError.setVisibility(View.GONE);
             loadingView.setVisibility(View.VISIBLE);
-            listViewModel.refresh("movie/top_rated?api_key=" + key + "&language=en-US&page=1");
+            listViewModel.refresh(IMovieRepository.TRENDING_LIST, 1);
+            observeViewModel();
+            loadingView.setVisibility(View.GONE);
+
             refreshLayout.setRefreshing(false);
         });
 
+        listViewModel.getList(IMovieRepository.TRENDING_LIST, 1);
         observeViewModel();
+        loadingView.setVisibility(View.GONE);
     }
 
     /**
