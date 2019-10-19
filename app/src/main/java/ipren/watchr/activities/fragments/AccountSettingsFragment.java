@@ -18,14 +18,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 
 import java.io.File;
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.BuildConfig;
 import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
@@ -36,6 +39,38 @@ import static android.app.Activity.RESULT_OK;
 //TODO This class is not finnished
 public class AccountSettingsFragment extends Fragment {
 
+    //User verified layout -> Settings
+    @BindView(R.id.ver_email_layout)
+    ConstraintLayout userNotVerifiedLayout;
+    @BindView(R.id.user_email_txt)
+    TextView userEmailTxt;
+    @BindView(R.id.username_Input)
+    EditText usernameInputField;
+    @BindView(R.id.UID_txt_field)
+    TextView uIDTextField;
+    @BindView(R.id.profile_img_acc)
+    CircleImageView profilePic;
+    @BindView(R.id.save_user_config_btn)
+    Button saveUserConfigBtn;
+
+
+
+    // User not verified layout
+    @BindView(R.id.settings_layout)
+    ConstraintLayout verifiedUserLayout;
+    @BindView(R.id.email_veri_resp_txt)
+    TextView verifcationSentRespTxt;
+    @BindView(R.id.is_user_verified_text)
+    TextView checkUserVerifcationRespTxt;
+    @BindView(R.id.send_ver_email_btn)
+    Button sendEmailVerBtn;
+    @BindView(R.id.email_veri_spinner)
+    ProgressBar sendEmailVerSpinner;
+    @BindView(R.id.usr_verif_btn)
+    Button isUsrVerifiedBtn;
+    @BindView(R.id.user_veri_check_spinner)
+    ProgressBar usrVerifiedCheckSpinner;
+    
     private final int IMAGE_SRC_GALLERY = 0;
     private final int IMAGE_SRC_CAMERA = 1;
     private final String TMP_IMG_FILENAME = "JPEG_PROFILE_PICTURE";
@@ -44,11 +79,15 @@ public class AccountSettingsFragment extends Fragment {
 
     private Uri newProfileImgUri = null;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         settingsViewModel = ViewModelProviders.of(this).get(AccountSettingsViewModel.class);
-        return inflater.inflate(R.layout.account_settings_fragment, container, false);
+        View view  = inflater.inflate(R.layout.account_settings_fragment, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
@@ -65,18 +104,18 @@ public class AccountSettingsFragment extends Fragment {
 
             showEmailVerifiedLayout(e.isVerified());
 
-            if(!getView().findViewById(R.id.usr_verif_btn).isEnabled()) {
-                ((TextView)getView().findViewById(R.id.is_user_verified_text)).setText("User not verified!");
-                ((TextView)getView().findViewById(R.id.is_user_verified_text)).setTextColor(Color.RED);
-                (getView().findViewById(R.id.is_user_verified_text)).setVisibility(View.VISIBLE);
-               loadingButtonEnabled(getView().findViewById(R.id.usr_verif_btn), getView().findViewById(R.id.user_veri_check_spinner), false , "CLICK WHEN VERIFIED");
+            if(!isUsrVerifiedBtn.isEnabled()) {
+                checkUserVerifcationRespTxt.setText("User not verified!");
+                checkUserVerifcationRespTxt.setTextColor(Color.RED);
+                checkUserVerifcationRespTxt.setVisibility(View.VISIBLE);
+               loadingButtonEnabled(isUsrVerifiedBtn, usrVerifiedCheckSpinner, false , "CLICK WHEN VERIFIED");
             }
 
-            // set Image here getView().findViewById(R.id.profile_img_acc)
-            ((TextView) getView().findViewById(R.id.email_input_field)).setText(String.format(getResources().getString(R.string.email), e.getEmail()));
-            ((TextView) getView().findViewById(R.id.username_Input)).setText(e.getUserName());
-            ((TextView) getView().findViewById(R.id.UID_txt_field)).setText(String.format(getResources().getString(R.string.uid), e.getUID()));
-            Util.loadImage(getView().findViewById(R.id.profile_img_acc), e.getUserProfilePictureUri().toString(), Util.getProgressDrawable(getContext()));
+
+            userEmailTxt.setText(String.format(getResources().getString(R.string.email), e.getEmail()));
+            usernameInputField.setText(e.getUserName());
+            uIDTextField.setText(String.format(getResources().getString(R.string.uid), e.getUID()));
+            Util.loadImage(profilePic, e.getUserProfilePictureUri(), Util.getProgressDrawable(getContext()));
         });
     }
 
@@ -88,13 +127,13 @@ public class AccountSettingsFragment extends Fragment {
             switch (requestCode) {
                 case IMAGE_SRC_CAMERA:
                     newProfileImgUri = uriToTempFile;
-                    Util.loadImage(getView().findViewById(R.id.profile_img_acc),
-                            uriToTempFile.toString(), Util.getProgressDrawable(getContext()));
+                    Util.loadImage(profilePic,
+                            uriToTempFile, Util.getProgressDrawable(getContext()));
                     break;
                 case IMAGE_SRC_GALLERY:
                     newProfileImgUri = data.getData();
-                    Util.loadImage(getView().findViewById(R.id.profile_img_acc),
-                            newProfileImgUri.toString(), Util.getProgressDrawable(getContext()));
+                    Util.loadImage(profilePic,
+                            newProfileImgUri, Util.getProgressDrawable(getContext()));
                     break;
             }
         } else {
@@ -103,38 +142,38 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     private void showEmailVerifiedLayout(boolean verified) {
-        getView().findViewById(R.id.ver_email_layout).setVisibility(verified ? View.GONE : View.VISIBLE);
-        getView().findViewById(R.id.settings_layout).setVisibility(verified ? View.VISIBLE : View.GONE);
+        userNotVerifiedLayout.setVisibility(verified ? View.GONE : View.VISIBLE);
+        verifiedUserLayout.setVisibility(verified ? View.VISIBLE : View.GONE);
     }
 
     private void initEmailVerificationLayout() {
 
-        getView().findViewById(R.id.send_ver_email_btn).setOnClickListener(e ->{
-            loadingButtonEnabled(getView().findViewById(R.id.send_ver_email_btn), getView().findViewById(R.id.email_veri_spinner), true, "Sending...");
-            ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setVisibility(View.INVISIBLE);
-            ((TextView)getView().findViewById(R.id.is_user_verified_text)).setVisibility(View.INVISIBLE);
+       sendEmailVerBtn.setOnClickListener(e ->{
+            loadingButtonEnabled(sendEmailVerBtn, sendEmailVerSpinner, true, "Sending...");
+            verifcationSentRespTxt.setVisibility(View.INVISIBLE);
+            checkUserVerifcationRespTxt.setVisibility(View.INVISIBLE);
             settingsViewModel.resendVerificationEmail();
 
         });
 
-        getView().findViewById(R.id.usr_verif_btn).setOnClickListener(e -> {
-            loadingButtonEnabled(getView().findViewById(R.id.usr_verif_btn), getView().findViewById(R.id.user_veri_check_spinner), true, "Checking");
-            ((TextView)getView().findViewById(R.id.is_user_verified_text)).setVisibility(View.INVISIBLE);
+        isUsrVerifiedBtn.setOnClickListener(e -> {
+            loadingButtonEnabled(isUsrVerifiedBtn, usrVerifiedCheckSpinner, true, "Checking");
+            checkUserVerifcationRespTxt.setVisibility(View.INVISIBLE);
             settingsViewModel.refreshUsr();
 
         });
 
         settingsViewModel.getVerificationResponse().observe(this, e -> {
-            loadingButtonEnabled(getView().findViewById(R.id.send_ver_email_btn), getView().findViewById(R.id.email_veri_spinner), false, "RE-SEND VERIFICATION");
+            loadingButtonEnabled(sendEmailVerBtn, sendEmailVerSpinner, false, "RE-SEND VERIFICATION");
             if(e == null)
                 return;
-            ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setVisibility(View.VISIBLE);
+            verifcationSentRespTxt.setVisibility(View.VISIBLE);
             if(e.isSuccessful()){
-                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setText("Email sent!");
-                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setTextColor(Color.GREEN);
+                verifcationSentRespTxt.setText("Email sent!");
+                verifcationSentRespTxt.setTextColor(Color.GREEN);
             }else {
-                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setText(e.getErrorMsg());
-                ((TextView)getView().findViewById(R.id.email_veri_resp_txt)).setTextColor(Color.RED);
+                verifcationSentRespTxt.setText(e.getErrorMsg());
+                verifcationSentRespTxt.setTextColor(Color.RED);
             }
         });
 
@@ -143,14 +182,14 @@ public class AccountSettingsFragment extends Fragment {
 
     private void initUserConfigurationLayout() {
 
-        getView().findViewById(R.id.save_user_config_btn).setOnClickListener(e -> {
+        saveUserConfigBtn.setOnClickListener(e -> {
 
             String oldImage = settingsViewModel.getUser().getValue().getUserProfilePictureUri().toString();
             Uri newImage = newProfileImgUri != null && !oldImage.equals(newProfileImgUri.toString()) ? newProfileImgUri : null;
 
 
             String oldText = settingsViewModel.getUser().getValue().getUserName();
-            String newText = ((EditText) getView().findViewById(R.id.username_Input)).getText().toString();
+            String newText = usernameInputField.getText().toString();
             String username = !newText.isEmpty() && !oldText.equals(newText) ? newText : null;
 
             if (username == null && newImage == null)
@@ -159,7 +198,7 @@ public class AccountSettingsFragment extends Fragment {
             settingsViewModel.updateUserProfile(username, newImage);
         });
 
-        getView().findViewById(R.id.profile_img_acc).setOnClickListener(e -> chooseGalleryOrCamera());
+        profilePic.setOnClickListener(e -> chooseGalleryOrCamera());
     }
 
     private void chooseGalleryOrCamera() {

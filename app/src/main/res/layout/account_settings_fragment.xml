@@ -61,7 +61,7 @@
 
 
         <TextView
-            android:id="@+id/email_input_field"
+            android:id="@+id/user_email_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -85,9 +85,9 @@
             android:hint="Username"
             android:inputType="textPersonName"
             android:textColorHint="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="@+id/email_input_field"
+            app:layout_constraintEnd_toEndOf="@+id/user_email_txt"
             app:layout_constraintHorizontal_bias="0.488"
-            app:layout_constraintStart_toStartOf="@+id/email_input_field"
+            app:layout_constraintStart_toStartOf="@+id/user_email_txt"
             app:layout_constraintTop_toBottomOf="@+id/UID_txt_field" />
 
         <TextView
@@ -100,7 +100,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_input_field" />
+            app:layout_constraintTop_toBottomOf="@+id/user_email_txt" />
 
         <TextView
             android:id="@+id/textView"
