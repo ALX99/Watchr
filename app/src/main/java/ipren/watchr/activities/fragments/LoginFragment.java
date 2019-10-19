@@ -1,6 +1,5 @@
 package ipren.watchr.activities.fragments;
 
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +52,7 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.start_password_reset_btn)
     TextView startPasswordReset;
     @BindView(R.id.go_to_login_btn)
-    ImageView backToLogin;
+    ImageView resetPwBackToLogin;
     @BindView(R.id.reset_password_btn)
     Button resetPasswordBtn;
     @BindView(R.id.forgot_psswd_txt_field)
@@ -64,6 +62,8 @@ public class LoginFragment extends Fragment {
     ProgressBar resetPasswordSpinner;
     @BindView(R.id.password_reset_response_txt)
     TextView passwordResetResponse;
+    @BindView(R.id.register_go_to_login_btn)
+    ImageView registerBackToLoginBtn;
 
 
     public LoginFragment() {
@@ -128,15 +128,12 @@ public class LoginFragment extends Fragment {
         });
 
         //This allows the user to switch to the register page
-        startUserRegistration.setOnClickListener(e -> {
-            loginLayout.setVisibility(View.INVISIBLE);
-            registerlayout.setVisibility(View.VISIBLE);
-        });
+        startUserRegistration.setOnClickListener(e ->
+                transitionBetweenLayouts(loginLayout, registerlayout, Direction.Right)
+        );
 
-        startPasswordReset.setOnClickListener(e -> {
-            loginLayout.setVisibility(View.INVISIBLE);
-            resetPasswordLayout.setVisibility(View.VISIBLE);
-        });
+        startPasswordReset.setOnClickListener(e ->
+                transitionBetweenLayouts(loginLayout, resetPasswordLayout, Direction.Left));
 
 
     }
@@ -186,36 +183,35 @@ public class LoginFragment extends Fragment {
                 shakeButton(getView().findViewById(R.id.register_user_btn));
             }
         });
+
+        registerBackToLoginBtn.setOnClickListener(e -> transitionBetweenLayouts(registerlayout, loginLayout, Direction.Left));
     }
 
     private void initPasswordResetLayout() {
         forgotEmailTxtField.addTextChangedListener(new EmailFormatListener(forgotEmailTxtField));
-        backToLogin.setOnClickListener(e -> {
-            loginLayout.setVisibility(View.VISIBLE);
-            resetPasswordLayout.setVisibility(View.INVISIBLE);
-        });
+        resetPwBackToLogin.setOnClickListener(e -> transitionBetweenLayouts(resetPasswordLayout, loginLayout, Direction.Right));
 
         resetPasswordBtn.setOnClickListener(e -> {
             passwordResetResponse.setVisibility(View.INVISIBLE);
             String email = forgotEmailTxtField.getText().toString();
-            if(email.isEmpty()) {
+            if (email.isEmpty()) {
                 forgotEmailTxtField.setError("This field cannot be empty");
                 shakeButton(resetPasswordBtn);
-            }else if (isEmailFormat(email)) {
+            } else if (isEmailFormat(email)) {
                 loadingButtonEnabled(resetPasswordBtn, resetPasswordSpinner, true, "Sending...");
                 loginViewModel.resetPassword(email);
             }
         });
 
         loginViewModel.getPasswordResetResponse().observe(this, e -> {
-           passwordResetResponse.setVisibility(View.VISIBLE);
-            if(e.isSuccessful()){
+            passwordResetResponse.setVisibility(View.VISIBLE);
+            if (e.isSuccessful()) {
                 setTextAndColor(passwordResetResponse, "Sent!", Color.GREEN);
-            }else{
+            } else {
                 setTextAndColor(passwordResetResponse, e.getErrorMsg(), Color.RED);
             }
 
-           loadingButtonEnabled(resetPasswordBtn, resetPasswordSpinner, false, "Reset password");
+            loadingButtonEnabled(resetPasswordBtn, resetPasswordSpinner, false, "Reset password");
         });
 
 
@@ -274,9 +270,39 @@ public class LoginFragment extends Fragment {
         spinner.setVisibility(on ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void setTextAndColor(TextView view, String text, int color){
+    private void setTextAndColor(TextView view, String text, int color) {
         view.setText(text);
         view.setTextColor(color);
+    }
+
+    private void transitionBetweenLayouts(ViewGroup from, ViewGroup to, Direction dir) {
+        switch (dir) {
+            case Left:
+                from.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_right));
+                to.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_left));
+                break;
+            case Right:
+                from.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_left));
+                to.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_right));
+                break;
+            case Up:
+                from.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_top));
+                to.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_bottom));
+                break;
+            case Down:
+                from.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_bottom));
+                to.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_top));
+                break;
+        }
+
+        from.setVisibility(View.INVISIBLE);
+        to.setVisibility(View.VISIBLE);
+
+
+    }
+
+    private enum Direction {
+        Left, Right, Up, Down
     }
 }
 
