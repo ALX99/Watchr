@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -30,8 +31,9 @@ import static java.lang.Integer.parseInt;
 /**
  * The view model for the movies lists, handling the data conversion
  */
-public class ListViewModel extends AndroidViewModel {
+public class ListViewModel {
 
+    private static ListViewModel instance;
     private LiveData<User> user;
     private LiveData<String[]> movieIds;
     private LiveData<List<Movie>> movies;
@@ -41,17 +43,21 @@ public class ListViewModel extends AndroidViewModel {
     private IMovieRepository movieRepository;
     private IUserDataRepository userRepository;
 
-    // We use AndroidViewModel to get access to a context for Room
-    public ListViewModel(@NonNull Application application) {
-        super(application);
-
+    private ListViewModel(Fragment fragment) {
         userRepository = IUserDataRepository.getInstance();
-        movieRepository = new MovieRepository(application.getApplicationContext());
+        movieRepository = new MovieRepository(fragment.getContext().getApplicationContext());
         user = userRepository.getUserLiveData();
         movieLoadError = new MutableLiveData<>();
         loading = new MutableLiveData<>();
         emptyListStatus = new MutableLiveData<>();
         movies = new MutableLiveData<>();
+    }
+
+    public static ListViewModel getInstance(Fragment fragment) {
+        if (instance == null) {
+            instance = new ListViewModel(fragment);
+        }
+        return instance;
     }
 
     public LiveData<User> getUser() {

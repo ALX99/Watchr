@@ -51,7 +51,7 @@ public class MovieListFragment extends Fragment {
     }
 
     public MovieListFragment() {
-
+        // Required
     }
 
     @Override
@@ -74,7 +74,9 @@ public class MovieListFragment extends Fragment {
         connectFilterButton();
         connectSearchView();
 
-        listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
+        // This creates a new instance every time because of how bottom navigation works
+//        listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
+        listViewModel = ListViewModel.getInstance(this);
         movieListAdapter = new MovieListAdapter(new ArrayList<>(), listViewModel);
         String listType = this.getArguments().getString("listType");
 
