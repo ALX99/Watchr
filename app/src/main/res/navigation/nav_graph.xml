@@ -21,8 +21,8 @@
         app:enterAnim="@anim/enter_from_top"
         app:exitAnim="@anim/exit_to_bottom"
         app:launchSingleTop="true"
-        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        app:popEnterAnim="@anim/enter_from_bottom"
+        app:popExitAnim="@anim/exit_to_top" />
     <action
         android:id="@+id/action_global_accountFragment"
         app:destination="@id/accountFragment"

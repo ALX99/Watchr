@@ -147,4 +147,13 @@
         app:layout_constraintEnd_toEndOf="@+id/usr_verif_btn"
         app:layout_constraintStart_toStartOf="@+id/usr_verif_btn"
         app:layout_constraintTop_toTopOf="@+id/usr_verif_btn" />
+
+    <ImageView
+        android:id="@+id/verify_back_btn"
+        android:layout_width="60dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/is_user_verified_text"
+        app:srcCompat="@drawable/ic_keyboard_return_black_24dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

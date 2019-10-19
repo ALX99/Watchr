@@ -11,7 +11,7 @@
         android:id="@+id/ver_email_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <include
             layout="@layout/verify_account_layout"
@@ -137,6 +137,16 @@
             app:layout_constraintStart_toStartOf="@+id/save_user_config_btn"
             app:layout_constraintTop_toTopOf="@+id/save_user_config_btn"
             app:layout_constraintVertical_bias="1.0" />
+
+        <ImageView
+            android:id="@+id/settings_back_btn"
+            android:layout_width="60dp"
+            android:layout_height="59dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="84dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/save_user_profile_spinner"
+            app:srcCompat="@drawable/ic_keyboard_return_black_24dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

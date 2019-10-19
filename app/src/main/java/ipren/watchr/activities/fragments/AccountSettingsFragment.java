@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +57,8 @@ public class AccountSettingsFragment extends Fragment {
     CircleImageView profilePic;
     @BindView(R.id.save_user_config_btn)
     Button saveUserConfigBtn;
+    @BindView(R.id.settings_back_btn)
+    ImageView settingsBackBtn;
 
     // User not verified layout
     @BindView(R.id.settings_layout)
@@ -75,6 +79,8 @@ public class AccountSettingsFragment extends Fragment {
     TextView updateProfileResponseTxt;
     @BindView(R.id.save_user_profile_spinner)
     ProgressBar saveUserConfigSpinner;
+    @BindView(R.id.verify_back_btn)
+    ImageView verifyBackBtn;
 
     private final int IMAGE_SRC_GALLERY = 0;
     private final int IMAGE_SRC_CAMERA = 1;
@@ -84,12 +90,11 @@ public class AccountSettingsFragment extends Fragment {
     private Uri newProfileImgUri = null;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         settingsViewModel = ViewModelProviders.of(this).get(AccountSettingsViewModel.class);
-        View view  = inflater.inflate(R.layout.account_settings_fragment, container, false);
+        View view = inflater.inflate(R.layout.account_settings_fragment, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -108,11 +113,11 @@ public class AccountSettingsFragment extends Fragment {
 
             showEmailVerifiedLayout(e.isVerified());
 
-            if(!isUsrVerifiedBtn.isEnabled()) {
+            if (!isUsrVerifiedBtn.isEnabled()) {
                 checkUserVerifcationRespTxt.setText("User not verified!");
                 checkUserVerifcationRespTxt.setTextColor(Color.RED);
                 checkUserVerifcationRespTxt.setVisibility(View.VISIBLE);
-               loadingButtonEnabled(isUsrVerifiedBtn, usrVerifiedCheckSpinner, false , "CLICK WHEN VERIFIED");
+                loadingButtonEnabled(isUsrVerifiedBtn, usrVerifiedCheckSpinner, false, "CLICK WHEN VERIFIED");
             }
 
 
@@ -146,13 +151,17 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     private void showEmailVerifiedLayout(boolean verified) {
-        userNotVerifiedLayout.setVisibility(verified ? View.GONE : View.VISIBLE);
-        verifiedUserLayout.setVisibility(verified ? View.VISIBLE : View.GONE);
+        if (verified && userNotVerifiedLayout.getVisibility() == View.VISIBLE) {
+            userNotVerifiedLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_out));
+            Toast.makeText(getContext(), "You've been verified", Toast.LENGTH_SHORT).show();
+        }
+        userNotVerifiedLayout.setVisibility(verified ? View.INVISIBLE : View.VISIBLE);
+        verifiedUserLayout.setVisibility(verified ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void initEmailVerificationLayout() {
-
-       sendEmailVerBtn.setOnClickListener(e ->{
+        verifyBackBtn.setOnClickListener(e -> Navigation.findNavController(getView()).popBackStack());
+        sendEmailVerBtn.setOnClickListener(e -> {
             loadingButtonEnabled(sendEmailVerBtn, sendEmailVerSpinner, true, "Sending...");
             verifcationSentRespTxt.setVisibility(View.INVISIBLE);
             checkUserVerifcationRespTxt.setVisibility(View.INVISIBLE);
@@ -169,13 +178,13 @@ public class AccountSettingsFragment extends Fragment {
 
         settingsViewModel.getVerificationResponse().observe(this, e -> {
             loadingButtonEnabled(sendEmailVerBtn, sendEmailVerSpinner, false, "RE-SEND VERIFICATION");
-            if(e == null)
+            if (e == null)
                 return;
             verifcationSentRespTxt.setVisibility(View.VISIBLE);
-            if(e.isSuccessful()){
+            if (e.isSuccessful()) {
                 verifcationSentRespTxt.setText("Email sent!");
                 verifcationSentRespTxt.setTextColor(Color.GREEN);
-            }else {
+            } else {
                 verifcationSentRespTxt.setText(e.getErrorMsg());
                 verifcationSentRespTxt.setTextColor(Color.RED);
             }
@@ -185,6 +194,8 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     private void initUserConfigurationLayout() {
+
+        settingsBackBtn.setOnClickListener(e -> Navigation.findNavController(getView()).popBackStack());
 
         saveUserConfigBtn.setOnClickListener(e -> {
 
@@ -196,11 +207,11 @@ public class AccountSettingsFragment extends Fragment {
             String newText = usernameInputField.getText().toString();
 
 
-            if(oldText.equals(newText) && newImage == null){
+            if (oldText.equals(newText) && newImage == null) {
                 shakeButton(saveUserConfigBtn);
-                Toast.makeText( getContext(),"You have not changed anything!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "You have not changed anything!", Toast.LENGTH_SHORT).show();
                 return;
-            } else if(!oldText.isEmpty() && newText.isEmpty()){
+            } else if (!oldText.isEmpty() && newText.isEmpty()) {
                 shakeButton(saveUserConfigBtn);
                 usernameInputField.setError("Your username can't be empty");
                 return;
@@ -210,7 +221,7 @@ public class AccountSettingsFragment extends Fragment {
                 return;
             }
 
-            loadingButtonEnabled(saveUserConfigBtn, saveUserConfigSpinner, true , "Saving...");
+            loadingButtonEnabled(saveUserConfigBtn, saveUserConfigSpinner, true, "Saving...");
             updateProfileResponseTxt.setVisibility(View.INVISIBLE);
             settingsViewModel.updateUserProfile(newText, newImage);
         });
@@ -218,12 +229,12 @@ public class AccountSettingsFragment extends Fragment {
         profilePic.setOnClickListener(e -> chooseGalleryOrCamera());
 
         settingsViewModel.getUpdateProfileResponse().observe(this, e -> {
-            loadingButtonEnabled(saveUserConfigBtn, saveUserConfigSpinner, false , "SAVE");
+            loadingButtonEnabled(saveUserConfigBtn, saveUserConfigSpinner, false, "SAVE");
             updateProfileResponseTxt.setVisibility(View.VISIBLE);
-                if(e.isSuccessful())
-                    setTextAndColor(updateProfileResponseTxt, "Success!", Color.GREEN);
-                else
-                    setTextAndColor(updateProfileResponseTxt, e.getErrorMsg(), Color.RED);
+            if (e.isSuccessful())
+                setTextAndColor(updateProfileResponseTxt, "Success!", Color.GREEN);
+            else
+                setTextAndColor(updateProfileResponseTxt, e.getErrorMsg(), Color.RED);
         });
     }
 
@@ -279,13 +290,13 @@ public class AccountSettingsFragment extends Fragment {
 
     }
 
-    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text){
+    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text) {
         button.setEnabled(!on);
         button.setText(text);
-        spinner.setVisibility(on ?  View.VISIBLE : View.GONE );
+        spinner.setVisibility(on ? View.VISIBLE : View.GONE);
     }
 
-    private void setTextAndColor(TextView view, String text, int color){
+    private void setTextAndColor(TextView view, String text, int color) {
         view.setText(text);
         view.setTextColor(color);
     }
