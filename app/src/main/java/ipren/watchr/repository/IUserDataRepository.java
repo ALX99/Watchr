@@ -39,7 +39,7 @@ public interface IUserDataRepository {
 
     void reSendVerificationEmail(OnCompleteListener callback);
 
-    void updateProfile(String userName, Uri pictureUri);
+    void updateProfile(String userName, Uri pictureUri, OnCompleteListener callback);
 
     //Firebase database functions
     LiveData<PublicProfile> getPublicProfile(String user_id);

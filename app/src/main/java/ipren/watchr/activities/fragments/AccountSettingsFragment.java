@@ -6,10 +6,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -35,6 +37,7 @@ import ipren.watchr.R;
 import ipren.watchr.viewModels.AccountSettingsViewModel;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.VIBRATOR_SERVICE;
 
 //TODO This class is not finnished
 public class AccountSettingsFragment extends Fragment {
@@ -53,8 +56,6 @@ public class AccountSettingsFragment extends Fragment {
     @BindView(R.id.save_user_config_btn)
     Button saveUserConfigBtn;
 
-
-
     // User not verified layout
     @BindView(R.id.settings_layout)
     ConstraintLayout verifiedUserLayout;
@@ -70,13 +71,16 @@ public class AccountSettingsFragment extends Fragment {
     Button isUsrVerifiedBtn;
     @BindView(R.id.user_veri_check_spinner)
     ProgressBar usrVerifiedCheckSpinner;
-    
+    @BindView(R.id.update_profile_result_txt)
+    TextView updateProfileResponseTxt;
+    @BindView(R.id.save_user_profile_spinner)
+    ProgressBar saveUserConfigSpinner;
+
     private final int IMAGE_SRC_GALLERY = 0;
     private final int IMAGE_SRC_CAMERA = 1;
     private final String TMP_IMG_FILENAME = "JPEG_PROFILE_PICTURE";
     AccountSettingsViewModel settingsViewModel;
     private Uri uriToTempFile = null;
-
     private Uri newProfileImgUri = null;
 
 
@@ -190,15 +194,37 @@ public class AccountSettingsFragment extends Fragment {
 
             String oldText = settingsViewModel.getUser().getValue().getUserName();
             String newText = usernameInputField.getText().toString();
-            String username = !newText.isEmpty() && !oldText.equals(newText) ? newText : null;
 
-            if (username == null && newImage == null)
+
+            if(oldText.equals(newText) && newImage == null){
+                shakeButton(saveUserConfigBtn);
+                Toast.makeText( getContext(),"You have not changed anything!", Toast.LENGTH_SHORT).show();
                 return;
+            } else if(!oldText.isEmpty() && newText.isEmpty()){
+                shakeButton(saveUserConfigBtn);
+                usernameInputField.setError("Your username can't be empty");
+                return;
+            } else if (newText.length() > 15) {
+                shakeButton(saveUserConfigBtn);
+                usernameInputField.setError("That username is too long");
+                return;
+            }
 
-            settingsViewModel.updateUserProfile(username, newImage);
+            loadingButtonEnabled(saveUserConfigBtn, saveUserConfigSpinner, true , "Saving...");
+            updateProfileResponseTxt.setVisibility(View.INVISIBLE);
+            settingsViewModel.updateUserProfile(newText, newImage);
         });
 
         profilePic.setOnClickListener(e -> chooseGalleryOrCamera());
+
+        settingsViewModel.getUpdateProfileResponse().observe(this, e -> {
+            loadingButtonEnabled(saveUserConfigBtn, saveUserConfigSpinner, false , "SAVE");
+            updateProfileResponseTxt.setVisibility(View.VISIBLE);
+                if(e.isSuccessful())
+                    setTextAndColor(updateProfileResponseTxt, "Success!", Color.GREEN);
+                else
+                    setTextAndColor(updateProfileResponseTxt, e.getErrorMsg(), Color.RED);
+        });
     }
 
     private void chooseGalleryOrCamera() {
@@ -257,5 +283,16 @@ public class AccountSettingsFragment extends Fragment {
         button.setEnabled(!on);
         button.setText(text);
         spinner.setVisibility(on ?  View.VISIBLE : View.GONE );
+    }
+
+    private void setTextAndColor(TextView view, String text, int color){
+        view.setText(text);
+        view.setTextColor(color);
+    }
+
+    private void shakeButton(Button button) {
+        Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
+        vibrator.vibrate(200);
+        button.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.shake));
     }
 }

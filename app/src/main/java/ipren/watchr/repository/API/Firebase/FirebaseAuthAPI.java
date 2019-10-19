@@ -83,20 +83,23 @@ public class FirebaseAuthAPI {
         return new User(userName, email, profilePicture, UID, isVerified);
     }
 
-    void updateProfile(String userName, Uri uri) {
+    void updateProfile(String userName, Uri uri, OnCompleteListener callback) {
         if (uri != null) {
             uploadImage(uri, e -> {
-                if (e.isSuccessful()) ;
-                uploadProfileChanges(userName, (Uri) e.getResult());
+                if (e.isSuccessful())
+                    uploadProfileChanges(userName, (Uri) e.getResult(), callback);
+                else
+                    callback.onComplete(e);
+
             });
         } else {
-            uploadProfileChanges(userName, null);
+            uploadProfileChanges(userName, null, callback);
         }
 
 
     }
 
-    private void uploadProfileChanges(String userName, Uri uri) {
+    private void uploadProfileChanges(String userName, Uri uri, OnCompleteListener callback) {
         UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
         if (uri != null)
             builder.setPhotoUri(uri);
@@ -106,6 +109,9 @@ public class FirebaseAuthAPI {
         mAuth.getCurrentUser().updateProfile(builder.build()).addOnCompleteListener(e -> {
             if (e.isSuccessful())
                 refreshUsr();
+
+                callback.onComplete(e);
+
         });
 
     }

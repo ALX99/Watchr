@@ -79,8 +79,8 @@ public class FireRepositoryManager implements IUserDataRepository {
     }
 
     @Override
-    public void updateProfile(String userName, Uri pictureUri) {
-        firebaseAuthAPI.updateProfile(userName, pictureUri);
+    public void updateProfile(String userName, Uri pictureUri, OnCompleteListener callback) {
+        firebaseAuthAPI.updateProfile(userName, pictureUri, callback);
     }
 
     //Firestore
