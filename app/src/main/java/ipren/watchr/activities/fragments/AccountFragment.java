@@ -47,7 +47,7 @@ public class AccountFragment extends Fragment {
     @BindView(R.id.logout_btn)
     Button logoutBtn;
     @BindView(R.id.user_not_verified_txt)
-    TextView userNotVeirfiedTxt;
+    TextView userNotVerifiedTxt;
     @BindView(R.id.configure_acc_btn)
     ImageView configAccBtn;
     @BindView(R.id.username_text_field_acc)
@@ -96,7 +96,7 @@ public class AccountFragment extends Fragment {
                     e.getUserProfilePictureUri().toString(),
                     Util.getProgressDrawable(getContext()));
             if(e.isVerified())
-                userNotVeirfiedTxt.setVisibility(View.GONE);
+                userNotVerifiedTxt.setVisibility(View.GONE);
 
             postUserStatistics(uID);
 

@@ -14,20 +14,21 @@ import ipren.watchr.viewModels.util.LoginErrorParser;
 
 public class LoginViewModel extends ViewModel {
 
-    IUserDataRepository mainRepository;
+    IUserDataRepository userDataRepository;
     MutableLiveData<AuthenticationResponse> signInResponse = new MutableLiveData();
     MutableLiveData<AuthenticationResponse> createUserResponse = new MutableLiveData();
+    MutableLiveData<AuthenticationResponse> passwordResetResponse = new MutableLiveData<>();
     LiveData<User> user;
 
     @VisibleForTesting
-    public LoginViewModel(IUserDataRepository mainRepository) {
-        this.mainRepository = mainRepository;
-        this.user = mainRepository.getUserLiveData();
+    public LoginViewModel(IUserDataRepository userDataRepository) {
+        this.userDataRepository = userDataRepository;
+        this.user = userDataRepository.getUserLiveData();
     }
 
-    public LoginViewModel(){
-        this.mainRepository = IUserDataRepository.getInstance();
-        this.user = mainRepository.getUserLiveData();
+    public LoginViewModel() {
+        this.userDataRepository = IUserDataRepository.getInstance();
+        this.user = userDataRepository.getUserLiveData();
     }
 
     public LiveData<User> getUser() {
@@ -42,12 +43,20 @@ public class LoginViewModel extends ViewModel {
         return this.createUserResponse;
     }
 
+    public LiveData<AuthenticationResponse> getPasswordResetResponse() {
+        return this.passwordResetResponse;
+    }
+
     public void registerUser(String email, String password) {
-        mainRepository.registerUser(email, password, res -> updateCreateUserResponse(res));
+        userDataRepository.registerUser(email, password, this::updateCreateUserResponse);
     }
 
     public void signIn(String email, String password) {
-        mainRepository.loginUser(email, password, res -> updateSignInResponse(res));
+        userDataRepository.loginUser(email, password, this::updateSignInResponse);
+    }
+
+    public void resetPassword(String email) {
+        userDataRepository.resetPassword(email, this::updateResetPasswordResponse);
     }
 
     private void updateSignInResponse(Task task) {
@@ -58,5 +67,10 @@ public class LoginViewModel extends ViewModel {
     private void updateCreateUserResponse(Task task) {
         String error = LoginErrorParser.parseAuthError(task.getException());
         createUserResponse.postValue(new AuthenticationResponse(task.isSuccessful(), error));
+    }
+
+    private void updateResetPasswordResponse(Task task) {
+        Exception exception = task.getException();
+        passwordResetResponse.postValue(new AuthenticationResponse(task.isSuccessful(), exception != null ? exception.getLocalizedMessage() : "Unkown error"));
     }
 }

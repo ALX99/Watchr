@@ -27,6 +27,8 @@ public interface IUserDataRepository {
 
     LiveData<User> getUserLiveData();
 
+    void resetPassword(String email, OnCompleteListener callback );
+
     void registerUser(String email, String password, OnCompleteListener callback);
 
     void signOutUser();

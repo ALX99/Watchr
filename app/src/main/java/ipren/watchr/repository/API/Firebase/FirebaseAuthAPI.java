@@ -65,6 +65,11 @@ public class FirebaseAuthAPI {
         mAuth.signOut();
     }
 
+    public void resetPassword(String email, OnCompleteListener callback) {
+        Task task = mAuth.sendPasswordResetEmail(email);
+        attachCallback(task, callback);
+    }
+
 
     private User buildUserObject(FirebaseUser firebaseUser) {
         if (firebaseUser == null)
@@ -115,8 +120,8 @@ public class FirebaseAuthAPI {
         });
     }
 
-    private void attachCallback(Task task, OnCompleteListener callback){
-        if(callback != null)
+    private void attachCallback(Task task, OnCompleteListener callback) {
+        if (callback != null)
             task.addOnCompleteListener(callback);
 
     }

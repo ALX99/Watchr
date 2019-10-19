@@ -49,6 +49,11 @@ public class FireRepositoryManager implements IUserDataRepository {
     }
 
     @Override
+    public void resetPassword(String email ,OnCompleteListener callback) {
+        firebaseAuthAPI.resetPassword(email , callback);
+    }
+
+    @Override
     public void registerUser(String email, String password, OnCompleteListener callback) {
         firebaseAuthAPI.registerUser(email, password, callback);
     }
