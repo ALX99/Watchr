@@ -37,11 +37,4 @@ public class FireComment {
     public String getuID() {
         return uID;
     }
-
-    public FireComment(String movie_id, String user_id, String text, String uID){
-        this.movie_id = movie_id;
-        this.user_id = user_id;
-        this.text = text;
-        this.uID = uID;
-    }
 }

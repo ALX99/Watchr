@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModelInterface mainViewModel;
     private NavController navController;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
