@@ -12,7 +12,7 @@ import ipren.watchr.dataHolders.Actor;
 public interface ActorDao extends BaseDao<Actor> {
     @Query("SELECT * FROM actors WHERE movie_id LIKE :movieID")
     LiveData<List<Actor>> getActorsFromMovie(int movieID);
-    
+
     @Query("DELETE FROM actors")
     void NUKE();
     
