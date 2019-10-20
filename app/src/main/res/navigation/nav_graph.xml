@@ -18,19 +18,19 @@
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/loginFragment"
-        app:enterAnim="@animator/enter_from_top"
-        app:exitAnim="@animator/exit_to_bottom"
+        app:enterAnim="@anim/enter_from_top"
+        app:exitAnim="@anim/exit_to_bottom"
         app:launchSingleTop="true"
-        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        app:popEnterAnim="@anim/enter_from_bottom"
+        app:popExitAnim="@anim/exit_to_top" />
     <action
         android:id="@+id/action_global_accountFragment"
         app:destination="@id/accountFragment"
-        app:enterAnim="@animator/enter_from_bottom"
-        app:exitAnim="@animator/exit_to_top"
+        app:enterAnim="@anim/enter_from_bottom"
+        app:exitAnim="@anim/exit_to_top"
         app:launchSingleTop="true"
-        app:popEnterAnim="@animator/enter_from_top"
-        app:popExitAnim="@animator/exit_to_bottom" />
+        app:popEnterAnim="@anim/enter_from_top"
+        app:popExitAnim="@anim/exit_to_bottom" />
 
     <!-- START LIST FRAGMENTS -->
     <fragment
@@ -41,10 +41,10 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@animator/enter_from_right"
-            app:exitAnim="@animator/exit_to_left"
-            app:popEnterAnim="@animator/enter_from_left"
-            app:popExitAnim="@animator/exit_to_right" />
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="browse" />
@@ -57,10 +57,10 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@animator/enter_from_right"
-            app:exitAnim="@animator/exit_to_left"
-            app:popEnterAnim="@animator/enter_from_left"
-            app:popExitAnim="@animator/exit_to_right" />
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="recommended" />
@@ -76,10 +76,10 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@animator/enter_from_right"
-            app:exitAnim="@animator/exit_to_left"
-            app:popEnterAnim="@animator/enter_from_left"
-            app:popExitAnim="@animator/exit_to_right" />
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="favorites" />
@@ -92,10 +92,10 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@animator/enter_from_right"
-            app:exitAnim="@animator/exit_to_left"
-            app:popEnterAnim="@animator/enter_from_left"
-            app:popExitAnim="@animator/exit_to_right" />
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="watchLater" />
@@ -108,10 +108,10 @@
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/detailFragment"
-            app:enterAnim="@animator/enter_from_right"
-            app:exitAnim="@animator/exit_to_left"
-            app:popEnterAnim="@animator/enter_from_left"
-            app:popExitAnim="@animator/exit_to_right" />
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
             android:defaultValue="watched" />

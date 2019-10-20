@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.Task;
+
 import ipren.watchr.dataHolders.AuthenticationResponse;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
@@ -13,20 +15,29 @@ import ipren.watchr.repository.IUserDataRepository;
 
 public class AccountSettingsViewModel extends ViewModel {
 
-    IUserDataRepository mainRepository;
+    IUserDataRepository userDataRepository;
 
     LiveData<User> liveUser;
-
-    MutableLiveData<AuthenticationResponse> sendVerEmailResponse = new MutableLiveData<>(null);
+    MutableLiveData<AuthenticationResponse> updateProfileResponse = new MutableLiveData<>();
+    MutableLiveData<AuthenticationResponse> sendVerEmailResponse = new MutableLiveData<>();
+    MutableLiveData<AuthenticationResponse> changePasswordResponse = new MutableLiveData<>();
 
    public AccountSettingsViewModel(){
-       mainRepository = IUserDataRepository.getInstance();
-       this.liveUser = mainRepository.getUserLiveData();
+       userDataRepository = IUserDataRepository.getInstance();
+       this.liveUser = userDataRepository.getUserLiveData();
 
+    }
+
+    public LiveData<AuthenticationResponse> getUpdateProfileResponse(){
+       return updateProfileResponse;
     }
 
     public LiveData<AuthenticationResponse> getVerificationResponse(){
        return  sendVerEmailResponse;
+    }
+
+    public LiveData<AuthenticationResponse> getChangePasswordResponse(){
+       return changePasswordResponse;
     }
 
     public LiveData<User> getUser() {
@@ -34,23 +45,40 @@ public class AccountSettingsViewModel extends ViewModel {
     }
 
     public void refreshUsr() {
-        mainRepository.refreshUsr();
+        userDataRepository.refreshUsr();
     }
 
     public void updateUserProfile(String username, Uri imageUri) {
-        mainRepository.updateProfile(username, imageUri);
+        userDataRepository.updateProfile(username, imageUri, this::refreshUpdateUserProfile);
+    }
+
+    public void updateUserPassword(String oldPassword, String newPassword){
+            userDataRepository.changePassword(oldPassword, newPassword, this::refreshPasswordChangeResponse);
     }
 
     public void resendVerificationEmail() {
-        mainRepository.reSendVerificationEmail(e -> {
-            if(e == null){
-                sendVerEmailResponse.postValue(new AuthenticationResponse(false, "Email Already verified"));
-            }else{
-                Exception exc = e.getException();
-                sendVerEmailResponse.postValue(new AuthenticationResponse(e.isSuccessful(),exc !=null ? exc.getMessage() : "" ));
-            }
-        });
+        userDataRepository.reSendVerificationEmail(this::refreshEmailVerificationResponse);
     }
+
+    private void refreshPasswordChangeResponse(Task task){
+        Exception exception = task.getException();
+        changePasswordResponse.postValue(new AuthenticationResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
+    }
+
+    private void refreshUpdateUserProfile(Task task){
+        Exception exception = task.getException();
+        updateProfileResponse.postValue(new AuthenticationResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
+    }
+    private void refreshEmailVerificationResponse(Task task){
+        if(task == null){
+            sendVerEmailResponse.postValue(new AuthenticationResponse(false, "Email Already verified"));
+        }else{
+            Exception exc = task.getException();
+            sendVerEmailResponse.postValue(new AuthenticationResponse(task.isSuccessful(),exc !=null ? exc.getMessage() : "" ));
+        }
+    }
+
+
 
 
 }

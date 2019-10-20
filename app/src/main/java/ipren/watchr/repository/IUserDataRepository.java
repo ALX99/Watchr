@@ -27,6 +27,8 @@ public interface IUserDataRepository {
 
     LiveData<User> getUserLiveData();
 
+    void resetPassword(String email, OnCompleteListener callback );
+
     void registerUser(String email, String password, OnCompleteListener callback);
 
     void signOutUser();
@@ -37,7 +39,9 @@ public interface IUserDataRepository {
 
     void reSendVerificationEmail(OnCompleteListener callback);
 
-    void updateProfile(String userName, Uri pictureUri);
+    void updateProfile(String userName, Uri pictureUri, OnCompleteListener callback);
+
+    void changePassword(String oldPassword, String newPassword , OnCompleteListener callback);
 
     //Firebase database functions
     LiveData<PublicProfile> getPublicProfile(String user_id);

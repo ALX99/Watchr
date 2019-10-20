@@ -1,6 +1,7 @@
 package ipren.watchr.Helpers;
 
 import android.content.Context;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -25,6 +26,13 @@ public class Util {
                 .setDefaultRequestOptions(options)
                 .load(url)
                 .into(imageView);
+    }
+
+    /**
+     * Overloaded method, converts URI to string
+     */
+    public static void loadImage(ImageView imageView, Uri uri, CircularProgressDrawable progressDrawable){
+        loadImage(imageView, uri.toString(), progressDrawable);
     }
 
     /**

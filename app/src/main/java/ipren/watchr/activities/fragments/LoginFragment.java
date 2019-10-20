@@ -1,5 +1,6 @@
 package ipren.watchr.activities.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.Editable;
@@ -10,24 +11,61 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.viewModels.LoginViewModel;
+import static ipren.watchr.activities.Util.ActivityUtils.*;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
 public class LoginFragment extends Fragment {
 
+    @BindView(R.id.login_layout)
+    ConstraintLayout loginLayout;
+    @BindView(R.id.register_user_layout)
+    ConstraintLayout registerlayout;
+    @BindView(R.id.reset_password_layout)
+    ConstraintLayout resetPasswordLayout;
+
+    @BindView(R.id.password_text_input)
+    EditText loginPasswordField;
+    @BindView(R.id.email_text_input)
+    EditText loginEmailField;
+    @BindView(R.id.login_button)
+    Button signInBtn;
+    @BindView(R.id.login_spinner)
+    ProgressBar loginSpinner;
+    @BindView(R.id.start_user_registration_btn)
+    TextView startUserRegistration;
+    @BindView(R.id.start_password_reset_btn)
+    TextView startPasswordReset;
+    @BindView(R.id.go_to_login_btn)
+    ImageView resetPwBackToLogin;
+    @BindView(R.id.reset_password_btn)
+    Button resetPasswordBtn;
+    @BindView(R.id.forgot_psswd_txt_field)
+    EditText forgotEmailTxtField;
     LoginViewModel loginViewModel;
+    @BindView(R.id.reset_password_spinner)
+    ProgressBar resetPasswordSpinner;
+    @BindView(R.id.password_reset_response_txt)
+    TextView passwordResetResponse;
+    @BindView(R.id.register_go_to_login_btn)
+    ImageView registerBackToLoginBtn;
+
 
     public LoginFragment() {
     }
@@ -35,7 +73,9 @@ public class LoginFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     //This method is called when the fragment has created has a view.
@@ -47,53 +87,55 @@ public class LoginFragment extends Fragment {
 
         initiateRegisterLayout();
         initiateLoginLayout();
+        initPasswordResetLayout();
 
     }
 
     //This method must be called after onViewCreated and after the loginViewModel has been fetched
     private void initiateLoginLayout() {
-        View fragmentView = getView();
-        EditText passwordTextField = fragmentView.findViewById(R.id.password_text_input);
-        EditText emailTextField = fragmentView.findViewById(R.id.email_text_input);
+
         //Displays an error if the email is badly formatted
-        emailTextField.addTextChangedListener(new EmailFormatListener(emailTextField));
+        loginEmailField.addTextChangedListener(new EmailFormatListener(loginEmailField));
 
         //Used to make the phone vibrate when wrong password is entered.
         //This callback loggs the user in or displays error messages
-        fragmentView.findViewById(R.id.login_button).setOnClickListener(e -> {
+        signInBtn.setOnClickListener(e -> {
 
-            String userEmailTxt = emailTextField.getText().toString();
-            String userPasswordTxt = passwordTextField.getText().toString();
+            String userEmailTxt = loginEmailField.getText().toString();
+            String userPasswordTxt = loginPasswordField.getText().toString();
 
             //Checks if any fields are empty or badly formatted, if not it attempts a login
             //If the values pass the test a login is attempted, if it fails it will show an error message
             if (!userPasswordTxt.isEmpty() && isEmailFormat(userEmailTxt)) {
                 loginViewModel.signIn(userEmailTxt, userPasswordTxt);
-                loadingButtonEnabled((Button) e, getView().findViewById(R.id.login_spinner), true, "Signing in...");
+                loadingButtonEnabled((Button) e, loginSpinner, true, "Signing in...");
             } else {
                 if (userPasswordTxt.isEmpty())
-                    passwordTextField.setError("Please enter your password");
-                if (userEmailTxt.isEmpty()) emailTextField.setError("Please enter your email");
+                    loginPasswordField.setError("Please enter your password");
+                if (userEmailTxt.isEmpty()) loginEmailField.setError("Please enter your email");
                 shakeButton((Button) e);
             }
         });
         //Response from the model regarding the login attempt
         loginViewModel.getSignInResponse().observe(this, e -> {
-            loadingButtonEnabled(getView().findViewById(R.id.login_button), getView().findViewById(R.id.login_spinner), false, "Login");
             if (e.isSuccessful()) {
                 exitLoginFragment(true);
             } else {
-                shakeButton(getView().findViewById(R.id.login_button));
-                displayAuthError(e.getErrorMsg(), emailTextField, passwordTextField);
+                loadingButtonEnabled(signInBtn, loginSpinner, false, "Login");
+                shakeButton(signInBtn);
+                displayAuthError(e.getErrorMsg(), loginEmailField, loginPasswordField);
             }
 
         });
 
         //This allows the user to switch to the register page
-        fragmentView.findViewById(R.id.start_user_registration_btn).setOnClickListener(e -> {
-            fragmentView.findViewById(R.id.login_layout).setVisibility(View.INVISIBLE);
-            fragmentView.findViewById(R.id.register_user_layout).setVisibility(View.VISIBLE);
-        });
+        startUserRegistration.setOnClickListener(e ->
+                transitionBetweenLayouts(loginLayout, registerlayout, Direction.Right, getContext())
+        );
+
+        startPasswordReset.setOnClickListener(e ->
+                transitionBetweenLayouts(loginLayout, resetPasswordLayout, Direction.Left, getContext()));
+
 
     }
 
@@ -142,6 +184,38 @@ public class LoginFragment extends Fragment {
                 shakeButton(getView().findViewById(R.id.register_user_btn));
             }
         });
+
+        registerBackToLoginBtn.setOnClickListener(e -> transitionBetweenLayouts(registerlayout, loginLayout, Direction.Left, getContext()));
+    }
+
+    private void initPasswordResetLayout() {
+        forgotEmailTxtField.addTextChangedListener(new EmailFormatListener(forgotEmailTxtField));
+        resetPwBackToLogin.setOnClickListener(e -> transitionBetweenLayouts(resetPasswordLayout, loginLayout, Direction.Right, getContext()));
+
+        resetPasswordBtn.setOnClickListener(e -> {
+            passwordResetResponse.setVisibility(View.INVISIBLE);
+            String email = forgotEmailTxtField.getText().toString();
+            if (email.isEmpty()) {
+                forgotEmailTxtField.setError("This field cannot be empty");
+                shakeButton(resetPasswordBtn);
+            } else if (isEmailFormat(email)) {
+                loadingButtonEnabled(resetPasswordBtn, resetPasswordSpinner, true, "Sending...");
+                loginViewModel.resetPassword(email);
+            }
+        });
+
+        loginViewModel.getPasswordResetResponse().observe(this, e -> {
+            passwordResetResponse.setVisibility(View.VISIBLE);
+            if (e.isSuccessful()) {
+                setTextAndColor(passwordResetResponse, "Sent!", Color.GREEN);
+            } else {
+                setTextAndColor(passwordResetResponse, e.getErrorMsg(), Color.RED);
+            }
+
+            loadingButtonEnabled(resetPasswordBtn, resetPasswordSpinner, false, "Reset password");
+        });
+
+
     }
 
     //TODO rework error parsing
@@ -191,11 +265,20 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text){
+    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text) {
         button.setEnabled(!on);
         button.setText(text);
-        spinner.setVisibility(on ?  View.VISIBLE : View.GONE );
+        spinner.setVisibility(on ? View.VISIBLE : View.INVISIBLE);
     }
+
+    private void setTextAndColor(TextView view, String text, int color) {
+        view.setText(text);
+        view.setTextColor(color);
+    }
+
+
+
+
 }
 
 
