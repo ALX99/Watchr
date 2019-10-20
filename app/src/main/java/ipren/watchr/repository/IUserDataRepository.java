@@ -41,6 +41,8 @@ public interface IUserDataRepository {
 
     void updateProfile(String userName, Uri pictureUri, OnCompleteListener callback);
 
+    void changePassword(String oldPassword, String newPassword , OnCompleteListener callback);
+
     //Firebase database functions
     LiveData<PublicProfile> getPublicProfile(String user_id);
 

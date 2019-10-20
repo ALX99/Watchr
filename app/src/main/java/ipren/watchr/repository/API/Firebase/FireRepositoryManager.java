@@ -83,6 +83,11 @@ public class FireRepositoryManager implements IUserDataRepository {
         firebaseAuthAPI.updateProfile(userName, pictureUri, callback);
     }
 
+    @Override
+    public void changePassword(String oldPassword, String newPassword, OnCompleteListener callback) {
+            firebaseAuthAPI.changePassword(oldPassword,newPassword, callback);
+    }
+
     //Firestore
 
     @Override

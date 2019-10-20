@@ -38,6 +38,8 @@ import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.viewModels.AccountSettingsViewModel;
 
+import static ipren.watchr.activities.Util.ActivityUtils.*;
+
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -59,6 +61,8 @@ public class AccountSettingsFragment extends Fragment {
     Button saveUserConfigBtn;
     @BindView(R.id.settings_back_btn)
     ImageView settingsBackBtn;
+    @BindView(R.id.change_password_btn)
+    Button changePasswordBtn;
 
     // User not verified layout
     @BindView(R.id.settings_layout)
@@ -81,6 +85,24 @@ public class AccountSettingsFragment extends Fragment {
     ProgressBar saveUserConfigSpinner;
     @BindView(R.id.verify_back_btn)
     ImageView verifyBackBtn;
+
+    @BindView(R.id.change_password_layout)
+    ConstraintLayout changePasswordLayout;
+    @BindView(R.id.go_back_to_profile_btn)
+    ImageView goBackToProfileBtn;
+    @BindView(R.id.save_password_btn)
+    Button savePasswordBtn;
+    @BindView(R.id.save_password_spinner)
+    ProgressBar savePasswordSpinner;
+    @BindView(R.id.old_password_input)
+    EditText oldPasswordInput;
+    @BindView(R.id.new_password_input)
+    EditText newPasswordInput;
+    @BindView(R.id.retype_password_input)
+    EditText reTypedPasswordInput;
+    @BindView(R.id.change_password_response_txt)
+    TextView changePasswordResponse;
+
 
     private final int IMAGE_SRC_GALLERY = 0;
     private final int IMAGE_SRC_CAMERA = 1;
@@ -105,6 +127,7 @@ public class AccountSettingsFragment extends Fragment {
 
         initEmailVerificationLayout();
         initUserConfigurationLayout();
+        initChangePasswordLayout();
 
         //Syncing to Livedata<User>
         settingsViewModel.getUser().observe(this, e -> {
@@ -193,10 +216,56 @@ public class AccountSettingsFragment extends Fragment {
 
     }
 
+    private void initChangePasswordLayout() {
+        goBackToProfileBtn.setOnClickListener(e -> transitionBetweenLayouts(changePasswordLayout, verifiedUserLayout, Direction.Left, getContext()));
+        savePasswordBtn.setOnClickListener(e -> {
+            changePasswordResponse.setVisibility(View.INVISIBLE);
+            String oldPassword = oldPasswordInput.getText().toString();
+            String newPassword = newPasswordInput.getText().toString();
+            String reTypedPassword = reTypedPasswordInput.getText().toString();
+            if (oldPassword.isEmpty() || newPassword.isEmpty()) {
+                if (oldPassword.isEmpty())
+                    oldPasswordInput.setError("Please write your old password");
+                if (newPassword.isEmpty())
+                    newPasswordInput.setError("Please write a new password");
+            } else if (!newPassword.equals(reTypedPassword)) {
+                if (reTypedPassword.isEmpty())
+                    reTypedPasswordInput.setError("Please re-type password");
+                else
+                    reTypedPasswordInput.setError("Passwords not identical");
+            } else {
+                loadingButtonEnabled(savePasswordBtn, savePasswordSpinner, true, "Saving...");
+                settingsViewModel.updateUserPassword(oldPassword, newPassword);
+                return;
+            }
+            shakeButton(savePasswordBtn, getContext());
+        });
+        settingsViewModel.getChangePasswordResponse().observe(this, e -> {
+            changePasswordResponse.setVisibility(View.VISIBLE);
+            loadingButtonEnabled(savePasswordBtn, savePasswordSpinner, false, "Save password");
+            if (e.isSuccessful()) {
+                oldPasswordInput.setText("");
+                newPasswordInput.setText("");
+                reTypedPasswordInput.setText("");
+                setTextAndColor(changePasswordResponse, "Success!", Color.GREEN);
+            } else {
+                if(e.getErrorMsg().contains("6"))
+                    newPasswordInput.setError("Too weak");
+                else if(e.getErrorMsg().contains("invalid"))
+                    oldPasswordInput.setError("Wrong");
+                shakeButton(savePasswordBtn, getContext());
+                setTextAndColor(changePasswordResponse, e.getErrorMsg(), Color.RED);
+            }
+
+
+        });
+
+    }
+
     private void initUserConfigurationLayout() {
 
         settingsBackBtn.setOnClickListener(e -> Navigation.findNavController(getView()).popBackStack());
-
+        changePasswordBtn.setOnClickListener(e -> transitionBetweenLayouts(verifiedUserLayout, changePasswordLayout, Direction.Right, getContext()));
         saveUserConfigBtn.setOnClickListener(e -> {
 
             String oldImage = settingsViewModel.getUser().getValue().getUserProfilePictureUri().toString();
@@ -208,15 +277,15 @@ public class AccountSettingsFragment extends Fragment {
 
 
             if (oldText.equals(newText) && newImage == null) {
-                shakeButton(saveUserConfigBtn);
+                shakeButton(saveUserConfigBtn, getContext());
                 Toast.makeText(getContext(), "You have not changed anything!", Toast.LENGTH_SHORT).show();
                 return;
             } else if (!oldText.isEmpty() && newText.isEmpty()) {
-                shakeButton(saveUserConfigBtn);
+                shakeButton(saveUserConfigBtn, getContext());
                 usernameInputField.setError("Your username can't be empty");
                 return;
             } else if (newText.length() > 15) {
-                shakeButton(saveUserConfigBtn);
+                shakeButton(saveUserConfigBtn, getContext());
                 usernameInputField.setError("That username is too long");
                 return;
             }
@@ -244,7 +313,7 @@ public class AccountSettingsFragment extends Fragment {
         builder.setTitle("Choose a method");
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) {
-                Uri uri = getIMGTmpFileUri();
+                Uri uri = createTempPictureFile();
                 if (uri == null) {
                     Toast.makeText(getContext(),
                             "Something went wrong, try the gallery instead"
@@ -266,7 +335,7 @@ public class AccountSettingsFragment extends Fragment {
         builder.show();
     }
 
-    private Uri getIMGTmpFileUri() {
+    private Uri createTempPictureFile() {
 
         File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
@@ -290,20 +359,4 @@ public class AccountSettingsFragment extends Fragment {
 
     }
 
-    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text) {
-        button.setEnabled(!on);
-        button.setText(text);
-        spinner.setVisibility(on ? View.VISIBLE : View.GONE);
-    }
-
-    private void setTextAndColor(TextView view, String text, int color) {
-        view.setText(text);
-        view.setTextColor(color);
-    }
-
-    private void shakeButton(Button button) {
-        Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
-        vibrator.vibrate(200);
-        button.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.shake));
-    }
 }

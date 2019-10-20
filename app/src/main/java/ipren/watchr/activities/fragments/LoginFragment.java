@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.viewModels.LoginViewModel;
+import static ipren.watchr.activities.Util.ActivityUtils.*;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -117,10 +118,10 @@ public class LoginFragment extends Fragment {
         });
         //Response from the model regarding the login attempt
         loginViewModel.getSignInResponse().observe(this, e -> {
-            loadingButtonEnabled(signInBtn, loginSpinner, false, "Login");
             if (e.isSuccessful()) {
                 exitLoginFragment(true);
             } else {
+                loadingButtonEnabled(signInBtn, loginSpinner, false, "Login");
                 shakeButton(signInBtn);
                 displayAuthError(e.getErrorMsg(), loginEmailField, loginPasswordField);
             }
@@ -129,11 +130,11 @@ public class LoginFragment extends Fragment {
 
         //This allows the user to switch to the register page
         startUserRegistration.setOnClickListener(e ->
-                transitionBetweenLayouts(loginLayout, registerlayout, Direction.Right)
+                transitionBetweenLayouts(loginLayout, registerlayout, Direction.Right, getContext())
         );
 
         startPasswordReset.setOnClickListener(e ->
-                transitionBetweenLayouts(loginLayout, resetPasswordLayout, Direction.Left));
+                transitionBetweenLayouts(loginLayout, resetPasswordLayout, Direction.Left, getContext()));
 
 
     }
@@ -184,12 +185,12 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        registerBackToLoginBtn.setOnClickListener(e -> transitionBetweenLayouts(registerlayout, loginLayout, Direction.Left));
+        registerBackToLoginBtn.setOnClickListener(e -> transitionBetweenLayouts(registerlayout, loginLayout, Direction.Left, getContext()));
     }
 
     private void initPasswordResetLayout() {
         forgotEmailTxtField.addTextChangedListener(new EmailFormatListener(forgotEmailTxtField));
-        resetPwBackToLogin.setOnClickListener(e -> transitionBetweenLayouts(resetPasswordLayout, loginLayout, Direction.Right));
+        resetPwBackToLogin.setOnClickListener(e -> transitionBetweenLayouts(resetPasswordLayout, loginLayout, Direction.Right, getContext()));
 
         resetPasswordBtn.setOnClickListener(e -> {
             passwordResetResponse.setVisibility(View.INVISIBLE);
@@ -275,35 +276,9 @@ public class LoginFragment extends Fragment {
         view.setTextColor(color);
     }
 
-    private void transitionBetweenLayouts(ViewGroup from, ViewGroup to, Direction dir) {
-        switch (dir) {
-            case Left:
-                from.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_right));
-                to.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_left));
-                break;
-            case Right:
-                from.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_left));
-                to.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_right));
-                break;
-            case Up:
-                from.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_top));
-                to.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_bottom));
-                break;
-            case Down:
-                from.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_bottom));
-                to.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.enter_from_top));
-                break;
-        }
-
-        from.setVisibility(View.INVISIBLE);
-        to.setVisibility(View.VISIBLE);
 
 
-    }
 
-    private enum Direction {
-        Left, Right, Up, Down
-    }
 }
 
 

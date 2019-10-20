@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -95,8 +97,20 @@ public class FirebaseAuthAPI {
         } else {
             uploadProfileChanges(userName, null, callback);
         }
+    }
 
+    void changePassword(String oldPassword, String newPassword, OnCompleteListener callback){
+       FirebaseUser user = mAuth.getCurrentUser();
+       if(user == null)
+           if(callback !=null)
+               callback.onComplete(null);
 
+       user.reauthenticate(EmailAuthProvider.getCredential(user.getEmail(), oldPassword)).addOnCompleteListener( e -> {
+           if(e.isSuccessful())
+              attachCallback(user.updatePassword(newPassword), callback);
+           else if(callback != null)
+               callback.onComplete(e);
+       });
     }
 
     private void uploadProfileChanges(String userName, Uri uri, OnCompleteListener callback) {
