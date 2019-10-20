@@ -60,7 +60,7 @@
         android:id="@+id/register_user_btn"
         android:layout_width="259dp"
         android:layout_height="44dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="51dp"
         android:background="@drawable/rounded_corners_green_selector"
         android:elevation="4dp"
         android:text="@string/register"
@@ -79,6 +79,16 @@
         app:layout_constraintEnd_toEndOf="@+id/register_user_btn"
         app:layout_constraintStart_toStartOf="@+id/register_user_btn"
         app:layout_constraintTop_toTopOf="@+id/register_user_btn" />
+
+    <ImageView
+        android:id="@+id/register_go_to_login_btn"
+        android:layout_width="69dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_user_spinner"
+        app:srcCompat="@drawable/ic_navigate_before_black_24dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

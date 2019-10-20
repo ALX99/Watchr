@@ -49,6 +49,11 @@ public class FireRepositoryManager implements IUserDataRepository {
     }
 
     @Override
+    public void resetPassword(String email ,OnCompleteListener callback) {
+        firebaseAuthAPI.resetPassword(email , callback);
+    }
+
+    @Override
     public void registerUser(String email, String password, OnCompleteListener callback) {
         firebaseAuthAPI.registerUser(email, password, callback);
     }
@@ -74,8 +79,13 @@ public class FireRepositoryManager implements IUserDataRepository {
     }
 
     @Override
-    public void updateProfile(String userName, Uri pictureUri) {
-        firebaseAuthAPI.updateProfile(userName, pictureUri);
+    public void updateProfile(String userName, Uri pictureUri, OnCompleteListener callback) {
+        firebaseAuthAPI.updateProfile(userName, pictureUri, callback);
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword, OnCompleteListener callback) {
+            firebaseAuthAPI.changePassword(oldPassword,newPassword, callback);
     }
 
     //Firestore

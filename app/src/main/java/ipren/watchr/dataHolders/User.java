@@ -8,8 +8,8 @@ import ipren.watchr.R;
 
 //Immutable User object
 public class User {
-    private String userName = "No user name";
-    private String email = "No email";
+    private String userName = "";
+    private String email = "";
     private boolean isVerified;
     private String UID = "UID missing";
     private Uri userProfilePictureUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.default_profile_photo);

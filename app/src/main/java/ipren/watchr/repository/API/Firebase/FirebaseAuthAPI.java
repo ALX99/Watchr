@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -65,6 +67,11 @@ public class FirebaseAuthAPI {
         mAuth.signOut();
     }
 
+    public void resetPassword(String email, OnCompleteListener callback) {
+        Task task = mAuth.sendPasswordResetEmail(email);
+        attachCallback(task, callback);
+    }
+
 
     private User buildUserObject(FirebaseUser firebaseUser) {
         if (firebaseUser == null)
@@ -78,20 +85,35 @@ public class FirebaseAuthAPI {
         return new User(userName, email, profilePicture, UID, isVerified);
     }
 
-    void updateProfile(String userName, Uri uri) {
+    void updateProfile(String userName, Uri uri, OnCompleteListener callback) {
         if (uri != null) {
             uploadImage(uri, e -> {
-                if (e.isSuccessful()) ;
-                uploadProfileChanges(userName, (Uri) e.getResult());
+                if (e.isSuccessful())
+                    uploadProfileChanges(userName, (Uri) e.getResult(), callback);
+                else
+                    callback.onComplete(e);
+
             });
         } else {
-            uploadProfileChanges(userName, null);
+            uploadProfileChanges(userName, null, callback);
         }
-
-
     }
 
-    private void uploadProfileChanges(String userName, Uri uri) {
+    void changePassword(String oldPassword, String newPassword, OnCompleteListener callback){
+       FirebaseUser user = mAuth.getCurrentUser();
+       if(user == null)
+           if(callback !=null)
+               callback.onComplete(null);
+
+       user.reauthenticate(EmailAuthProvider.getCredential(user.getEmail(), oldPassword)).addOnCompleteListener( e -> {
+           if(e.isSuccessful())
+              attachCallback(user.updatePassword(newPassword), callback);
+           else if(callback != null)
+               callback.onComplete(e);
+       });
+    }
+
+    private void uploadProfileChanges(String userName, Uri uri, OnCompleteListener callback) {
         UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
         if (uri != null)
             builder.setPhotoUri(uri);
@@ -101,6 +123,9 @@ public class FirebaseAuthAPI {
         mAuth.getCurrentUser().updateProfile(builder.build()).addOnCompleteListener(e -> {
             if (e.isSuccessful())
                 refreshUsr();
+
+                callback.onComplete(e);
+
         });
 
     }
