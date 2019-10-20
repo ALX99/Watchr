@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +29,9 @@ import ipren.watchr.viewModels.ListViewModel;
  * Class for handling the creation and updating of movie cards in the recycler view
  */
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements MovieClickListener, Filterable {
+
+    // Singleton instance
+    private static MovieListAdapter instance;
 
     private ListViewModel listViewModel;
     private List<Movie> movieList;
@@ -77,14 +79,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     };
 
     /**
-     * Creates a movie adapter with a list of movies
-     */
-    public MovieListAdapter(List<Movie> movieList, ListViewModel listViewModel) {
-        this.movieList = movieList;
-        this.listViewModel = listViewModel;
-    }
-
-    /**
      * Class for holding a movie view layout
      */
     class MovieViewHolder extends RecyclerView.ViewHolder {
@@ -95,6 +89,24 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             super(itemView.getRoot());
             this.itemView = itemView;
         }
+    }
+
+    /**
+     * Creates a movie adapter with a list of movies
+     */
+    private MovieListAdapter(ListViewModel listViewModel) {
+        this.movieList = new ArrayList<>();
+        this.listViewModel = listViewModel;
+    }
+
+    /**
+     * @return Singleton instance
+     */
+    public static MovieListAdapter getInstance(ListViewModel listViewModel) {
+        if (instance == null) {
+            instance = new MovieListAdapter(listViewModel);
+        }
+        return instance;
     }
 
     /**

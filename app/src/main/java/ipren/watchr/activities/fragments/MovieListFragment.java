@@ -14,12 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -71,34 +69,27 @@ public class MovieListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Get view model and set correct data
+        listViewModel = ListViewModel.getInstance(this);
+        listViewModel.setListType(this.getArguments().getString("listType"));
+        listViewModel.refresh();
+
+        // Set list layout and adapter
+        movieList.setLayoutManager(new LinearLayoutManager(getContext()));
+        movieListAdapter = MovieListAdapter.getInstance(listViewModel);
+        movieList.setAdapter(movieListAdapter);
+
+        // Connect toolbar search and filter
         connectFilterButton();
         connectSearchView();
 
-        // This creates a new instance every time because of how bottom navigation works
-//        listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
-        listViewModel = ListViewModel.getInstance(this);
-        movieListAdapter = new MovieListAdapter(new ArrayList<>(), listViewModel);
-        String listType = this.getArguments().getString("listType");
-
-        movieList.setLayoutManager(new LinearLayoutManager(getContext()));
-        movieList.setAdapter(movieListAdapter);
-
-        // Navigate based on list and login status
-        if (listType.equals("Browse") || listType.equals("Recommended") || listViewModel.getUser().getValue() != null) {
-            listViewModel.refresh(listType);
-            observeViewModel();
-        } else {
-            listError.setVisibility(View.GONE);
-            movieList.setVisibility(View.GONE);
-            loadingView.setVisibility(View.GONE);
-            notLoggedInError.setVisibility(View.VISIBLE);
-        }
+        observeViewModel();
 
         // Fetch fresh data from API on refresh
         refreshLayout.setOnRefreshListener(() -> {
-            movieList.setVisibility(View.GONE);
-            listError.setVisibility(View.GONE);
-            listViewModel.refresh(listType);
+//            movieList.setVisibility(View.GONE);
+//            listError.setVisibility(View.GONE);
+//            listViewModel.refresh(listType);
             refreshLayout.setRefreshing(false);
         });
     }
@@ -107,34 +98,55 @@ public class MovieListFragment extends Fragment {
      * Makes the fragment listen to the live data in the view model
      */
     private void observeViewModel() {
-        listViewModel.getMovies().observe(this, movies -> {
+        listViewModel.getMovies().observe(getViewLifecycleOwner(), movies -> {
             if (movies != null && movies instanceof List) {
-                movieList.setVisibility(View.VISIBLE);
                 movieListAdapter.updateMovieList(movies);
+                movieList.setVisibility(View.VISIBLE);
+                listError.setVisibility(View.GONE);
+                loadingView.setVisibility(View.GONE);
+                emptyListView.setVisibility(View.GONE);
+                notLoggedInError.setVisibility(View.GONE);
             }
+            listViewModel.getMovies().removeObservers(getViewLifecycleOwner());
         });
 
-        listViewModel.getMovieLoadError().observe(this, isError -> {
-            if (isError != null && isError instanceof Boolean) {
-                listError.setVisibility(isError ? View.VISIBLE : View.GONE);
-            }
-        });
-
-        listViewModel.getLoading().observe(this, isLoading -> {
-            if (isLoading != null && isLoading instanceof Boolean) {
-                loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-                if (isLoading) {
-                    listError.setVisibility(View.GONE);
+        listViewModel.getLoggedInStatus().observe(getViewLifecycleOwner(), isLoggedIn -> {
+            if (isLoggedIn != null && isLoggedIn instanceof Boolean) {
+                if (!isLoggedIn) {
                     movieList.setVisibility(View.GONE);
+                    listError.setVisibility(View.GONE);
+                    loadingView.setVisibility(View.GONE);
                     emptyListView.setVisibility(View.GONE);
+                    notLoggedInError.setVisibility(View.VISIBLE);
                 }
             }
+            listViewModel.getLoggedInStatus().removeObservers(getViewLifecycleOwner());
         });
 
-        listViewModel.getEmptyListStatus().observe(this, isEmptyList -> {
-            if (isEmptyList != null && isEmptyList instanceof Boolean) {
-                emptyListView.setVisibility(isEmptyList ? View.VISIBLE : View.GONE);
+        listViewModel.getEmptyListStatus().observe(getViewLifecycleOwner(), isEmpty -> {
+            if (isEmpty != null && isEmpty instanceof Boolean) {
+                if (isEmpty) {
+                    movieList.setVisibility(View.GONE);
+                    listError.setVisibility(View.GONE);
+                    loadingView.setVisibility(View.GONE);
+                    emptyListView.setVisibility(View.VISIBLE);
+                    notLoggedInError.setVisibility(View.GONE);
+                }
             }
+            listViewModel.getEmptyListStatus().removeObservers(getViewLifecycleOwner());
+        });
+
+        listViewModel.getLoadingStatus().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null && isLoading instanceof Boolean) {
+                if (isLoading) {
+                    movieList.setVisibility(View.GONE);
+                    listError.setVisibility(View.GONE);
+                    loadingView.setVisibility(View.VISIBLE);
+                    emptyListView.setVisibility(View.GONE);
+                    notLoggedInError.setVisibility(View.GONE);
+                }
+            }
+            listViewModel.getLoadingStatus().removeObservers(getViewLifecycleOwner());
         });
     }
 
