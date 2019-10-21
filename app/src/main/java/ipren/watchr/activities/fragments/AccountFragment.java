@@ -89,6 +89,11 @@ public class AccountFragment extends Fragment {
                 Navigation.findNavController(fragmentView).navigate(R.id.action_global_account_settings));
 
         accountViewModel.getUser().observe(this, e -> {
+            if(e == null) {
+                Navigation.findNavController(getView()).popBackStack();
+                return;
+            }
+
             String uID = e.getUID();
             usernameTxtField.setText(e.getUserName());
             emailTxtField.setText(e.getEmail());
@@ -146,4 +151,5 @@ public class AccountFragment extends Fragment {
         else
             view.setText("" + list.length);
     }
+
 }

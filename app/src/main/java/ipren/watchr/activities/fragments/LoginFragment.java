@@ -118,7 +118,7 @@ public class LoginFragment extends Fragment {
             if (!loginViewModel.signIn()) shakeButton(signInBtn, getContext());
         });
 
-        loginViewModel.signingIn.observe(this, e -> loadingButtonEnabled(signInBtn, loginSpinner, e.booleanValue(), e.booleanValue() ? "Signing in..." : "Login"));
+        loginViewModel.signingIn.observe(this, bool -> loadingButtonEnabled(signInBtn, loginSpinner, bool, bool ? "Signing in..." : "Login"));
 
         loginViewModel.getSignInResponse().observe(this, e -> {
             signInResponseTxt.setVisibility(View.VISIBLE);
@@ -159,7 +159,7 @@ public class LoginFragment extends Fragment {
             if (!loginViewModel.registerUser()) shakeButton(registerUsrBtn, getContext());
         });
 
-        loginViewModel.registeringUser.observe(this, e -> loadingButtonEnabled(signInBtn, loginSpinner, e.booleanValue(), e.booleanValue() ? "Registering..." : "Register"));
+        loginViewModel.registeringUser.observe(this, bool -> loadingButtonEnabled(signInBtn, loginSpinner, bool, bool ? "Registering..." : "Register"));
         loginViewModel.getCreateUserResponse().observe(this, e -> {
             registerUsrResponseTxt.setVisibility(View.VISIBLE);
             loadingButtonEnabled(registerUsrBtn, registerUsrBtnSpinner, false, "Register");
@@ -189,8 +189,8 @@ public class LoginFragment extends Fragment {
 
         });
 
-        loginViewModel.sendingResetMsg.observe(this, e ->
-                loadingButtonEnabled(resetPasswordBtn, resetPasswordSpinner, e.booleanValue(), e.booleanValue() ? "Sending..." : "Reset password"));
+        loginViewModel.sendingResetMsg.observe(this, bool ->
+                loadingButtonEnabled(resetPasswordBtn, resetPasswordSpinner, bool, bool ? "Sending..." : "Reset password"));
 
         loginViewModel.getPasswordResetResponse().observe(this, e -> {
             passwordResetResponse.setVisibility(View.VISIBLE);

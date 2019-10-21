@@ -14,6 +14,8 @@ import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.util.LoginErrorParser;
 
+import static ipren.watchr.viewModels.util.ViewModelSupportUtils.*;
+
 public class LoginViewModel extends ViewModel {
 
     public final IUserDataRepository userDataRepository;
@@ -131,21 +133,6 @@ public class LoginViewModel extends ViewModel {
         postValue(passwordResetResponse, new AuthenticationResponse(task.isSuccessful(), exception != null ? exception.getLocalizedMessage() : "Unkown error"));
     }
 
-    private void updateEmailErrorTxt(LiveData<String> live, String text) {
-        if (!isEmailFormat(text))
-            postValue(live, "Not an email address");
-    }
-
-    private void updatePasswordErrorTxt(LiveData<String> live, String text) {
-        if (!text.isEmpty() && text.length() < 6)
-            postValue(live, "Must be more than five characters");
-    }
-
-    private void updatePasswordMatchErrorTxt(LiveData<String> live, String pw, String rePw) {
-        if (!pw.equals(rePw))
-            postValue(live, "Passwords don't match");
-    }
-
     private <T> void postValue(LiveData<T> liveData, T object) {
         try {
             ((MutableLiveData<T>) liveData).postValue(object);
@@ -185,9 +172,6 @@ public class LoginViewModel extends ViewModel {
         updateEmailErrorTxt(resetEmailError, resetEmailTxt);
     }
 
-    private boolean isEmailFormat(String email) {
-        return email != null && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
 
     // Because java.
     public String getRegEmailTxt() {
