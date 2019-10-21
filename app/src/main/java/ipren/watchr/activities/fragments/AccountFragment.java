@@ -108,6 +108,7 @@ public class AccountFragment extends Fragment {
         });
     }
 
+    //SetData
     private void postUserStatistics(String uID) {
         accountViewModel.getCommentsByUserId(uID).observe(this, res -> postListSize(commentsMadeCount, res));
         accountViewModel.getRatingByUserId(uID).observe(this, res -> {
@@ -119,6 +120,9 @@ public class AccountFragment extends Fragment {
         accountViewModel.getWatchLaterList(uID).observe(this, res -> postListSize(watch_later_count, res));
     }
 
+
+
+    //Helpers
     private void setAverageScore(TextView textView, Double value) {
         if (value == null || value.isNaN()) {
             textView.setText("n/a");

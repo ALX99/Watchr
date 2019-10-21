@@ -24,6 +24,7 @@ public class FirebaseAuthAPI {
     FirebaseAuthAPI() {
         mAuth = FirebaseAuth.getInstance();
         mAuth.addAuthStateListener(e -> refreshUsr());
+        FirebaseStorage.getInstance().setMaxUploadRetryTimeMillis(2000);
     }
 
     // The "reload()" method does not trigger the AuthstateListener so livedata must be updated manually
@@ -137,6 +138,8 @@ public class FirebaseAuthAPI {
         storageRef.putFile(uri).addOnCompleteListener(e -> {
             if (e.isSuccessful())
                 storageRef.getDownloadUrl().addOnCompleteListener(callback);
+            else
+                callback.onComplete(e);
         });
     }
 
