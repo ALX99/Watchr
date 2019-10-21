@@ -62,7 +62,7 @@ public class MovieRepository implements IMovieRepository {
      * since there can be many different discoverLists
      * @param genres List of genres to include
      * @param page Page num
-     * @param forceFetch Force daa from api?
+     * @param forceFetch Force data from api?
      * @return The movie list
      */
     public LiveData<List<Movie>> getDiscoverList(int[] genres, int page, boolean forceFetch) {
@@ -73,8 +73,24 @@ public class MovieRepository implements IMovieRepository {
     }
 
     /**
+     * @param text       The text to search
+     * @param page       The page number to fetch
+     * @param forceFetch Force data from the api?
+     * @return The movie list
+     */
+    public LiveData<List<Movie>> Search(String text, int page, boolean forceFetch) {
+        String list = IMovieRepository.SEARCH_LIST + text.toLowerCase();
+        getList(list, page, forceFetch, movieApi.Search(text, page));
+        return movieDB.movieListDao().getMoviesFromList(list, page);
+    }
+
+    /**
+     * Returns a list of movies from the call it's given, it will only
+     * fetch movies from the API if the movie is null,
+     * some information about the movie is missing,
+     * the movie info is older than a day or forceFetch is set to true
      * @param page       The page number of the trending list
-     * @param forceFetch Force fetching from the API?
+     * @param forceFetch Force data from the api?
      */
     private void getList(String list, int page, boolean forceFetch, Call<MovieList> call) {
         new Thread(() -> {
