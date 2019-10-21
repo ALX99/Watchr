@@ -1,6 +1,8 @@
 package ipren.watchr.activities.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,16 +16,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 import butterknife.BindView;
@@ -36,6 +42,7 @@ import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
+import ipren.watchr.dataHolders.FireRating;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.IMovieViewModel;
@@ -45,6 +52,12 @@ import ipren.watchr.viewModels.MovieViewModel;
  * The type Movie details.
  */
 public class MovieDetails extends Fragment {
+    private int movieID;
+    private IMovieViewModel viewModel;
+    private User user;
+    private NavController navController;
+
+
     @BindView(R.id.castList)
     RecyclerView cast;
     @BindView(R.id.genreList)
@@ -116,15 +129,27 @@ public class MovieDetails extends Fragment {
         // Gets viewModel and sets the movieID
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
         viewModel.setMovieID(movieID);
+
         // Inits stuff
         initUser();
         initMovie();
+        initOurRating();
         initCheckBoxes();
         initCast();
         initGenres();
         initComments();
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setupScrolling();
+        hideSearchAndFilter();
+
+        // Set up navigation
+        navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
     }
 
     private void hideSearchAndFilter() {
@@ -137,11 +162,47 @@ public class MovieDetails extends Fragment {
         filterBtn.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setupScrolling();
-        hideSearchAndFilter();
+    private void initOurRating() {
+        // Get the rating view
+        final View ratingView = getLayoutInflater().inflate(R.layout.rating_layout, null);
+        // Get the RatingBar
+        AppCompatRatingBar rating = ratingView.findViewById(R.id.setRating);
+
+
+        // TODO not working, duplicate ratings should be fixed in firebase
+        viewModel.getRatings().observe(getViewLifecycleOwner(), fireRatings -> {
+            double avg = 0;
+            if (fireRatings != null) {
+                for (FireRating f : fireRatings) {
+                    avg += f.getScore();
+                    Log.d("RATING", f.getUser_id());
+                    if (user != null && f.getUser_id().equals(user.getUID())) {
+                        float test = (float) (f.getScore() / 2);
+                        rating.setRating((float) (f.getScore() / 2));
+                    }
+                }
+                ourRatingText.setText(new DecimalFormat("#.#").format(avg / fireRatings.length));
+            }
+        });
+
+        ourRating.setOnClickListener(v -> {
+            // Create a alert dialog builder.
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+            // Set rating view in the builder
+            builder.setView(ratingView);
+            builder.setCancelable(true);
+
+            builder.create().show();
+        });
+
+        // RatingBar change listener.
+        rating.setOnRatingBarChangeListener((ratingBar, rating1, fromUser) -> {
+            if (checkLoggedIn() && checkVerified() && fromUser) {
+                viewModel.rateMovie(Math.round(rating1 * 2), user.getUID()); // Rate the movie
+                Toast.makeText(getContext(), "You rated the movie " + Math.round(rating1 * 2) + " stars!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -155,9 +216,7 @@ public class MovieDetails extends Fragment {
                 // Load pic
                 Glide.with(getContext())
                         .load(user.getUserProfilePictureUri().toString())
-                        .error(ContextCompat.getDrawable(getContext(), getView().getResources().getIdentifier("default_profile_photo", "drawable", "ipren.watchr")))
                         .into(profilePicture);
-
                 // Set checkboxes to match data from firebase
                 viewModel.getUserList(IUserDataRepository.FAVORITES_LIST, user.getUID()).observe(getViewLifecycleOwner(), result -> {
                     if (Arrays.asList(result).contains(Integer.toString(movieID)))
@@ -171,6 +230,7 @@ public class MovieDetails extends Fragment {
                     if (Arrays.asList(result).contains(Integer.toString(movieID)))
                         watchLaterCheckbox.setChecked(true);
                 });
+
             } else {
                 profilePicture.setImageDrawable(ContextCompat.getDrawable(getContext(), getContext().getResources().getIdentifier("default_profile_photo", "drawable", "ipren.watchr")));
                 favoriteCheckbox.setChecked(false);
@@ -224,8 +284,8 @@ public class MovieDetails extends Fragment {
             int pop = (int) Math.round(Movie.getPopularity());
             popularityText.setText(Integer.toString(pop));
             popularity.setProgress(pop);
-            // Our Rating
         });
+
     }
 
     /**
@@ -233,29 +293,29 @@ public class MovieDetails extends Fragment {
      */
     private void initCheckBoxes() {
         favoriteCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (checkLoggedIn()) {
+            if (checkLoggedIn() && checkVerified()) {
                 if (isChecked)
-                    viewModel.addMovieToList(movieID, IUserDataRepository.FAVORITES_LIST, user.getUID());
+                    viewModel.addMovieToList(IUserDataRepository.FAVORITES_LIST, user.getUID());
                 else
-                    viewModel.removeMovieFromList(movieID, IUserDataRepository.FAVORITES_LIST, user.getUID());
+                    viewModel.removeMovieFromList(IUserDataRepository.FAVORITES_LIST, user.getUID());
             } else
                 favoriteCheckbox.setChecked(false);
         });
         watchedCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (checkLoggedIn()) {
+            if (checkLoggedIn() && checkVerified()) {
                 if (isChecked)
-                    viewModel.addMovieToList(movieID, IUserDataRepository.WATCHED_LIST, user.getUID());
+                    viewModel.addMovieToList(IUserDataRepository.WATCHED_LIST, user.getUID());
                 else
-                    viewModel.removeMovieFromList(movieID, IUserDataRepository.WATCHED_LIST, user.getUID());
+                    viewModel.removeMovieFromList(IUserDataRepository.WATCHED_LIST, user.getUID());
             } else
                 watchedCheckbox.setChecked(false);
         });
         watchLaterCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (checkLoggedIn()) {
+            if (checkLoggedIn() && checkVerified()) {
                 if (isChecked)
-                    viewModel.addMovieToList(movieID, IUserDataRepository.WATCH_LATER_LIST, user.getUID());
+                    viewModel.addMovieToList(IUserDataRepository.WATCH_LATER_LIST, user.getUID());
                 else
-                    viewModel.removeMovieFromList(movieID, IUserDataRepository.WATCH_LATER_LIST, user.getUID());
+                    viewModel.removeMovieFromList(IUserDataRepository.WATCH_LATER_LIST, user.getUID());
             } else
                 watchLaterCheckbox.setChecked(false);
         });
@@ -283,7 +343,6 @@ public class MovieDetails extends Fragment {
         CommentAdapter adapter = new CommentAdapter(requireContext(), viewModel, getViewLifecycleOwner());
         comments.setAdapter(adapter);
 
-
         viewModel.getComments().observe(getViewLifecycleOwner(), comments -> {
 
             adapter.setData(comments);
@@ -291,8 +350,8 @@ public class MovieDetails extends Fragment {
 
         // OnClickListener to send comments
         send.setOnClickListener((View v) -> {
-            if (checkLoggedIn()) {
-                viewModel.commentOnMovie(movieID, user.getUID(), comment.getText().toString());
+            if (checkLoggedIn() && checkVerified()) {
+                viewModel.commentOnMovie(user.getUID(), comment.getText().toString());
                 comment.setText("");
                 comment.clearFocus();
             }
@@ -321,7 +380,22 @@ public class MovieDetails extends Fragment {
      */
     private boolean checkLoggedIn() {
         if (user != null) return true;
-        Toast.makeText(getContext(), "You need to be logged in to use this feature!", Toast.LENGTH_LONG).show(); // Debug
+        Toast.makeText(getContext(), "You need to be logged in to use this feature!", Toast.LENGTH_LONG).show();
         return false;
+    }
+
+    /**
+     * Checks if a user is verified
+     *
+     * @return true if a user is verified, false otherwise
+     */
+    private boolean checkVerified() {
+        if (user.isVerified()) {
+            Toast.makeText(getContext(), "You need to verify your account to use this feature!", Toast.LENGTH_LONG).show();
+            navController.navigate(R.id.accountSettingsFragment);
+            return false;
+        }
+        return true;
+
     }
 }

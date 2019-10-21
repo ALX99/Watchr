@@ -54,7 +54,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         .error(ContextCompat.getDrawable(mContext, mContext.getResources().getIdentifier("default_profile_photo", "drawable", "ipren.watchr")))
                         .into(holder.profilePic);
                 holder.username.setText(profile.getUsername());
-                Log.d("INFO", profile.getProfilePhotoUri().toString());
+                Log.d("COMMENT", "URI for " + profile.getUsername() + " is " + profile.getProfilePhotoUri().toString());
             }
         });
 

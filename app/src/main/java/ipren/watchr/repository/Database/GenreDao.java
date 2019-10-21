@@ -13,7 +13,7 @@ import java.util.List;
 import ipren.watchr.dataHolders.Genre;
 
 @Dao
-public interface GenreDao {
+public interface GenreDao extends BaseDao<Genre> {
     @Query("DELETE FROM genres WHERE id IN(:genreIDs)")
     int deleteGenreByID(int[] genreIDs);
 

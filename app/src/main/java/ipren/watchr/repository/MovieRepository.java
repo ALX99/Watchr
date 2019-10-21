@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -47,11 +48,27 @@ public class MovieRepository implements IMovieRepository {
      * @param list       The list to be returned
      * @param page       The page in the list
      * @param forceFetch Should data be forced to be gathered from the API?
-     * @return Returns the movie list
+     * @return The movie list
      */
     public LiveData<List<Movie>> getMovieList(String list, int page, boolean forceFetch) {
         if (list == IMovieRepository.TRENDING_LIST)
-            getTrendingList(page, forceFetch);
+            getList(list, page, forceFetch, movieApi.getTrending(page));
+        return movieDB.movieListDao().getMoviesFromList(list, page);
+    }
+
+
+    /**
+     * Need another function for getting the discoverList
+     * since there can be many different discoverLists
+     * @param genres List of genres to include
+     * @param page Page num
+     * @param forceFetch Force daa from api?
+     * @return The movie list
+     */
+    public LiveData<List<Movie>> getDiscoverList(int[] genres, int page, boolean forceFetch) {
+        Arrays.sort(genres);
+        String list = IMovieRepository.DISCOVER_LIST + genres.toString();
+        getList(list, page, forceFetch, movieApi.getDiscover(genres, page));
         return movieDB.movieListDao().getMoviesFromList(list, page);
     }
 
@@ -59,30 +76,30 @@ public class MovieRepository implements IMovieRepository {
      * @param page       The page number of the trending list
      * @param forceFetch Force fetching from the API?
      */
-    private void getTrendingList(int page, boolean forceFetch) {
+    private void getList(String list, int page, boolean forceFetch, Call<MovieList> call) {
         new Thread(() -> {
-            List<Movie> movies = movieDB.movieListDao().getMoviesFromListNonLiveData(IMovieRepository.TRENDING_LIST, page);
+            List<Movie> movies = movieDB.movieListDao().getMoviesFromListNonLiveData(list, page);
             if (movies == null || movies.size() == 0 || movies.get(0).getUpdateDate() == null || forceFetch)
-                insertTrendingMovies(page);
+                insertMovieList(call, list, page);
             else {
                 long diff = new Date().getTime() - movies.get(0).getUpdateDate().getTime();
                 if (TimeUnit.MILLISECONDS.toDays(diff) > 1) {
-                    Log.d("MOVIE", "The movie list " + IMovieRepository.TRENDING_LIST + " has to be updated!");
-                    insertTrendingMovies(page);
+                    Log.d("MOVIE", "The movie list " + list + " has to be updated!");
+                    insertMovieList(call, list, page);
                 } else
-                    Log.d("MOVIE", "The movie list " + IMovieRepository.TRENDING_LIST + " does not have to be updated. It is " + TimeUnit.MILLISECONDS.toMinutes(diff) + " minutes old");
+                    Log.d("MOVIE", "The movie list " + list + " does not have to be updated. It is " + TimeUnit.MILLISECONDS.toMinutes(diff) + " minutes old");
             }
         }).start();
     }
 
     /**
-     * Inserts trending movies into the DB
-     *
-     * @param page The page number of the trending list to be fetched
+     * Handles inserting movies into the DB
+     * @param call The API call
+     * @param list The list to be inserted into
+     * @param page The page
      */
-    private void insertTrendingMovies(int page) {
-        Log.d("MOVIE", "Fetching trending movies");
-        Call<MovieList> call = movieApi.getTrending(page);
+    private void insertMovieList(Call<MovieList> call, String list, int page) {
+        Log.d("MOVIE", "Fetching list from API");
         call.enqueue(new Callback<MovieList>() {
             @Override
             public void onResponse(Call<MovieList> call, Response<MovieList> response) {
@@ -97,11 +114,10 @@ public class MovieRepository implements IMovieRepository {
                         if (movieDB.movieDao().getMovieByIDNonLiveObject(m.getId()) == null)
                             movieDB.movieDao().insert(m);
                         // Associate the movie with the movieList
-                        movieDB.movieListDao().insert(new MovieList(m.id, IMovieRepository.TRENDING_LIST, page, d));
+                        movieDB.movieListDao().insert(new MovieList(m.id, list, page, d));
                     }
                 }).start();
             }
-
             @Override
             public void onFailure(Call<MovieList> call, Throwable t) {
 
@@ -121,6 +137,9 @@ public class MovieRepository implements IMovieRepository {
     }
 
     /**
+     *  Gets a movie from either the API or DB
+     *  depending if it exists in the DB
+     *  and how old it is
      * @param movieID The ID of the movie
      * @return The movie
      */
@@ -132,7 +151,7 @@ public class MovieRepository implements IMovieRepository {
                 // If this condition is true, it means that the movie has been inserted from
                 // the gathering of a movieList and does not contain the full information
                 // therefore has to be updated
-            else if (m != null && m.getUpdateDate() == null)
+            else if (m != null && (m.getUpdateDate() == null || m.getActorList() == null))
                 insertMovie(movieID, UPDATE);
             else {
                 long diff = new Date().getTime() - m.getUpdateDate().getTime();
@@ -148,6 +167,7 @@ public class MovieRepository implements IMovieRepository {
     }
 
     /**
+     * Insert a movie into the DB
      * @param movieID The ID of the movie
      * @param method  The method to be used, (inserting or updating)
      */

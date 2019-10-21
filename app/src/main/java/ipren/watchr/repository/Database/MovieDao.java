@@ -2,18 +2,14 @@ package ipren.watchr.repository.Database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
 import ipren.watchr.dataHolders.Movie;
 
 @Dao
-public interface MovieDao {
+public interface MovieDao extends BaseDao<Movie> {
     @Query("SELECT * FROM movies")
     LiveData<List<Movie>> getAllMovies();
 
@@ -26,18 +22,6 @@ public interface MovieDao {
 
     @Query("SELECT * FROM movies WHERE id IN(:movieID)")
     LiveData<List<Movie>> getMoviesByID(int... movieID);
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(Movie... movies);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<Movie> movies);
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void update(Movie... movies);
-
-    @Delete
-    void delete(Movie... movies);
 
     @Query("DELETE FROM movies WHERE id = :movieID")
     void deleteMoviesByID(int movieID);
