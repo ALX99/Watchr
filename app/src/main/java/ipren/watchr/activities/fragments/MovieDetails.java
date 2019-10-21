@@ -160,44 +160,48 @@ public class MovieDetails extends Fragment {
     }
 
     private void initOurRating() {
-        // Get the rating view
-        final View ratingView = getLayoutInflater().inflate(R.layout.rating_layout, null);
-        // Get the RatingBar
-        AppCompatRatingBar rating = ratingView.findViewById(R.id.setRating);
+        // Create a alert dialog builder.
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        builder.create();
 
 
-        // TODO not working, duplicate ratings should be fixed in firebase
+        ourRating.setOnClickListener(v -> {
+            // Get the rating view
+            View ratingView = getLayoutInflater().inflate(R.layout.rating_layout, null);
+            // Get the RatingBar
+            AppCompatRatingBar rating = ratingView.findViewById(R.id.setRating);
+            // Set rating view in the builder
+            builder.setView(ratingView);
+            builder.show();
+
+            // RatingBar change listener; send request to rate movie to FireBase
+            rating.setOnRatingBarChangeListener((ratingBar, rating1, fromUser) -> {
+                if (checkLoggedIn() && checkVerified() && fromUser) {
+                    viewModel.rateMovie(Math.round(rating1 * 2), user.getUID()); // Rate the movie
+                    Toast.makeText(getContext(), "You rated the movie " + rating1 + " stars!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // Display our average of our ratings from FireBase
+            viewModel.getRatings().observe(getViewLifecycleOwner(), fireRatings -> {
+                if (fireRatings != null) {
+                    for (FireRating f : fireRatings) {
+                        Log.d("RATING", f.getUser_id());
+                        if (user != null && f.getUser_id().equals(user.getUID()))
+                            rating.setRating((float) (f.getScore() / 2));
+                    }
+                }
+            });
+        });
+
+        //
         viewModel.getRatings().observe(getViewLifecycleOwner(), fireRatings -> {
             double avg = 0;
             if (fireRatings != null) {
-                for (FireRating f : fireRatings) {
+                for (FireRating f : fireRatings)
                     avg += f.getScore();
-                    Log.d("RATING", f.getUser_id());
-                    if (user != null && f.getUser_id().equals(user.getUID())) {
-                        float test = (float) (f.getScore() / 2);
-                        rating.setRating((float) (f.getScore() / 2));
-                    }
-                }
                 ourRatingText.setText(new DecimalFormat("#.#").format(avg / fireRatings.length));
-            }
-        });
-
-        ourRating.setOnClickListener(v -> {
-            // Create a alert dialog builder.
-            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-            // Set rating view in the builder
-            builder.setView(ratingView);
-            builder.setCancelable(true);
-
-            builder.create().show();
-        });
-
-        // RatingBar change listener.
-        rating.setOnRatingBarChangeListener((ratingBar, rating1, fromUser) -> {
-            if (checkLoggedIn() && checkVerified() && fromUser) {
-                viewModel.rateMovie(Math.round(rating1 * 2), user.getUID()); // Rate the movie
-                Toast.makeText(getContext(), "You rated the movie " + Math.round(rating1 * 2) + " stars!", Toast.LENGTH_SHORT).show();
             }
         });
     }
