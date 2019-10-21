@@ -1,7 +1,6 @@
 package ipren.watchr.activities.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,23 +8,24 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
+import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.viewModels.ListViewModel;
 
@@ -35,15 +35,24 @@ public class MovieListFragment extends Fragment {
     RecyclerView movieList;
     @BindView(R.id.listError)
     TextView listError;
+    @BindView(R.id.notLoggedInError)
+    TextView notLoggedInError;
     @BindView(R.id.loadingView)
     ProgressBar loadingView;
     @BindView(R.id.refreshLayout)
     SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.emptyListView)
+    TextView emptyListView;
     private ListViewModel listViewModel;
     private MovieListAdapter movieListAdapter;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     public MovieListFragment() {
-        movieListAdapter = new MovieListAdapter(new ArrayList<>());
+        // Required
     }
 
     @Override
@@ -56,69 +65,99 @@ public class MovieListFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Sets up the list, decides which list to display.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        connectFilterButton();
-        connectSearchView();
+        // Get view model and set correct data
+        listViewModel = ListViewModel.getInstance(this);
+        String listType = this.getArguments().getString("listType");
+        listViewModel.setListType(listType);
+        listViewModel.refresh();
 
-
-        // TODO: @johan Check if logged in to access all lists beside browse
-
-        listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
-
+        // Set list layout and adapter
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
+        movieListAdapter = MovieListAdapter.getInstance(listViewModel);
         movieList.setAdapter(movieListAdapter);
+
+        // Connect toolbar search and filter
+        connectFilterButton();
+        connectSearchView(listType);
+
+        observeViewModel();
 
         // Fetch fresh data from API on refresh
         refreshLayout.setOnRefreshListener(() -> {
-            movieList.setVisibility(View.GONE);
-            loadingView.setVisibility(View.VISIBLE);
-            listViewModel.refresh(IMovieRepository.TRENDING_LIST, 1);
-            observeViewModel();
-            loadingView.setVisibility(View.GONE);
-
+//            movieList.setVisibility(View.GONE);
+//            listError.setVisibility(View.GONE);
+//            listViewModel.refresh(listType);
             refreshLayout.setRefreshing(false);
         });
-
-        listViewModel.getList(IMovieRepository.TRENDING_LIST, 1);
-        observeViewModel();
-        loadingView.setVisibility(View.GONE);
     }
 
     /**
      * Makes the fragment listen to the live data in the view model
      */
     private void observeViewModel() {
-        listViewModel.getMovies().observe(this, movies -> {
+        listViewModel.getMovies().observe(getViewLifecycleOwner(), movies -> {
             if (movies != null && movies instanceof List) {
-                movieList.setVisibility(View.VISIBLE);
                 movieListAdapter.updateMovieList(movies);
+                movieList.setVisibility(View.VISIBLE);
+                listError.setVisibility(View.GONE);
+                loadingView.setVisibility(View.GONE);
+                emptyListView.setVisibility(View.GONE);
+                notLoggedInError.setVisibility(View.GONE);
             }
+            listViewModel.getMovies().removeObservers(getViewLifecycleOwner());
         });
 
-        listViewModel.getMovieLoadError().observe(this, isError -> {
-            if (isError != null && isError instanceof Boolean) {
-                listError.setVisibility(isError ? View.VISIBLE : View.GONE);
-            }
-        });
-
-        listViewModel.getLoading().observe(this, isLoading -> {
-            if (isLoading != null && isLoading instanceof Boolean) {
-                loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-                if (isLoading) {
-                    listError.setVisibility(View.GONE);
+        listViewModel.getLoggedInStatus().observe(getViewLifecycleOwner(), isLoggedIn -> {
+            if (isLoggedIn != null && isLoggedIn instanceof Boolean) {
+                if (!isLoggedIn) {
                     movieList.setVisibility(View.GONE);
+                    listError.setVisibility(View.GONE);
+                    loadingView.setVisibility(View.GONE);
+                    emptyListView.setVisibility(View.GONE);
+                    notLoggedInError.setVisibility(View.VISIBLE);
                 }
             }
+            listViewModel.getLoggedInStatus().removeObservers(getViewLifecycleOwner());
+        });
+
+        listViewModel.getEmptyListStatus().observe(getViewLifecycleOwner(), isEmpty -> {
+            if (isEmpty != null && isEmpty instanceof Boolean) {
+                if (isEmpty) {
+                    movieList.setVisibility(View.GONE);
+                    listError.setVisibility(View.GONE);
+                    loadingView.setVisibility(View.GONE);
+                    emptyListView.setVisibility(View.VISIBLE);
+                    notLoggedInError.setVisibility(View.GONE);
+                }
+            }
+            listViewModel.getEmptyListStatus().removeObservers(getViewLifecycleOwner());
+        });
+
+        listViewModel.getLoadingStatus().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null && isLoading instanceof Boolean) {
+                if (isLoading) {
+                    movieList.setVisibility(View.GONE);
+                    listError.setVisibility(View.GONE);
+                    loadingView.setVisibility(View.VISIBLE);
+                    emptyListView.setVisibility(View.GONE);
+                    notLoggedInError.setVisibility(View.GONE);
+                }
+            }
+            listViewModel.getLoadingStatus().removeObservers(getViewLifecycleOwner());
         });
     }
 
     /**
      * Find and setup the search bar
      */
-    private void connectSearchView() {
+    private void connectSearchView(String listType) {
         // Get the search view from toolbar and show
         SearchView searchView = getActivity().findViewById(R.id.toolbar_search);
         searchView.setVisibility(View.VISIBLE);
@@ -130,19 +169,42 @@ public class MovieListFragment extends Fragment {
         // Get rid of magnifying glass on keyboard.
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
-        // Filter on input
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+        if (listType.equals(IMovieRepository.BROWSE_LIST)) {
+            // If browse, update list directly from API data
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // Get live data from query, observe it to make it async and then stop observing it
+                    LiveData<List<Movie>> moviesLiveData = listViewModel.getMoviesFromQuery(query);
+                    moviesLiveData.observe(getViewLifecycleOwner(), movies -> {
+                        if (movies != null) {
+                            movieListAdapter.updateMovieList(movies);
+                        }
+                        moviesLiveData.removeObservers(getViewLifecycleOwner());
+                    });
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                movieListAdapter.getFilter().filter(newText);
-                return false;
-            }
-        });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+        } else {
+            // Filter current list
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    movieListAdapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
+        }
     }
 
     /**
@@ -154,7 +216,7 @@ public class MovieListFragment extends Fragment {
         filterBtn.setVisibility(View.VISIBLE);
 
         filterBtn.setOnClickListener(v -> {
-            Log.d("TEST", "Clicked the filter button");
+            Toast.makeText(this.getContext(), "Clicked the filter button", Toast.LENGTH_SHORT).show();
         });
     }
 }

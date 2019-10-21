@@ -89,6 +89,11 @@ public class AccountFragment extends Fragment {
                 Navigation.findNavController(fragmentView).navigate(R.id.action_global_account_settings));
 
         accountViewModel.getUser().observe(this, e -> {
+            if(e == null) {
+                Navigation.findNavController(getView()).popBackStack();
+                return;
+            }
+
             String uID = e.getUID();
             usernameTxtField.setText(e.getUserName());
             emailTxtField.setText(e.getEmail());
@@ -103,6 +108,7 @@ public class AccountFragment extends Fragment {
         });
     }
 
+    //SetData
     private void postUserStatistics(String uID) {
         accountViewModel.getCommentsByUserId(uID).observe(this, res -> postListSize(commentsMadeCount, res));
         accountViewModel.getRatingByUserId(uID).observe(this, res -> {
@@ -114,6 +120,9 @@ public class AccountFragment extends Fragment {
         accountViewModel.getWatchLaterList(uID).observe(this, res -> postListSize(watch_later_count, res));
     }
 
+
+
+    //Helpers
     private void setAverageScore(TextView textView, Double value) {
         if (value == null || value.isNaN()) {
             textView.setText("n/a");
@@ -146,4 +155,5 @@ public class AccountFragment extends Fragment {
         else
             view.setText("" + list.length);
     }
+
 }

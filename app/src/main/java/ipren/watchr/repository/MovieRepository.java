@@ -24,10 +24,10 @@ import retrofit2.Response;
 
 
 public class MovieRepository implements IMovieRepository {
-    private MovieDB movieDB;
-    private IMovieApi movieApi;
     private static final int INSERT = 1;
     private static final int UPDATE = 2;
+    private MovieDB movieDB;
+    private IMovieApi movieApi;
 
     /**
      * Instantiates a new Movie repository.
@@ -142,7 +142,6 @@ public class MovieRepository implements IMovieRepository {
     }
 
     /**
-     *
      * @param ids The array of IDs of movies to get
      * @return The movie list
      */
@@ -186,7 +185,7 @@ public class MovieRepository implements IMovieRepository {
     /**
      * Insert a movie into the DB
      * @param movieID The ID of the movie
-     * @param method The method to be used, (inserting or updating)
+     * @param method  The method to be used, (inserting or updating)
      */
     private void insertMovie(int movieID, int method) {
         Log.d("MOVIE", "Fetching the movie " + movieID);
@@ -228,7 +227,6 @@ public class MovieRepository implements IMovieRepository {
     }
 
     /**
-     *
      * @param movieID The movie ID
      * @return The list of actors from the movie
      */

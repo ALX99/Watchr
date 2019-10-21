@@ -387,7 +387,7 @@ public class MovieDetails extends Fragment {
      * @return true if a user is verified, false otherwise
      */
     private boolean checkVerified() {
-        if (user.isVerified()) {
+        if (!user.isVerified()) {
             Toast.makeText(getContext(), "You need to verify your account to use this feature!", Toast.LENGTH_LONG).show();
             navController.navigate(R.id.accountSettingsFragment);
             return false;

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +41,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.BuildConfig;
 import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
+import ipren.watchr.activities.Util.TextWatcherAdapter;
+import ipren.watchr.dataHolders.User;
 import ipren.watchr.viewModels.AccountSettingsViewModel;
 
 import static ipren.watchr.activities.Util.ActivityUtils.*;
@@ -106,11 +113,8 @@ public class AccountSettingsFragment extends Fragment {
 
     private final int IMAGE_SRC_GALLERY = 0;
     private final int IMAGE_SRC_CAMERA = 1;
-    private final String TMP_IMG_FILENAME = "JPEG_PROFILE_PICTURE";
-    AccountSettingsViewModel settingsViewModel;
+    private AccountSettingsViewModel settingsViewModel;
     private Uri uriToTempFile = null;
-    private Uri newProfileImgUri = null;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -131,24 +135,14 @@ public class AccountSettingsFragment extends Fragment {
 
         //Syncing to Livedata<User>
         settingsViewModel.getUser().observe(this, e -> {
-            if (e == null)
+            if (e == null) {
+                Navigation.findNavController(getView()).popBackStack();
                 return;
-
-            showEmailVerifiedLayout(e.isVerified());
-
-            if (!isUsrVerifiedBtn.isEnabled()) {
-                checkUserVerifcationRespTxt.setText("User not verified!");
-                checkUserVerifcationRespTxt.setTextColor(Color.RED);
-                checkUserVerifcationRespTxt.setVisibility(View.VISIBLE);
-                loadingButtonEnabled(isUsrVerifiedBtn, usrVerifiedCheckSpinner, false, "CLICK WHEN VERIFIED");
             }
-
-
-            userEmailTxt.setText(String.format(getResources().getString(R.string.email), e.getEmail()));
-            usernameInputField.setText(e.getUserName());
-            uIDTextField.setText(String.format(getResources().getString(R.string.uid), e.getUID()));
-            Util.loadImage(profilePic, e.getUserProfilePictureUri(), Util.getProgressDrawable(getContext()));
+            showEmailVerifiedLayout(e.isVerified());
         });
+
+
     }
 
 
@@ -158,14 +152,14 @@ public class AccountSettingsFragment extends Fragment {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case IMAGE_SRC_CAMERA:
-                    newProfileImgUri = uriToTempFile;
+                    settingsViewModel.setNewProfilePicture(uriToTempFile);
                     Util.loadImage(profilePic,
                             uriToTempFile, Util.getProgressDrawable(getContext()));
                     break;
                 case IMAGE_SRC_GALLERY:
-                    newProfileImgUri = data.getData();
+                    settingsViewModel.setNewProfilePicture(data.getData());
                     Util.loadImage(profilePic,
-                            newProfileImgUri, Util.getProgressDrawable(getContext()));
+                            data.getData(), Util.getProgressDrawable(getContext()));
                     break;
             }
         } else {
@@ -176,6 +170,7 @@ public class AccountSettingsFragment extends Fragment {
     private void showEmailVerifiedLayout(boolean verified) {
         if (verified && userNotVerifiedLayout.getVisibility() == View.VISIBLE) {
             userNotVerifiedLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_out));
+            transitionBetweenLayouts(userNotVerifiedLayout, verifiedUserLayout, Direction.Right, getContext());
             Toast.makeText(getContext(), "You've been verified", Toast.LENGTH_SHORT).show();
         }
         userNotVerifiedLayout.setVisibility(verified ? View.INVISIBLE : View.VISIBLE);
@@ -184,75 +179,73 @@ public class AccountSettingsFragment extends Fragment {
 
     private void initEmailVerificationLayout() {
         verifyBackBtn.setOnClickListener(e -> Navigation.findNavController(getView()).popBackStack());
+
+        settingsViewModel.getUser().observe(this, e -> {
+            if (e == null) return;
+            if (!isUsrVerifiedBtn.isEnabled()) {
+                checkUserVerifcationRespTxt.setVisibility(View.VISIBLE);
+                setTextAndColor(checkUserVerifcationRespTxt,"User not verified!", Color.RED );
+                loadingButtonEnabled(isUsrVerifiedBtn, usrVerifiedCheckSpinner, false, "CLICK WHEN VERIFIED");
+            }
+        });
+
+        isUsrVerifiedBtn.setOnClickListener(e -> {
+            loadingButtonEnabled(isUsrVerifiedBtn, usrVerifiedCheckSpinner, true, "Checking...");
+            checkUserVerifcationRespTxt.setVisibility(View.INVISIBLE);
+            settingsViewModel.refreshUsr();
+
+        });
+
+
         sendEmailVerBtn.setOnClickListener(e -> {
-            loadingButtonEnabled(sendEmailVerBtn, sendEmailVerSpinner, true, "Sending...");
             verifcationSentRespTxt.setVisibility(View.INVISIBLE);
             checkUserVerifcationRespTxt.setVisibility(View.INVISIBLE);
             settingsViewModel.resendVerificationEmail();
 
         });
 
-        isUsrVerifiedBtn.setOnClickListener(e -> {
-            loadingButtonEnabled(isUsrVerifiedBtn, usrVerifiedCheckSpinner, true, "Checking");
-            checkUserVerifcationRespTxt.setVisibility(View.INVISIBLE);
-            settingsViewModel.refreshUsr();
-
-        });
+        settingsViewModel.sendingVerificationEmail.observe(this, bool -> loadingButtonEnabled(sendEmailVerBtn, sendEmailVerSpinner, bool, bool ? "Sending..." : "RE-SEND VERIFICATION"));
 
         settingsViewModel.getVerificationResponse().observe(this, e -> {
-            loadingButtonEnabled(sendEmailVerBtn, sendEmailVerSpinner, false, "RE-SEND VERIFICATION");
-            if (e == null)
-                return;
             verifcationSentRespTxt.setVisibility(View.VISIBLE);
-            if (e.isSuccessful()) {
-                verifcationSentRespTxt.setText("Email sent!");
-                verifcationSentRespTxt.setTextColor(Color.GREEN);
-            } else {
-                verifcationSentRespTxt.setText(e.getErrorMsg());
-                verifcationSentRespTxt.setTextColor(Color.RED);
-            }
+            if (e.isSuccessful())
+                setTextAndColor(verifcationSentRespTxt, "Email sent!", Color.GREEN);
+            else
+                setTextAndColor(verifcationSentRespTxt, e.getErrorMsg(), Color.RED);
         });
 
 
     }
 
     private void initChangePasswordLayout() {
+
+        settingsViewModel.usernameErrorTxt.observe(this, txt -> usernameInputField.setError(txt));
+
+
+        oldPasswordInput.addTextChangedListener(new TextForwarder(oldPasswordInput));
+        newPasswordInput.addTextChangedListener(new TextForwarder(newPasswordInput));
+        reTypedPasswordInput.addTextChangedListener(new TextForwarder(reTypedPasswordInput));
+
+        settingsViewModel.oldPasswordErrorTxt.observe(this, txt -> oldPasswordInput.setError(txt));
+        settingsViewModel.newPasswordErrorTxt.observe(this, txt -> newPasswordInput.setError(txt));
+        settingsViewModel.reTypedErrorTxt.observe(this, txt -> reTypedPasswordInput.setError(txt));
+
+        settingsViewModel.changingPassword.observe(this, bool -> loadingButtonEnabled(savePasswordBtn, savePasswordSpinner, bool, bool ? "Saving..." : "save password"));
         goBackToProfileBtn.setOnClickListener(e -> transitionBetweenLayouts(changePasswordLayout, verifiedUserLayout, Direction.Left, getContext()));
         savePasswordBtn.setOnClickListener(e -> {
             changePasswordResponse.setVisibility(View.INVISIBLE);
-            String oldPassword = oldPasswordInput.getText().toString();
-            String newPassword = newPasswordInput.getText().toString();
-            String reTypedPassword = reTypedPasswordInput.getText().toString();
-            if (oldPassword.isEmpty() || newPassword.isEmpty()) {
-                if (oldPassword.isEmpty())
-                    oldPasswordInput.setError("Please write your old password");
-                if (newPassword.isEmpty())
-                    newPasswordInput.setError("Please write a new password");
-            } else if (!newPassword.equals(reTypedPassword)) {
-                if (reTypedPassword.isEmpty())
-                    reTypedPasswordInput.setError("Please re-type password");
-                else
-                    reTypedPasswordInput.setError("Passwords not identical");
-            } else {
-                loadingButtonEnabled(savePasswordBtn, savePasswordSpinner, true, "Saving...");
-                settingsViewModel.updateUserPassword(oldPassword, newPassword);
-                return;
-            }
-            shakeButton(savePasswordBtn, getContext());
+            if (!settingsViewModel.updateUserPassword())
+                shakeButton(savePasswordBtn, getContext());
         });
+
+
         settingsViewModel.getChangePasswordResponse().observe(this, e -> {
             changePasswordResponse.setVisibility(View.VISIBLE);
-            loadingButtonEnabled(savePasswordBtn, savePasswordSpinner, false, "Save password");
             if (e.isSuccessful()) {
-                oldPasswordInput.setText("");
-                newPasswordInput.setText("");
+                oldPasswordInput.setText("");newPasswordInput.setText("");
                 reTypedPasswordInput.setText("");
                 setTextAndColor(changePasswordResponse, "Success!", Color.GREEN);
             } else {
-                if(e.getErrorMsg().contains("6"))
-                    newPasswordInput.setError("Too weak");
-                else if(e.getErrorMsg().contains("invalid"))
-                    oldPasswordInput.setError("Wrong");
                 shakeButton(savePasswordBtn, getContext());
                 setTextAndColor(changePasswordResponse, e.getErrorMsg(), Color.RED);
             }
@@ -263,42 +256,36 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     private void initUserConfigurationLayout() {
+        usernameInputField.addTextChangedListener(new TextForwarder(usernameInputField));
 
         settingsBackBtn.setOnClickListener(e -> Navigation.findNavController(getView()).popBackStack());
         changePasswordBtn.setOnClickListener(e -> transitionBetweenLayouts(verifiedUserLayout, changePasswordLayout, Direction.Right, getContext()));
-        saveUserConfigBtn.setOnClickListener(e -> {
-
-            String oldImage = settingsViewModel.getUser().getValue().getUserProfilePictureUri().toString();
-            Uri newImage = newProfileImgUri != null && !oldImage.equals(newProfileImgUri.toString()) ? newProfileImgUri : null;
 
 
-            String oldText = settingsViewModel.getUser().getValue().getUserName();
-            String newText = usernameInputField.getText().toString();
-
-
-            if (oldText.equals(newText) && newImage == null) {
-                shakeButton(saveUserConfigBtn, getContext());
-                Toast.makeText(getContext(), "You have not changed anything!", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (!oldText.isEmpty() && newText.isEmpty()) {
-                shakeButton(saveUserConfigBtn, getContext());
-                usernameInputField.setError("Your username can't be empty");
-                return;
-            } else if (newText.length() > 15) {
-                shakeButton(saveUserConfigBtn, getContext());
-                usernameInputField.setError("That username is too long");
-                return;
-            }
-
-            loadingButtonEnabled(saveUserConfigBtn, saveUserConfigSpinner, true, "Saving...");
-            updateProfileResponseTxt.setVisibility(View.INVISIBLE);
-            settingsViewModel.updateUserProfile(newText, newImage);
+        settingsViewModel.getUser().observe(this, e -> {
+            if (e == null) return;
+            userEmailTxt.setText(String.format(getResources().getString(R.string.email), e.getEmail()));
+            usernameInputField.setText(e.getUserName());
+            uIDTextField.setText(String.format(getResources().getString(R.string.uid), e.getUID()));
+            Util.loadImage(profilePic, e.getUserProfilePictureUri(), Util.getProgressDrawable(getContext()));
         });
 
+
+
+        saveUserConfigBtn.setOnClickListener(e -> {
+            updateProfileResponseTxt.setVisibility(View.INVISIBLE);
+            String usernameTxt = usernameInputField.getText().toString();
+            if (!settingsViewModel.updateUserProfile()) {
+                shakeButton(saveUserConfigBtn, getContext());
+                if (!usernameTxt.isEmpty() && (usernameTxt.length() < 15))
+                    Toast.makeText(getContext(), "You have not changed anything!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        settingsViewModel.savingPublicProfile.observe(this, bool -> loadingButtonEnabled(saveUserConfigBtn, saveUserConfigSpinner, bool, bool ? "saving profile..." : "Save profile"));
         profilePic.setOnClickListener(e -> chooseGalleryOrCamera());
 
         settingsViewModel.getUpdateProfileResponse().observe(this, e -> {
-            loadingButtonEnabled(saveUserConfigBtn, saveUserConfigSpinner, false, "SAVE");
             updateProfileResponseTxt.setVisibility(View.VISIBLE);
             if (e.isSuccessful())
                 setTextAndColor(updateProfileResponseTxt, "Success!", Color.GREEN);
@@ -313,7 +300,7 @@ public class AccountSettingsFragment extends Fragment {
         builder.setTitle("Choose a method");
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) {
-                Uri uri = createTempPictureFile();
+                Uri uri = createTempPictureFile(getContext());
                 if (uri == null) {
                     Toast.makeText(getContext(),
                             "Something went wrong, try the gallery instead"
@@ -335,28 +322,35 @@ public class AccountSettingsFragment extends Fragment {
         builder.show();
     }
 
-    private Uri createTempPictureFile() {
 
-        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    class TextForwarder extends TextWatcherAdapter {
+        private EditText textField;
 
-        try {
-            File file = File.createTempFile(
-                    TMP_IMG_FILENAME,  /* prefix */
-                    ".jpg",         /* suffix */
-                    storageDir      /* directory */
-            );
+        TextForwarder(EditText textField) {
+            this.textField = textField;
 
-
-            Uri photoURI = FileProvider.getUriForFile(getContext(),
-                    BuildConfig.APPLICATION_ID + ".provider",
-                    file);
-
-            return photoURI;
-
-        } catch (IOException e) {
-            return null;
         }
 
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String txt = editable.toString();
+
+            switch (textField.getId()) {
+                case R.id.username_Input:
+                    settingsViewModel.setUsername(txt);
+                    break;
+                case R.id.old_password_input:
+                    settingsViewModel.setOldPassword(txt);
+                    break;
+                case R.id.new_password_input:
+                    settingsViewModel.setNewPassword(txt);
+                    break;
+                case R.id.retype_password_input:
+                    settingsViewModel.setReTypedPassword(txt);
+                    break;
+
+            }
+        }
     }
 
 }

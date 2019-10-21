@@ -15,6 +15,8 @@ public interface IMovieRepository {
     String TRENDING_LIST = "Trending";
     String DISCOVER_LIST = "Discover";
     String SEARCH_LIST = "Search";
+    String BROWSE_LIST = "Browse";
+    String RECOMMENDED_LIST = "Recommended";
 
     /**
      * Gets a movie by its ID.

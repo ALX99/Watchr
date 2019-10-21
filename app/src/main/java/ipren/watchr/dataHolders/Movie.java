@@ -104,39 +104,6 @@ public class Movie {
         this.status = status;
     }
 
-    public void setPopularity(double popularity) {
-        this.popularity = popularity;
-    }
-
-    public void setVoteCount(int voteCount) {
-        this.voteCount = voteCount;
-    }
-
-    public void setVideo(boolean video) {
-        this.video = video;
-    }
-
-
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
-    }
-
-    public void setOriginalLanguage(String originalLanguage) {
-        this.originalLanguage = originalLanguage;
-    }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
-    }
-
-    public void setVoteAverage(double voteAverage) {
-        this.voteAverage = voteAverage;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public int getId() {
         return id;
     }
@@ -169,13 +136,24 @@ public class Movie {
         return popularity;
     }
 
+    public void setPopularity(double popularity) {
+        this.popularity = popularity;
+    }
 
     public int getVoteCount() {
         return voteCount;
     }
 
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
+    }
+
     public boolean isVideo() {
         return video;
+    }
+
+    public void setVideo(boolean video) {
+        this.video = video;
     }
 
     public boolean isAdult() {
@@ -190,23 +168,40 @@ public class Movie {
         return backdropPath;
     }
 
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
 
     public String getOriginalLanguage() {
         return originalLanguage;
     }
 
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
 
     public String getOriginalTitle() {
         return originalTitle;
     }
 
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
 
     public double getVoteAverage() {
         return voteAverage;
     }
 
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
     public String getReleaseDate() {
         return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
 

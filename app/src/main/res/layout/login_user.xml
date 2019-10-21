@@ -84,4 +84,13 @@
         app:layout_constraintStart_toStartOf="@+id/login_button"
         app:layout_constraintTop_toTopOf="@+id/start_user_registration_btn" />
 
+    <TextView
+        android:id="@+id/sign_in_response_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

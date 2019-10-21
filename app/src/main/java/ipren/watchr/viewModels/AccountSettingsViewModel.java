@@ -11,21 +11,43 @@ import com.google.android.gms.tasks.Task;
 import ipren.watchr.dataHolders.AuthenticationResponse;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
+import static ipren.watchr.viewModels.util.ViewModelSupportUtils.*;
 
 
 public class AccountSettingsViewModel extends ViewModel {
 
-    IUserDataRepository userDataRepository;
+    public void setNewProfilePicture(Uri newProfilePicture) {
+        this.newProfilePicture = newProfilePicture;
+    }
 
-    LiveData<User> liveUser;
-    MutableLiveData<AuthenticationResponse> updateProfileResponse = new MutableLiveData<>();
-    MutableLiveData<AuthenticationResponse> sendVerEmailResponse = new MutableLiveData<>();
-    MutableLiveData<AuthenticationResponse> changePasswordResponse = new MutableLiveData<>();
+    private String oldPassword = "";
+    private String newPassword = "";
+    private String reTypedPassword = "";
+    private String username = "";
+    private Uri newProfilePicture;
+
+
+
+    private IUserDataRepository userDataRepository;
+    public final LiveData<User> liveUser;
+    public final LiveData<AuthenticationResponse> updateProfileResponse = new MutableLiveData<>();
+    public final LiveData<AuthenticationResponse> sendVerEmailResponse = new MutableLiveData<>();
+    public final LiveData<AuthenticationResponse> changePasswordResponse = new MutableLiveData<>();
+
+    public final LiveData<String> oldPasswordErrorTxt = new MutableLiveData<>();
+    public final LiveData<String> newPasswordErrorTxt = new MutableLiveData<>();
+    public final LiveData<String> reTypedErrorTxt = new MutableLiveData<>();
+    public final LiveData<String> usernameErrorTxt = new MutableLiveData<>();
+
+    public final LiveData<Boolean> savingPublicProfile = new MutableLiveData<>();
+    public final LiveData<Boolean> changingPassword = new MutableLiveData<>();
+    public final LiveData<Boolean> sendingVerificationEmail = new MutableLiveData<>();
+    public final LiveData<Boolean> checkingUserVerification = new MutableLiveData<>();
+
 
    public AccountSettingsViewModel(){
        userDataRepository = IUserDataRepository.getInstance();
        this.liveUser = userDataRepository.getUserLiveData();
-
     }
 
     public LiveData<AuthenticationResponse> getUpdateProfileResponse(){
@@ -48,35 +70,106 @@ public class AccountSettingsViewModel extends ViewModel {
         userDataRepository.refreshUsr();
     }
 
-    public void updateUserProfile(String username, Uri imageUri) {
-        userDataRepository.updateProfile(username, imageUri, this::refreshUpdateUserProfile);
+    public boolean updateUserProfile() {
+       if(username.isEmpty()){
+            postValue(usernameErrorTxt, "Username please");
+           return false;
+       }else if (username.equals(liveUser.getValue().getUserName()) && newProfilePicture == null){
+            return false;
+       } else if (username.length() > 15){
+           return false;
+       }
+       else {
+           postValue(savingPublicProfile, true);
+           userDataRepository.updateProfile(username, newProfilePicture, this::refreshUpdateUserProfile);
+           return true;
+       }
     }
 
-    public void updateUserPassword(String oldPassword, String newPassword){
-            userDataRepository.changePassword(oldPassword, newPassword, this::refreshPasswordChangeResponse);
+    public boolean updateUserPassword(){
+       if(oldPassword.isEmpty() || newPassword.isEmpty()){
+           if(oldPassword.isEmpty()) postValue(oldPasswordErrorTxt, "Please enter your current password");
+           if(newPassword.isEmpty()) {
+               postValue(newPasswordErrorTxt, "Please enter a password");
+                postValue(reTypedErrorTxt,"Please re-enter password"  );
+           }
+           return false;
+       }else if(oldPassword.length() > 5 && newPassword.length() > 5 && newPassword.equals(reTypedPassword)){
+           postValue(changingPassword, true);
+           userDataRepository.changePassword(oldPassword, newPassword, this::refreshPasswordChangeResponse);
+           return true;
+       }
+       return false;
+
     }
 
     public void resendVerificationEmail() {
+        postValue(sendingVerificationEmail, true);
         userDataRepository.reSendVerificationEmail(this::refreshEmailVerificationResponse);
     }
 
     private void refreshPasswordChangeResponse(Task task){
+       postValue(changingPassword, false);
         Exception exception = task.getException();
-        changePasswordResponse.postValue(new AuthenticationResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
+        postValue(changePasswordResponse, new AuthenticationResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
     }
 
     private void refreshUpdateUserProfile(Task task){
+       postValue(savingPublicProfile, false);
         Exception exception = task.getException();
-        updateProfileResponse.postValue(new AuthenticationResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
+        postValue(updateProfileResponse ,new AuthenticationResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
     }
     private void refreshEmailVerificationResponse(Task task){
         if(task == null){
-            sendVerEmailResponse.postValue(new AuthenticationResponse(false, "Email Already verified"));
+            postValue(sendVerEmailResponse, new AuthenticationResponse(false, "Email Already verified"));
         }else{
             Exception exc = task.getException();
-            sendVerEmailResponse.postValue(new AuthenticationResponse(task.isSuccessful(),exc !=null ? exc.getMessage() : "" ));
+            postValue(sendVerEmailResponse,new AuthenticationResponse(task.isSuccessful(),exc !=null ? exc.getMessage() : "" ));
         }
     }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+        updatePasswordErrorTxt(oldPasswordErrorTxt,oldPassword);
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+        updatePasswordErrorTxt(newPasswordErrorTxt,newPassword);
+    }
+
+    public void setReTypedPassword(String reTypedPassword) {
+        this.reTypedPassword = reTypedPassword;
+        updatePasswordMatchErrorTxt(reTypedErrorTxt, newPassword, reTypedPassword);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+        setStringTooLongErroTxt(usernameErrorTxt, username, 15);
+    }
+
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public String getReTypedPassword() {
+        return reTypedPassword;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Uri getNewProfilePicture() {
+        return newProfilePicture;
+    }
+
+
 
 
 

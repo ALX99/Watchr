@@ -90,5 +90,15 @@
         app:layout_constraintTop_toBottomOf="@+id/register_user_spinner"
         app:srcCompat="@drawable/ic_navigate_before_black_24dp" />
 
+    <TextView
+        android:id="@+id/register_usr_response_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_user_btn" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

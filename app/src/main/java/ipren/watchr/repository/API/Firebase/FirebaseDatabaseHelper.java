@@ -2,7 +2,6 @@ package ipren.watchr.repository.API.Firebase;
 
 import android.net.Uri;
 import android.util.Log;
-import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -154,14 +153,36 @@ public class FirebaseDatabaseHelper {
     }
 
     void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
-        Map<String, Object> comment = new HashMap<>();
+        Map<String, Object> rating = new HashMap<>();
 
-        comment.put(USER_ID_FIELD, user_id);
-        comment.put(MOVIE_ID_FIELD, movie_id);
-        comment.put("score", new Integer(score));
+        rating.put(USER_ID_FIELD, user_id);
+        rating.put(MOVIE_ID_FIELD, movie_id);
+        rating.put("score", new Integer(score));
 
-        Task task = fireStore.collection(RATING_PATH).add(comment);
-        attachCallback(task, callback);
+        //This method updates existing documents if they exists or creates if they dont. Also removes duplicates if there are any
+        fireStore.collection(RATING_PATH).whereEqualTo(MOVIE_ID_FIELD, movie_id).whereEqualTo(USER_ID_FIELD, user_id).get().addOnCompleteListener( e -> {
+            if(e.isSuccessful()){
+                if(e.getResult().isEmpty()){
+                    attachCallback( fireStore.collection(RATING_PATH).add(rating), callback);
+                } else {
+                    boolean first = true;
+                    for (DocumentSnapshot doc : e.getResult()){
+                        if(first) {
+                            attachCallback(doc.getReference().set(rating), callback);
+                            first = false;
+                        }else {
+                            doc.getReference().delete();
+                        }
+                    }
+                }
+
+            }else if (callback != null)
+                callback.onComplete(e);
+        });
+
+
+    //    Task task = fireStore.collection(RATING_PATH).add(rating);
+      //  attachCallback(task, callback);
     }
 
     void removeRating(String rating_id, OnCompleteListener callback) {
