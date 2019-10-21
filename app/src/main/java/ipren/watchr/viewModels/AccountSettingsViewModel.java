@@ -39,7 +39,7 @@ public class AccountSettingsViewModel extends ViewModel {
     public final LiveData<String> reTypedErrorTxt = new MutableLiveData<>();
     public final LiveData<String> usernameErrorTxt = new MutableLiveData<>();
 
-    public final LiveData<Boolean> savingPublicProfile = new MutableLiveData<>();
+    public final LiveData<Boolean> savingNewProfileState = new MutableLiveData<>();
     public final LiveData<Boolean> changingPassword = new MutableLiveData<>();
     public final LiveData<Boolean> sendingVerificationEmail = new MutableLiveData<>();
     public final LiveData<Boolean> checkingUserVerification = new MutableLiveData<>();
@@ -80,7 +80,7 @@ public class AccountSettingsViewModel extends ViewModel {
            return false;
        }
        else {
-           postValue(savingPublicProfile, true);
+           postValue(savingNewProfileState, true);
            userDataRepository.updateProfile(username, newProfilePicture, this::refreshUpdateUserProfile);
            return true;
        }
@@ -115,7 +115,7 @@ public class AccountSettingsViewModel extends ViewModel {
     }
 
     private void refreshUpdateUserProfile(Task task){
-       postValue(savingPublicProfile, false);
+       postValue(savingNewProfileState, false);
         Exception exception = task.getException();
         postValue(updateProfileResponse ,new RequestResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
     }

@@ -114,7 +114,7 @@ public class LoginFragment extends Fragment {
         loginViewModel.logPasswordError.observe(this, txt -> loginPasswordField.setError(txt));
 
         signInBtn.setOnClickListener(e -> {
-            signInResponseTxt.setVisibility(View.INVISIBLE);
+            clearAndHideTextViews(signInResponseTxt);
             if (!loginViewModel.signIn()) shakeButton(signInBtn, getContext());
         });
 
@@ -155,11 +155,11 @@ public class LoginFragment extends Fragment {
         //Attempt to register the user
         //This will display an error if any fields are poorly formatted, if not will attempt to register
         registerUsrBtn.setOnClickListener(e -> {
-            registerUsrResponseTxt.setVisibility(View.INVISIBLE);
+            clearAndHideTextViews(registerUsrResponseTxt);
             if (!loginViewModel.registerUser()) shakeButton(registerUsrBtn, getContext());
         });
 
-        loginViewModel.registeringUser.observe(this, bool -> loadingButtonEnabled(signInBtn, loginSpinner, bool, bool ? "Registering..." : "Register"));
+        loginViewModel.registeringUser.observe(this, bool -> loadingButtonEnabled(registerUsrBtn, registerUsrBtnSpinner, bool, bool ? "Registering..." : "Register"));
         loginViewModel.getCreateUserResponse().observe(this, e -> {
             registerUsrResponseTxt.setVisibility(View.VISIBLE);
             loadingButtonEnabled(registerUsrBtn, registerUsrBtnSpinner, false, "Register");
@@ -184,7 +184,7 @@ public class LoginFragment extends Fragment {
 
 
         resetPasswordBtn.setOnClickListener(e -> {
-            passwordResetResponse.setVisibility(View.INVISIBLE);
+            clearAndHideTextViews(passwordResetResponse);
             if (!loginViewModel.resetPassword()) shakeButton(resetPasswordBtn, getContext());
 
         });

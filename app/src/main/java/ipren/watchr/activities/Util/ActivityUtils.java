@@ -72,9 +72,11 @@ public class ActivityUtils {
 
     }
 
-    public static void clearAndHideTextView(TextView textView){
-        textView.setText("");
-        textView.setVisibility(View.INVISIBLE);
+    public static void clearAndHideTextViews(TextView... textViews){
+        for(TextView textView : textViews) {
+            textView.setText("");
+            textView.setVisibility(View.INVISIBLE);
+        }
     }
 
 
