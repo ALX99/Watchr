@@ -13,7 +13,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import ipren.watchr.Helpers.DateConverter;
 import ipren.watchr.dataHolders.Actor;
-import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.GenreList;
 import ipren.watchr.dataHolders.Movie;
@@ -24,7 +23,7 @@ import ipren.watchr.repository.API.MovieApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
-@Database(entities = {Movie.class, Actor.class, Comment.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 12)
+@Database(entities = {Movie.class, Actor.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 13)
 @TypeConverters(DateConverter.class)
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance
@@ -55,8 +54,6 @@ public abstract class MovieDB extends RoomDatabase {
     public abstract ActorDao actorDao();
 
     public abstract MovieDao movieDao();
-
-    public abstract CommentDao commentDao();
 
     public abstract GenreDao genreDao();
 

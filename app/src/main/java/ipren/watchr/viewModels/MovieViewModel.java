@@ -20,9 +20,9 @@ import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.repository.MovieRepository;
 
 public class MovieViewModel extends AndroidViewModel implements IMovieViewModel {
-    private int movieID;
+    private String movieID;
     private IMovieRepository movieRepository;
-    private IUserDataRepository mainRepository;
+    private IUserDataRepository userDataRepository;
     private LiveData<Movie> movie;
     private LiveData<User> user;
     private LiveData<FireComment[]> comments;
@@ -31,30 +31,34 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
     public MovieViewModel(@NonNull Application application) {
         super(application);
         movieRepository = new MovieRepository(application.getApplicationContext());
-        mainRepository = IUserDataRepository.getInstance();
+        userDataRepository = IUserDataRepository.getInstance();
     }
 
     public void setMovieID(int movieID) {
-        this.movieID = movieID;
+        this.movieID = Integer.toString(movieID);
         this.movie = movieRepository.getMovieByID(movieID);
-        this.comments = mainRepository.getComments(Integer.toString(movieID), IUserDataRepository.SEARCH_METHOD_MOVIE_ID);
-        this.user = mainRepository.getUserLiveData();
+        this.comments = userDataRepository.getComments(Integer.toString(movieID), IUserDataRepository.SEARCH_METHOD_MOVIE_ID);
+        this.user = userDataRepository.getUserLiveData();
         this.actors = movieRepository.getActorsFromMovie(movieID);
     }
 
     @Override
-    public void addMovieToList(int movieID, String list, String UID) {
-        mainRepository.addMovieToList(list, Integer.toString(movieID), UID, null);
+    public void addMovieToList(String list, String UID) {
+        userDataRepository.addMovieToList(list, movieID, UID, null);
     }
 
     @Override
-    public void removeMovieFromList(int movieID, String list, String UID) {
-        mainRepository.removeMovieFromList(list, Integer.toString(movieID), UID, null);
+    public void removeMovieFromList(String list, String UID) {
+        userDataRepository.removeMovieFromList(list, movieID, UID, null);
     }
 
     @Override
-    public LiveData<FireRating[]> getRatings(int searchMethod) {
-        return mainRepository.getRatings(Integer.toString(movieID), searchMethod);
+    public LiveData<FireRating[]> getRatings() {
+        return userDataRepository.getRatings(movieID, IUserDataRepository.SEARCH_METHOD_MOVIE_ID);
+    }
+
+    public void rateMovie(int score, String UID) {
+        userDataRepository.rateMovie(score, movieID, UID, null);
     }
 
     public LiveData<Movie> getMovie() {
@@ -68,7 +72,7 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
 
     @Override
     public LiveData<String[]> getUserList(String list, String UID) {
-        return mainRepository.getMovieList(list, UID);
+        return userDataRepository.getMovieList(list, UID);
     }
 
     @Override
@@ -77,8 +81,8 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
     }
 
     @Override
-    public void commentOnMovie(int movieID, String UID, String text) {
-        mainRepository.commentMovie(text, Integer.toString(movieID), UID, null);
+    public void commentOnMovie(String UID, String text) {
+        userDataRepository.commentMovie(text, movieID, UID, null);
     }
 
     @Override
@@ -88,12 +92,12 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
 
     @Override
     public LiveData<List<Genre>> getGenres() {
-        return movieRepository.getGenresFromMovie(movieID);
+        return movieRepository.getGenresFromMovie(Integer.valueOf(movieID));
     }
 
     @Override
     public LiveData<PublicProfile> getPublicProfile(String user_id) {
-        return mainRepository.getPublicProfile(user_id);
+        return userDataRepository.getPublicProfile(user_id);
     }
 
     @Override

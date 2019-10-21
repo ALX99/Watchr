@@ -42,4 +42,9 @@ public class MovieApi implements IMovieApi {
     public Call<GenreList> getAllGenres() {
         return api.getAllGenres();
     }
+
+    @Override
+    public Call<MovieList> getDiscover(int[] genres, int page) {
+        return api.getDiscover(genres, page);
+    }
 }

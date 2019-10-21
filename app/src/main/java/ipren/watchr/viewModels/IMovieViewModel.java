@@ -33,11 +33,10 @@ public interface IMovieViewModel {
     /**
      * Comment on movie.
      *
-     * @param movieID The movie ID
      * @param UID     The user UID
      * @param text    The comment text
      */
-    void commentOnMovie(int movieID, String UID, String text);
+    void commentOnMovie(String UID, String text);
 
 
     /**
@@ -72,20 +71,18 @@ public interface IMovieViewModel {
     /**
      * Add movie to list.
      *
-     * @param movieID the movie id
      * @param list    the list
      * @param UID     the uid
      */
-    void addMovieToList(int movieID, String list, String UID);
+    void addMovieToList(String list, String UID);
 
     /**
      * Remove movie from list.
      *
-     * @param movieID the movie id
      * @param list    the list
      * @param UID     the uid
      */
-    void removeMovieFromList(int movieID, String list, String UID);
+    void removeMovieFromList(String list, String UID);
 
     /**
      * Gets a specified user list.
@@ -99,10 +96,9 @@ public interface IMovieViewModel {
     /**
      * Gets ratings for the movie.
      *
-     * @param searchMethod the search method
      * @return the ratings
      */
-    LiveData<FireRating[]> getRatings(int searchMethod);
+    LiveData<FireRating[]> getRatings();
 
     /**
      * Gets public profile for a user.
@@ -111,5 +107,12 @@ public interface IMovieViewModel {
      * @return the public profile
      */
     LiveData<PublicProfile> getPublicProfile(String user_id);
+
+    /**
+     * @param score User score
+     * @param UID   the uid
+     */
+    void rateMovie(int score, String UID);
+
 
 }
