@@ -14,6 +14,12 @@ public class Comment {
     //This is needed to enable firebase to initiate the object
     public Comment() { }
 
+    public Comment(String movie_id, String user_id, String text, String uID){
+        this.movie_id = movie_id;
+        this.user_id = user_id;
+        this.text = text;
+        this.uID = uID;
+    }
 
     public String getMovie_id() {
         return movie_id;
@@ -31,10 +37,4 @@ public class Comment {
         return uID;
     }
 
-    public Comment(String movie_id, String user_id, String text, String uID){
-        this.movie_id = movie_id;
-        this.user_id = user_id;
-        this.text = text;
-        this.uID = uID;
-    }
 }

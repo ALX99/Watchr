@@ -47,7 +47,7 @@
             app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="browse" />
+            android:defaultValue="Browse" />
     </fragment>
 
     <fragment
@@ -63,10 +63,8 @@
             app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="recommended" />
+            android:defaultValue="Recommended" />
     </fragment>
-
-    <!-- END LIST FRAGMENTS -->
 
     <fragment
         android:id="@+id/favoritesFragment"
@@ -82,7 +80,7 @@
             app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="favorites" />
+            android:defaultValue="Favorites" />
     </fragment>
     <fragment
         android:id="@+id/watchLaterFragment"
@@ -98,7 +96,7 @@
             app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="watchLater" />
+            android:defaultValue="Watch_Later" />
     </fragment>
     <fragment
         android:id="@+id/watchedFragment"
@@ -114,8 +112,10 @@
             app:popExitAnim="@anim/exit_to_right" />
         <argument
             android:name="listType"
-            android:defaultValue="watched" />
+            android:defaultValue="Watched" />
     </fragment>
+
+    <!-- END LIST FRAGMENTS -->
 
     <fragment
         android:id="@+id/loginFragment"
@@ -143,4 +143,30 @@
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>
+    <action
+        android:id="@+id/action_global_MovieListFragment"
+        app:destination="@id/MovieListFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true" />
+    <action
+        android:id="@+id/action_global_recommendedFragment"
+        app:destination="@id/recommendedFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true" />
+    <action
+        android:id="@+id/action_global_watchLaterFragment"
+        app:destination="@id/watchLaterFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true"
+        app:popUpToInclusive="false" />
+    <action
+        android:id="@+id/action_global_watchedFragment"
+        app:destination="@id/watchedFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true" />
+    <action
+        android:id="@+id/action_global_favoritesFragment"
+        app:destination="@id/favoritesFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true" />
 </navigation>

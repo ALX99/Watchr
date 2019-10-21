@@ -24,10 +24,10 @@ import retrofit2.Response;
 
 
 public class MovieRepository implements IMovieRepository {
-    private MovieDB movieDB;
-    private IMovieApi movieApi;
     private static final int INSERT = 1;
     private static final int UPDATE = 2;
+    private MovieDB movieDB;
+    private IMovieApi movieApi;
 
     /**
      * Instantiates a new Movie repository.
@@ -62,7 +62,7 @@ public class MovieRepository implements IMovieRepository {
      * since there can be many different discoverLists
      * @param genres List of genres to include
      * @param page Page num
-     * @param forceFetch Force daa from api?
+     * @param forceFetch Force data from api?
      * @return The movie list
      */
     public LiveData<List<Movie>> getDiscoverList(int[] genres, int page, boolean forceFetch) {
@@ -73,8 +73,24 @@ public class MovieRepository implements IMovieRepository {
     }
 
     /**
+     * @param text       The text to search
+     * @param page       The page number to fetch
+     * @param forceFetch Force data from the api?
+     * @return The movie list
+     */
+    public LiveData<List<Movie>> Search(String text, int page, boolean forceFetch) {
+        String list = IMovieRepository.SEARCH_LIST + text.toLowerCase();
+        getList(list, page, forceFetch, movieApi.Search(text, page));
+        return movieDB.movieListDao().getMoviesFromList(list, page);
+    }
+
+    /**
+     * Returns a list of movies from the call it's given, it will only
+     * fetch movies from the API if the movie is null,
+     * some information about the movie is missing,
+     * the movie info is older than a day or forceFetch is set to true
      * @param page       The page number of the trending list
-     * @param forceFetch Force fetching from the API?
+     * @param forceFetch Force data from the api?
      */
     private void getList(String list, int page, boolean forceFetch, Call<MovieList> call) {
         new Thread(() -> {
@@ -126,7 +142,6 @@ public class MovieRepository implements IMovieRepository {
     }
 
     /**
-     *
      * @param ids The array of IDs of movies to get
      * @return The movie list
      */
@@ -170,7 +185,7 @@ public class MovieRepository implements IMovieRepository {
     /**
      * Insert a movie into the DB
      * @param movieID The ID of the movie
-     * @param method The method to be used, (inserting or updating)
+     * @param method  The method to be used, (inserting or updating)
      */
     private void insertMovie(int movieID, int method) {
         Log.d("MOVIE", "Fetching the movie " + movieID);
@@ -212,7 +227,6 @@ public class MovieRepository implements IMovieRepository {
     }
 
     /**
-     *
      * @param movieID The movie ID
      * @return The list of actors from the movie
      */

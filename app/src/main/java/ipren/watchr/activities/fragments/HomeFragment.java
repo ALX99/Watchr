@@ -19,6 +19,7 @@ public class HomeFragment extends Fragment {
     View fragment;
     private String TAG = getClass().getName();
     private Activity activity;
+
     public HomeFragment() {
         // Required empty public constructor
     }

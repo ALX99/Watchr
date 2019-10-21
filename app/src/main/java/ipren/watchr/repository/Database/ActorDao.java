@@ -15,5 +15,5 @@ public interface ActorDao extends BaseDao<Actor> {
 
     @Query("DELETE FROM actors")
     void NUKE();
-    
+
 }

@@ -23,12 +23,18 @@ import ipren.watchr.activities.fragments.MovieListFragmentDirections;
 import ipren.watchr.activities.fragments.listeners.MovieClickListener;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.databinding.ItemMovieBinding;
+import ipren.watchr.repository.IUserDataRepository;
+import ipren.watchr.viewModels.ListViewModel;
 
 /**
  * Class for handling the creation and updating of movie cards in the recycler view
  */
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements MovieClickListener, Filterable {
 
+    // Singleton instance
+    private static MovieListAdapter instance;
+
+    private ListViewModel listViewModel;
     private List<Movie> movieList;
     private List<Movie> movieListFull;
 
@@ -74,10 +80,34 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     };
 
     /**
+     * Class for holding a movie view layout
+     */
+    class MovieViewHolder extends RecyclerView.ViewHolder {
+
+        public ItemMovieBinding itemView;
+
+        public MovieViewHolder(@NonNull ItemMovieBinding itemView) {
+            super(itemView.getRoot());
+            this.itemView = itemView;
+        }
+    }
+
+    /**
      * Creates a movie adapter with a list of movies
      */
-    public MovieListAdapter(List<Movie> movieList) {
-        this.movieList = movieList;
+    private MovieListAdapter(ListViewModel listViewModel) {
+        this.movieList = new ArrayList<>();
+        this.listViewModel = listViewModel;
+    }
+
+    /**
+     * @return Singleton instance
+     */
+    public static MovieListAdapter getInstance(ListViewModel listViewModel) {
+        if (instance == null) {
+            instance = new MovieListAdapter(listViewModel);
+        }
+        return instance;
     }
 
     /**
@@ -109,6 +139,25 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, int position) {
         holder.itemView.setMovie(movieList.get(position));
         holder.itemView.setListener(this);
+
+        // TODO: @johan Refactor and fix this (gives error)
+//        if (checkMovieInList(getMovieId(holder.itemView.getRoot()), IUserDataRepository.FAVORITES_LIST)) {
+//            changeButtonColor(holder.itemView.favoriteButton, R.color.colorAccent);
+//        } else {
+//            changeButtonColor(holder.itemView.favoriteButton, R.color.text);
+//        }
+//
+//        if (checkMovieInList(getMovieId(holder.itemView.getRoot()), IUserDataRepository.WATCH_LATER_LIST)) {
+//            changeButtonColor(holder.itemView.addButton, R.color.colorAccent);
+//        } else {
+//            changeButtonColor(holder.itemView.addButton, R.color.text);
+//        }
+//
+//        if (checkMovieInList(getMovieId(holder.itemView.getRoot()), IUserDataRepository.WATCHED_LIST)) {
+//            changeButtonColor(holder.itemView.watchedButton, R.color.colorAccent);
+//        } else {
+//            changeButtonColor(holder.itemView.watchedButton, R.color.text);
+//        }
     }
 
     /**
@@ -131,9 +180,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
         int id = getMovieId(parent);
         // TODO: @johan Fix multiple buttons being highlighted because ViewHolders is being reused
-        changeButtonColor((ImageButton) v, R.color.colorAccent);
-
-        Toast.makeText(v.getContext(), "Added id " + id + " to favorites", Toast.LENGTH_SHORT).show();
+        buttonHandler(v, id, "Favorites");
     }
 
     /**
@@ -143,10 +190,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void onWatchLaterClicked(View v) {
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
         int id = getMovieId(parent);
-
-        changeButtonColor((ImageButton) v, R.color.colorAccent);
-
-        Toast.makeText(v.getContext(), "Added id " + id + " to watch later", Toast.LENGTH_SHORT).show();
+        buttonHandler(v, id, "Watch_Later");
     }
 
     /**
@@ -156,10 +200,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void onWatchedClicked(View v) {
         ConstraintLayout parent = (ConstraintLayout) v.getParent();
         int id = getMovieId(parent);
-
-        changeButtonColor((ImageButton) v, R.color.colorAccent);
-
-        Toast.makeText(v.getContext(), "Added id " + id + " to watched", Toast.LENGTH_SHORT).show();
+        buttonHandler(v, id, "Watched");
     }
 
     /**
@@ -168,6 +209,27 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     private int getMovieId(View v) {
         String idString = ((TextView) v.findViewById(R.id.movieId)).getText().toString();
         return Integer.valueOf(idString);
+    }
+
+    /**
+     * Handles the updating of the buttons
+     */
+    private void buttonHandler(View v, int id, String listType) {
+        int status = listViewModel.updateMovieInList(id, listType);
+        if (status == 1) {
+            // Added movie to list
+            changeButtonColor((ImageButton) v, R.color.colorAccent);
+        } else if (status == -1) {
+            // Removed movie from list
+            changeButtonColor((ImageButton) v, R.color.text);
+        } else {
+            // Please log in
+            Toast.makeText(v.getContext(), "Please log in to use this feature", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean checkMovieInList(int id, String listType) {
+        return listViewModel.checkMovieInList(id, listType);
     }
 
     /**
@@ -192,18 +254,5 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @Override
     public Filter getFilter() {
         return filter;
-    }
-
-    /**
-     * Class for holding a movie view layout
-     */
-    class MovieViewHolder extends RecyclerView.ViewHolder {
-
-        public ItemMovieBinding itemView;
-
-        public MovieViewHolder(@NonNull ItemMovieBinding itemView) {
-            super(itemView.getRoot());
-            this.itemView = itemView;
-        }
     }
 }
