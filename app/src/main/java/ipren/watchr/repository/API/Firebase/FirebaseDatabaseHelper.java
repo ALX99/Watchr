@@ -2,7 +2,6 @@ package ipren.watchr.repository.API.Firebase;
 
 import android.net.Uri;
 import android.util.Log;
-import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

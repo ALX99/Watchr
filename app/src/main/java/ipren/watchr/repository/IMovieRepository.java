@@ -14,6 +14,8 @@ import ipren.watchr.dataHolders.Movie;
 public interface IMovieRepository {
     String TRENDING_LIST = "Trending";
     String DISCOVER_LIST = "Discover";
+    String BROWSE_LIST = "Browse";
+    String RECOMMENDED_LIST = "Recommended";
 
     /**
      * Gets a movie by its ID.
