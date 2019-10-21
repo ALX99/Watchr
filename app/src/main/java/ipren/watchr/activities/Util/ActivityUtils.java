@@ -1,6 +1,8 @@
 package ipren.watchr.activities.Util;
 
 import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,14 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.core.content.FileProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import ipren.watchr.BuildConfig;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.LoginFragment;
 
@@ -33,6 +43,35 @@ public class ActivityUtils {
         vibrator.vibrate(200);
         button.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake));
     }
+
+    public static Uri createTempPictureFile(Context context) {
+
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+
+        try {
+            File file = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",/* suffix */
+                    storageDir      /* directory */
+            );
+
+
+            Uri photoURI = FileProvider.getUriForFile(context,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    file);
+
+            return photoURI;
+
+        } catch (IOException e) {
+            return null;
+        }
+
+    }
+
 
     public static void transitionBetweenLayouts(ViewGroup from, ViewGroup to, Direction dir, Context context) {
         switch (dir) {
