@@ -61,6 +61,7 @@ public class ListViewModel {
     private void setPersonalList(String listType) {
         if (user.getValue() == null) {
             loggedInStatus.setValue(false);
+            emptyListStatus.setValue(false);
         } else {
             movieIds = userRepository.getMovieList(listType, user.getValue().getUID());
             if (movieIds.getValue() == null || movieIds.getValue().length == 0) {
@@ -80,8 +81,11 @@ public class ListViewModel {
     public void refresh() {
         switch (listType) {
             case IMovieRepository.BROWSE_LIST:
-            case IMovieRepository.RECOMMENDED_LIST:
                 movies = movieRepository.getMovieList(MovieRepository.TRENDING_LIST, 1, true);
+                break;
+            case IMovieRepository.RECOMMENDED_LIST:
+                // TODO: @johan Make fetching from discover list work
+                movies = movieRepository.getDiscoverList(new int[]{27}, 1, true);
                 break;
             case IUserDataRepository.FAVORITES_LIST:
             case IUserDataRepository.WATCH_LATER_LIST:
@@ -119,6 +123,11 @@ public class ListViewModel {
 
     public MutableLiveData<Boolean> getLoggedInStatus() {
         return loggedInStatus;
+    }
+
+    public LiveData<List<Movie>> getMoviesFromQuery(String query) {
+        // TODO: @johan Get query from correct method when it's created
+        return movieRepository.getMovieList(query, 1, true);
     }
 
     /**

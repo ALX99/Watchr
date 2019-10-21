@@ -1,7 +1,6 @@
 package ipren.watchr.activities.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,13 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,6 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
+import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.viewModels.ListViewModel;
 
 public class MovieListFragment extends Fragment {
@@ -71,7 +74,8 @@ public class MovieListFragment extends Fragment {
 
         // Get view model and set correct data
         listViewModel = ListViewModel.getInstance(this);
-        listViewModel.setListType(this.getArguments().getString("listType"));
+        String listType = this.getArguments().getString("listType");
+        listViewModel.setListType(listType);
         listViewModel.refresh();
 
         // Set list layout and adapter
@@ -81,7 +85,7 @@ public class MovieListFragment extends Fragment {
 
         // Connect toolbar search and filter
         connectFilterButton();
-        connectSearchView();
+        connectSearchView(listType);
 
         observeViewModel();
 
@@ -153,7 +157,7 @@ public class MovieListFragment extends Fragment {
     /**
      * Find and setup the search bar
      */
-    private void connectSearchView() {
+    private void connectSearchView(String listType) {
         // Get the search view from toolbar and show
         SearchView searchView = getActivity().findViewById(R.id.toolbar_search);
         searchView.setVisibility(View.VISIBLE);
@@ -165,19 +169,42 @@ public class MovieListFragment extends Fragment {
         // Get rid of magnifying glass on keyboard.
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
-        // Filter on input
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+        if (listType.equals(IMovieRepository.BROWSE_LIST)) {
+            // If browse, update list directly from API data
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // Get live data from query, observe it to make it async and then stop observing it
+                    LiveData<List<Movie>> moviesLiveData = listViewModel.getMoviesFromQuery(query);
+                    moviesLiveData.observe(getViewLifecycleOwner(), movies -> {
+                        if (movies != null) {
+                            movieListAdapter.updateMovieList(movies);
+                        }
+                        moviesLiveData.removeObservers(getViewLifecycleOwner());
+                    });
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                movieListAdapter.getFilter().filter(newText);
-                return false;
-            }
-        });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+        } else {
+            // Filter current list
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    movieListAdapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
+        }
     }
 
     /**
@@ -189,7 +216,7 @@ public class MovieListFragment extends Fragment {
         filterBtn.setVisibility(View.VISIBLE);
 
         filterBtn.setOnClickListener(v -> {
-            Log.d("TEST", "Clicked the filter button");
+            Toast.makeText(this.getContext(), "Clicked the filter button", Toast.LENGTH_SHORT).show();
         });
     }
 }

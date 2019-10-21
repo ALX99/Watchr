@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         // Set up navigation
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
-        NavigationUI.setupWithNavController(bottomNav, navController);
+        connectBottomNav(bottomNav);
 
         // Get model
         mainViewModel = getViewModel();
@@ -49,6 +49,29 @@ public class MainActivity extends AppCompatActivity {
         // To remove focus from the search view at start
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.requestFocus();
+    }
+
+    private void connectBottomNav(BottomNavigationView bottomNav) {
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.MovieListFragment:
+                    navController.navigate(R.id.action_global_MovieListFragment);
+                    return true;
+                case R.id.recommendedFragment:
+                    navController.navigate(R.id.action_global_recommendedFragment);
+                    return true;
+                case R.id.watchLaterFragment:
+                    navController.navigate(R.id.action_global_watchLaterFragment);
+                    return true;
+                case R.id.favoritesFragment:
+                    navController.navigate(R.id.action_global_favoritesFragment);
+                    return true;
+                case R.id.watchedFragment:
+                    navController.navigate(R.id.action_global_watchedFragment);
+                    return true;
+            }
+            return false;
+        });
     }
 
     //This method can be overridden and allows us to inject a ViewModel for testing

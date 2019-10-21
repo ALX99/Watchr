@@ -143,4 +143,30 @@
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>
+    <action
+        android:id="@+id/action_global_MovieListFragment"
+        app:destination="@id/MovieListFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true" />
+    <action
+        android:id="@+id/action_global_recommendedFragment"
+        app:destination="@id/recommendedFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true" />
+    <action
+        android:id="@+id/action_global_watchLaterFragment"
+        app:destination="@id/watchLaterFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true"
+        app:popUpToInclusive="false" />
+    <action
+        android:id="@+id/action_global_watchedFragment"
+        app:destination="@id/watchedFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true" />
+    <action
+        android:id="@+id/action_global_favoritesFragment"
+        app:destination="@id/favoritesFragment"
+        app:exitAnim="@anim/fade_out"
+        app:launchSingleTop="true" />
 </navigation>

@@ -106,9 +106,6 @@ public class MovieDetails extends Fragment {
     ProgressBar ourRating;
     @BindView(R.id.profile_picture)
     CircleImageView profilePicture;
-    private int movieID;
-    private IMovieViewModel viewModel;
-    private User user;
 
     public MovieDetails() {
         // Required empty public constructor

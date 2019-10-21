@@ -271,12 +271,6 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text) {
-        button.setEnabled(!on);
-        button.setText(text);
-        spinner.setVisibility(on ? View.VISIBLE : View.INVISIBLE);
-    }
-
     private void setTextAndColor(TextView view, String text, int color) {
         view.setText(text);
         view.setTextColor(color);
