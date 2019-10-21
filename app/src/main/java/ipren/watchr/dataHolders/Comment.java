@@ -4,7 +4,7 @@ import android.net.Uri;
 
 import com.google.firebase.firestore.DocumentId;
 
-public class FireComment {
+public class Comment {
     @DocumentId
     private String uID;
     private String movie_id;
@@ -12,7 +12,7 @@ public class FireComment {
     private String text;
 
     //This is needed to enable firebase to initiate the object
-    public FireComment() { }
+    public Comment() { }
 
 
     public String getMovie_id() {
@@ -31,7 +31,7 @@ public class FireComment {
         return uID;
     }
 
-    public FireComment(String movie_id, String user_id, String text, String uID){
+    public Comment(String movie_id, String user_id, String text, String uID){
         this.movie_id = movie_id;
         this.user_id = user_id;
         this.text = text;

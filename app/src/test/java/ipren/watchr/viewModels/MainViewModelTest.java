@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import ipren.watchr.MockClasses.MockMainRepository;
+import ipren.watchr.MockClasses.MockUserDataRepository;
 import ipren.watchr.dataHolders.User;
 
 import static org.junit.Assert.*;
@@ -22,12 +22,12 @@ import static org.junit.Assert.*;
 @Config(sdk = Build.VERSION_CODES.O_MR1)
 public class MainViewModelTest {
     private MainViewModel mainViewModel;
-    private MockMainRepository mockMainRepository;
+    private MockUserDataRepository mockUserDataRepository;
     private final User initialUser = new User("Fred", "Fred@test.com", null, null, false);
     @Before
     public void setUp(){
-        mockMainRepository = new MockMainRepository(initialUser);
-        mainViewModel = new MainViewModel(mockMainRepository);
+        mockUserDataRepository = new MockUserDataRepository(initialUser);
+        mainViewModel = new MainViewModel(mockUserDataRepository);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class MainViewModelTest {
         LiveData<User> liveUser = mainViewModel.getUser();
         assertNotEquals(liveUser.getValue(), testUser);
         assertNotEquals(mainViewModel.getUser().getValue(), liveUser);
-        mockMainRepository.setUser(testUser);
+        mockUserDataRepository.setUser(testUser);
         assertEquals(liveUser.getValue(), testUser);
         assertEquals(mainViewModel.getUser().getValue(), testUser);
     }

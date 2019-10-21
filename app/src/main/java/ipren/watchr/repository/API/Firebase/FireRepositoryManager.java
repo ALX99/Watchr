@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
-import ipren.watchr.dataHolders.FireComment;
-import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
@@ -16,16 +16,16 @@ public class FireRepositoryManager implements IUserDataRepository {
 
     private static IUserDataRepository fireApiManager;
 
-    private FirebaseAuthAPI firebaseAuthAPI;
+    private FirebaseAuthHelper firebaseAuthHelper;
 
     private FirebaseDatabaseHelper firestoreDatabase;
 
     private LiveData<User> currentLoggedUser;
 
     private FireRepositoryManager() {
-        firebaseAuthAPI = new FirebaseAuthAPI();
+        firebaseAuthHelper = new FirebaseAuthHelper();
         firestoreDatabase = new FirebaseDatabaseHelper();
-        currentLoggedUser = firebaseAuthAPI.getUser();
+        currentLoggedUser = firebaseAuthHelper.getUser();
 
         currentLoggedUser.observeForever(user -> {
             if (user == null)
@@ -50,42 +50,42 @@ public class FireRepositoryManager implements IUserDataRepository {
 
     @Override
     public void resetPassword(String email ,OnCompleteListener callback) {
-        firebaseAuthAPI.resetPassword(email , callback);
+        firebaseAuthHelper.resetPassword(email , callback);
     }
 
     @Override
     public void registerUser(String email, String password, OnCompleteListener callback) {
-        firebaseAuthAPI.registerUser(email, password, callback);
+        firebaseAuthHelper.registerUser(email, password, callback);
     }
 
     @Override
     public void signOutUser() {
-        firebaseAuthAPI.signOut();
+        firebaseAuthHelper.signOut();
     }
 
     @Override
     public void loginUser(String email, String password, OnCompleteListener callback) {
-        firebaseAuthAPI.loginUser(email, password, callback);
+        firebaseAuthHelper.loginUser(email, password, callback);
     }
 
     @Override
     public void refreshUsr() {
-        firebaseAuthAPI.refreshUsr();
+        firebaseAuthHelper.refreshUsr();
     }
 
     @Override
     public void reSendVerificationEmail(OnCompleteListener callback) {
-        firebaseAuthAPI.resendVerificationEmail(callback);
+        firebaseAuthHelper.resendVerificationEmail(callback);
     }
 
     @Override
     public void updateProfile(String userName, Uri pictureUri, OnCompleteListener callback) {
-        firebaseAuthAPI.updateProfile(userName, pictureUri, callback);
+        firebaseAuthHelper.updateProfile(userName, pictureUri, callback);
     }
 
     @Override
     public void changePassword(String oldPassword, String newPassword, OnCompleteListener callback) {
-            firebaseAuthAPI.changePassword(oldPassword,newPassword, callback);
+            firebaseAuthHelper.changePassword(oldPassword,newPassword, callback);
     }
 
     //Firestore
@@ -96,7 +96,7 @@ public class FireRepositoryManager implements IUserDataRepository {
     }
 
     @Override
-    public LiveData<FireComment[]> getComments(String id, int searchMethod) {
+    public LiveData<Comment[]> getComments(String id, int searchMethod) {
         if (searchMethod == IUserDataRepository.SEARCH_METHOD_MOVIE_ID)
             return firestoreDatabase.getCommentByMovieID(id);
         else
@@ -104,7 +104,7 @@ public class FireRepositoryManager implements IUserDataRepository {
     }
 
     @Override
-    public LiveData<FireRating[]> getRatings(String id, int searchMethod) {
+    public LiveData<Rating[]> getRatings(String id, int searchMethod) {
         if (searchMethod == IUserDataRepository.SEARCH_METHOD_MOVIE_ID)
             return firestoreDatabase.getRatingByMovieID(id);
         else

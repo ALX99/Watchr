@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
-import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.viewModels.AccountViewModel;
 
 import static android.content.Context.VIBRATOR_SERVICE;
@@ -138,11 +138,11 @@ public class AccountFragment extends Fragment {
         }
     }
 
-    private Double calculateAverageRating(FireRating[] list) {
+    private Double calculateAverageRating(Rating[] list) {
         double total = 0;
         if (list == null)
             return null;
-        for (FireRating rating : list) {
+        for (Rating rating : list) {
             total += rating.getScore();
         }
         return (total / list.length);

@@ -9,8 +9,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 import ipren.watchr.dataHolders.Actor;
-import ipren.watchr.dataHolders.FireComment;
-import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.PublicProfile;
@@ -25,7 +25,7 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
     private IUserDataRepository userDataRepository;
     private LiveData<Movie> movie;
     private LiveData<User> user;
-    private LiveData<FireComment[]> comments;
+    private LiveData<Comment[]> comments;
     private LiveData<List<Actor>> actors;
 
     public MovieViewModel(@NonNull Application application) {
@@ -53,7 +53,7 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
     }
 
     @Override
-    public LiveData<FireRating[]> getRatings() {
+    public LiveData<Rating[]> getRatings() {
         return userDataRepository.getRatings(movieID, IUserDataRepository.SEARCH_METHOD_MOVIE_ID);
     }
 
@@ -86,7 +86,7 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
     }
 
     @Override
-    public LiveData<FireComment[]> getComments() {
+    public LiveData<Comment[]> getComments() {
         return comments;
     }
 

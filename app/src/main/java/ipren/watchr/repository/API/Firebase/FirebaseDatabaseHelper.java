@@ -12,7 +12,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -23,11 +22,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import ipren.watchr.dataHolders.CurrentUser;
-import ipren.watchr.dataHolders.FireComment;
-import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 
@@ -56,11 +53,11 @@ public class FirebaseDatabaseHelper {
 
     FirebaseFirestore fireStore;
 
-    private HashMap<String, MutableLiveData<FireComment[]>> commentsByMovie_id = new HashMap<>();
-    private HashMap<String, MutableLiveData<FireComment[]>> commentsByUser_id = new HashMap<>();
+    private HashMap<String, MutableLiveData<Comment[]>> commentsByMovie_id = new HashMap<>();
+    private HashMap<String, MutableLiveData<Comment[]>> commentsByUser_id = new HashMap<>();
 
-    private HashMap<String, MutableLiveData<FireRating[]>> ratingByMovie_id = new HashMap<>();
-    private HashMap<String, MutableLiveData<FireRating[]>> ratingByUser_id = new HashMap<>();
+    private HashMap<String, MutableLiveData<Rating[]>> ratingByMovie_id = new HashMap<>();
+    private HashMap<String, MutableLiveData<Rating[]>> ratingByUser_id = new HashMap<>();
 
     private HashMap<String, MutableLiveData<PublicProfile>> publicProfiles = new HashMap<>();
     //user_id -> (movie_list , LiveData<movie_id[]>)
@@ -192,31 +189,31 @@ public class FirebaseDatabaseHelper {
 
     // that update rather than replace.
 
-    LiveData<FireComment[]> getCommentByMovieID(String movie_id) {
+    LiveData<Comment[]> getCommentByMovieID(String movie_id) {
         if (!commentsByMovie_id.containsKey(movie_id))
-            commentsByMovie_id.put(movie_id, listenToResources(COMMENT_PATH, MOVIE_ID_FIELD, movie_id, FireComment.class));
+            commentsByMovie_id.put(movie_id, listenToResources(COMMENT_PATH, MOVIE_ID_FIELD, movie_id, Comment.class));
 
         return commentsByMovie_id.get(movie_id);
     }
 
-    LiveData<FireComment[]> getCommentsByUserID(String user_id) {
+    LiveData<Comment[]> getCommentsByUserID(String user_id) {
         if (!commentsByUser_id.containsKey(user_id))
-            commentsByUser_id.put(user_id, listenToResources(COMMENT_PATH, USER_ID_FIELD, user_id, FireComment.class));
+            commentsByUser_id.put(user_id, listenToResources(COMMENT_PATH, USER_ID_FIELD, user_id, Comment.class));
 
         return commentsByUser_id.get(user_id);
     }
 
-    LiveData<FireRating[]> getRatingByUserID(String user_id) {
+    LiveData<Rating[]> getRatingByUserID(String user_id) {
         if (!ratingByUser_id.containsKey(user_id))
-            ratingByUser_id.put(user_id, listenToResources(RATING_PATH, USER_ID_FIELD, user_id, FireRating.class));
+            ratingByUser_id.put(user_id, listenToResources(RATING_PATH, USER_ID_FIELD, user_id, Rating.class));
 
         return ratingByUser_id.get(user_id);
     }
 
 
-    LiveData<FireRating[]> getRatingByMovieID(String movie_id) {
+    LiveData<Rating[]> getRatingByMovieID(String movie_id) {
         if (!ratingByMovie_id.containsKey(movie_id))
-            ratingByMovie_id.put(movie_id, listenToResources(RATING_PATH, MOVIE_ID_FIELD, movie_id, FireRating.class));
+            ratingByMovie_id.put(movie_id, listenToResources(RATING_PATH, MOVIE_ID_FIELD, movie_id, Rating.class));
 
         return ratingByMovie_id.get(movie_id);
     }

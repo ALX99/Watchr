@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.Task;
 
-import ipren.watchr.dataHolders.AuthenticationResponse;
+import ipren.watchr.dataHolders.RequestResponse;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 import static ipren.watchr.viewModels.util.ViewModelSupportUtils.*;
@@ -30,9 +30,9 @@ public class AccountSettingsViewModel extends ViewModel {
 
     private IUserDataRepository userDataRepository;
     public final LiveData<User> liveUser;
-    public final LiveData<AuthenticationResponse> updateProfileResponse = new MutableLiveData<>();
-    public final LiveData<AuthenticationResponse> sendVerEmailResponse = new MutableLiveData<>();
-    public final LiveData<AuthenticationResponse> changePasswordResponse = new MutableLiveData<>();
+    public final LiveData<RequestResponse> updateProfileResponse = new MutableLiveData<>();
+    public final LiveData<RequestResponse> sendVerEmailResponse = new MutableLiveData<>();
+    public final LiveData<RequestResponse> changePasswordResponse = new MutableLiveData<>();
 
     public final LiveData<String> oldPasswordErrorTxt = new MutableLiveData<>();
     public final LiveData<String> newPasswordErrorTxt = new MutableLiveData<>();
@@ -50,15 +50,15 @@ public class AccountSettingsViewModel extends ViewModel {
        this.liveUser = userDataRepository.getUserLiveData();
     }
 
-    public LiveData<AuthenticationResponse> getUpdateProfileResponse(){
+    public LiveData<RequestResponse> getUpdateProfileResponse(){
        return updateProfileResponse;
     }
 
-    public LiveData<AuthenticationResponse> getVerificationResponse(){
+    public LiveData<RequestResponse> getVerificationResponse(){
        return  sendVerEmailResponse;
     }
 
-    public LiveData<AuthenticationResponse> getChangePasswordResponse(){
+    public LiveData<RequestResponse> getChangePasswordResponse(){
        return changePasswordResponse;
     }
 
@@ -111,20 +111,20 @@ public class AccountSettingsViewModel extends ViewModel {
     private void refreshPasswordChangeResponse(Task task){
        postValue(changingPassword, false);
         Exception exception = task.getException();
-        postValue(changePasswordResponse, new AuthenticationResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
+        postValue(changePasswordResponse, new RequestResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
     }
 
     private void refreshUpdateUserProfile(Task task){
        postValue(savingPublicProfile, false);
         Exception exception = task.getException();
-        postValue(updateProfileResponse ,new AuthenticationResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
+        postValue(updateProfileResponse ,new RequestResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
     }
     private void refreshEmailVerificationResponse(Task task){
         if(task == null){
-            postValue(sendVerEmailResponse, new AuthenticationResponse(false, "Email Already verified"));
+            postValue(sendVerEmailResponse, new RequestResponse(false, "Email Already verified"));
         }else{
             Exception exc = task.getException();
-            postValue(sendVerEmailResponse,new AuthenticationResponse(task.isSuccessful(),exc !=null ? exc.getMessage() : "" ));
+            postValue(sendVerEmailResponse,new RequestResponse(task.isSuccessful(),exc !=null ? exc.getMessage() : "" ));
         }
     }
 
