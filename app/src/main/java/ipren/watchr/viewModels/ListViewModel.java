@@ -32,6 +32,9 @@ public class ListViewModel {
     // Live data from user repo
     private LiveData<User> user;
     private LiveData<String[]> movieIds;
+    private LiveData<String[]> favoritesIds;
+    private LiveData<String[]> watchLaterIds;
+    private LiveData<String[]> watchedIds;
 
     // Live data from movie repo
     private LiveData<List<Movie>> movies;
@@ -79,6 +82,12 @@ public class ListViewModel {
      * Where the magic happens, sets up the correct movie list based on type and user status
      */
     public void refresh() {
+        if (user.getValue() != null) {
+            favoritesIds = userRepository.getMovieList(IUserDataRepository.FAVORITES_LIST, user.getValue().getUID());
+            watchLaterIds = userRepository.getMovieList(IUserDataRepository.WATCH_LATER_LIST, user.getValue().getUID());
+            watchedIds = userRepository.getMovieList(IUserDataRepository.WATCHED_LIST, user.getValue().getUID());
+        }
+
         switch (listType) {
             case IMovieRepository.BROWSE_LIST:
                 movies = movieRepository.getMovieList(MovieRepository.TRENDING_LIST, 1, true);
@@ -130,6 +139,15 @@ public class ListViewModel {
         return movieRepository.getMovieList(query, 1, true);
     }
 
+    public boolean checkMovieInList(int movieId, String listType) {
+        switch (listType) {
+            case IUserDataRepository.FAVORITES_LIST: return Arrays.asList(favoritesIds.getValue()).contains(String.valueOf(movieId));
+            case IUserDataRepository.WATCH_LATER_LIST: return Arrays.asList(watchLaterIds.getValue()).contains(String.valueOf(movieId));
+            case IUserDataRepository.WATCHED_LIST: return Arrays.asList(watchedIds.getValue()).contains(String.valueOf(movieId));
+            default: return false;
+        }
+    }
+
     /**
      * Returns 1 if user is logged in and movie not in list
      * Returns 0 if user is not logged in
@@ -137,8 +155,13 @@ public class ListViewModel {
      */
     public int updateMovieInList(int movieId, String listType) {
         if (user.getValue() != null) {
-            LiveData<String[]> ids = userRepository.getMovieList(listType, user.getValue().getUID());
-            if (Arrays.asList(ids.getValue()).contains(movieId)) {
+            LiveData<String[]> ids = null;
+            switch (listType) {
+                case IUserDataRepository.FAVORITES_LIST: ids = favoritesIds;
+                case IUserDataRepository.WATCH_LATER_LIST: ids = watchLaterIds;
+                case IUserDataRepository.WATCHED_LIST: ids = watchedIds;
+            }
+            if (Arrays.asList(ids.getValue()).contains(String.valueOf(movieId))) {
                 userRepository.removeMovieFromList(listType, "" + movieId, user.getValue().getUID(), v -> Log.d("TEST", "Removed movie with id " + movieId + " to " + listType));
                 return -1;
             } else {

@@ -23,6 +23,7 @@ import ipren.watchr.activities.fragments.MovieListFragmentDirections;
 import ipren.watchr.activities.fragments.listeners.MovieClickListener;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.databinding.ItemMovieBinding;
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.ListViewModel;
 
 /**
@@ -138,6 +139,25 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, int position) {
         holder.itemView.setMovie(movieList.get(position));
         holder.itemView.setListener(this);
+
+        // TODO: @johan Refactor and fix this (gives error)
+//        if (checkMovieInList(getMovieId(holder.itemView.getRoot()), IUserDataRepository.FAVORITES_LIST)) {
+//            changeButtonColor(holder.itemView.favoriteButton, R.color.colorAccent);
+//        } else {
+//            changeButtonColor(holder.itemView.favoriteButton, R.color.text);
+//        }
+//
+//        if (checkMovieInList(getMovieId(holder.itemView.getRoot()), IUserDataRepository.WATCH_LATER_LIST)) {
+//            changeButtonColor(holder.itemView.addButton, R.color.colorAccent);
+//        } else {
+//            changeButtonColor(holder.itemView.addButton, R.color.text);
+//        }
+//
+//        if (checkMovieInList(getMovieId(holder.itemView.getRoot()), IUserDataRepository.WATCHED_LIST)) {
+//            changeButtonColor(holder.itemView.watchedButton, R.color.colorAccent);
+//        } else {
+//            changeButtonColor(holder.itemView.watchedButton, R.color.text);
+//        }
     }
 
     /**
@@ -206,6 +226,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             // Please log in
             Toast.makeText(v.getContext(), "Please log in to use this feature", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean checkMovieInList(int id, String listType) {
+        return listViewModel.checkMovieInList(id, listType);
     }
 
     /**
