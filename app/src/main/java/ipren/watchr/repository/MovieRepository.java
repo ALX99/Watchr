@@ -38,6 +38,10 @@ public class MovieRepository implements IMovieRepository {
         movieDB = MovieDB.getInstance(context);
         movieApi = new MovieApi();
     }
+    public MovieRepository(MovieDB movieDB) {
+        this.movieDB = movieDB;
+        movieApi = new MovieApi();
+    }
 
 
     public LiveData<List<Genre>> getGenresFromMovie(int id) {
@@ -162,13 +166,14 @@ public class MovieRepository implements IMovieRepository {
     public LiveData<Movie> getMovieByID(int movieID) {
         new Thread(() -> {
             Movie m = movieDB.movieDao().getMovieByIDNonLiveObject(movieID);
-            if (m == null)
+            if (m == null) {
+                Log.d("MOVIE", "The movie " + movieID + " is null");
                 insertMovie(movieID, INSERT);
                 // If this condition is true, it means that the movie has been inserted from
                 // the gathering of a movieList and does not contain the full information
                 // therefore has to be updated
-            else if (m != null && (m.getUpdateDate() == null || m.getActorList() == null))
-                insertMovie(movieID, UPDATE);
+            }else if (m != null && (m.getUpdateDate() == null)){
+            insertMovie(movieID, UPDATE);}
             else {
                 long diff = new Date().getTime() - m.getUpdateDate().getTime();
                 if (TimeUnit.MILLISECONDS.toDays(diff) > 7) {
@@ -193,8 +198,10 @@ public class MovieRepository implements IMovieRepository {
         movieCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
-                if (!response.isSuccessful())
+                if (!response.isSuccessful()){
+                    Log.d("MOVIE", "FAIL");
                     return;
+                }
                 Movie movie = response.body();
                 // Insert stuff to db :)
                 new Thread(() -> {
