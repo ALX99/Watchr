@@ -42,9 +42,9 @@ public class LiveDataTestUtil {
         };
         liveData.observeForever(observer);
         if (timeoutSet)
-            latch.await(3, TimeUnit.SECONDS);
-        else
             latch.await(timeout, TimeUnit.SECONDS);
+        else
+            latch.await(3, TimeUnit.SECONDS);
         return (T) data[0];
     }
 }

@@ -190,23 +190,25 @@ public class MovieDetails extends Fragment {
                         if (user != null && f.getUser_id().equals(user.getUID()))
                             rating.setRating((float) (f.getScore() / 2));
                     }
+                }
+            });
+
+            //
+            viewModel.getRatings().observe(getViewLifecycleOwner(), fireRatings -> {
+                double avg = 0;
+                double num = 0;
+                if (fireRatings != null) {
+                    for (Rating f : fireRatings)
+                        avg += f.getScore();
+                    if (fireRatings.length > 0)
+                        num = avg / fireRatings.length;
+                    ourRatingText.setText(new DecimalFormat("#.#").format(num));
+                    ourRating.setProgress((int) Math.round(num));
+                }
             });
         });
-
-        //
-        viewModel.getRatings().observe(getViewLifecycleOwner(), fireRatings -> {
-            double avg = 0;
-            double num = 0;
-            if (fireRatings != null) {
-                for (Rating f : fireRatings)
-                    avg += f.getScore();
-                if (fireRatings.length > 0)
-                    num = avg / fireRatings.length;
-                ourRatingText.setText(new DecimalFormat("#.#").format(num));
-                ourRating.setProgress((int) Math.round(num));
-            }
-        });
     }
+
 
     /**
      * Starts observing the user object and sets stuff according according to the user object

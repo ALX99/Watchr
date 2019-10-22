@@ -9,14 +9,15 @@ import java.util.List;
 
 public interface BaseDao<T> {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(T... items);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<T> items);
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(T... items);
+
+    void update(List<T> items);
 
     @Delete
     void delete(T... items);

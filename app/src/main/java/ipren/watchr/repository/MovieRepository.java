@@ -126,16 +126,14 @@ public class MovieRepository implements IMovieRepository {
                 if (!response.isSuccessful())
                     return;
                 Date d = new Date();
+                // Insert all the movies
                 List<Movie> movies = response.body().getMovies();
+                Log.d("MOVIE", "Fetching done, inserting " + movies.size() + " movies");
                 new Thread(() -> {
-                    // We don't update the movie entries here
-                    for (Movie m : movies) {
-                        // If the movie doesn't exist in the DB already we have to insert it
-                        if (movieDB.movieDao().getMovieByIDNonLiveObject(m.getId()) == null)
-                            movieDB.movieDao().insert(m);
-                        // Associate the movie with the movieList
+                    movieDB.movieDao().insert(movies);
+                    for (Movie m : movies)
                         movieDB.movieListDao().insert(new MovieList(m.id, list, page, d));
-                    }
+
                 }).start();
             }
             @Override

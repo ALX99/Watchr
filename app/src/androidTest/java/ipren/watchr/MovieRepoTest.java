@@ -3,7 +3,6 @@ package ipren.watchr;
 import android.app.Application;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 
@@ -32,6 +31,7 @@ import ipren.watchr.repository.MovieRepository;
 public class MovieRepoTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+    private static int API_TIMEOUT = 3;
     private Movie m = new Movie(3, "testMovie");
 
     private MovieDao movieDao;
@@ -64,7 +64,7 @@ public class MovieRepoTest {
     public void getActorsTest() throws Exception {
         // Insert new actors
         ActorDao actorDao = actorDao = db.actorDao();
-        Actor a = new Actor("1", m.id, "Chris Pratt", "Joker", 2, "pictureLink");
+        Actor a = new Actor("1", m.id, "Chris Pratt", "Joker", 1, "pictureLink");
         Actor b = new Actor("2", m.id, "Chris Pratt", "Joker", 2, "pictureLink");
         actorDao.insert(a);
         actorDao.insert(b);
@@ -89,20 +89,22 @@ public class MovieRepoTest {
     }
     @Test
     public void getTrendingAPIList() throws Exception{
-        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST,1,true),3);
+        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST, 1, true), API_TIMEOUT);
         // The list of movies returned from a query in the API is always 20
         Assert.assertEquals(20,movies.size());
     }
     @Test
     public void getTrendingDB() throws Exception{
-        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST,1,true),3);
+        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST, 1, true), API_TIMEOUT);
         // The list of movies returned from a query in the API is always 20
         Assert.assertEquals(20,movies.size());
     }
     @Test
     public void searchTest()  throws Exception{
-        List<Movie> movies = LiveDataTestUtil.getValue(repo.Search("spiderman",1,false),3);
+        List<Movie> movies = LiveDataTestUtil.getValue(repo.Search("spiderman", 1, true), API_TIMEOUT);
         Assert.assertEquals(20,movies.size());
+        Assert.assertTrue(!movies.get(0).title.isEmpty());
+
     }
 
 
