@@ -38,17 +38,22 @@ public abstract class MovieDB extends RoomDatabase {
     };
 
     // Singleton
-    public static synchronized MovieDB getInstance(Context context) {
-        if (INSTANCE != null)
-            return INSTANCE;
+    public static synchronized MovieDB getInstance() {
+        return INSTANCE;
+    }
 
+    // Room requires a context to associate the DB with
+    // Easier to init it like this so we don't have to
+    // pass around the context all the time
+    public static synchronized void initDB(Context context) {
+        // Do nothing if instance already set
+        if (INSTANCE != null)
+            return;
         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                 MovieDB.class, DB_NAME)
                 .fallbackToDestructiveMigration()
                 .addCallback(dbCallback)
                 .build();
-        return INSTANCE;
-
     }
 
     public abstract ActorDao actorDao();

@@ -83,5 +83,9 @@ public interface IMovieRepository {
      */
     LiveData<List<Movie>> getDiscoverList(int[] genres, int page, boolean forceFetch);
 
+    // Singleton method to get instance
+    static IMovieRepository getInstance() {
+        return MovieRepository.getInstance();
+    }
 }
 

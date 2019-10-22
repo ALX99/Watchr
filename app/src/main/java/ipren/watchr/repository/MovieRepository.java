@@ -1,6 +1,5 @@
 package ipren.watchr.repository;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -26,23 +25,30 @@ import retrofit2.Response;
 public class MovieRepository implements IMovieRepository {
     private static final int INSERT = 1;
     private static final int UPDATE = 2;
-    private MovieDB movieDB;
-    private IMovieApi movieApi;
+    private static MovieDB movieDB;
+    private static IMovieApi movieApi;
+    private static IMovieRepository INSTANCE;
 
-    /**
-     * Instantiates a new Movie repository.
-     *
-     * @param context the context
-     */
-    public MovieRepository(Context context) {
-        movieDB = MovieDB.getInstance(context);
-        movieApi = new MovieApi();
+    public MovieRepository() {
+
     }
+
+    // Used with junit tests
     public MovieRepository(MovieDB movieDB) {
         this.movieDB = movieDB;
         movieApi = new MovieApi();
     }
 
+    // Singleton
+    public static IMovieRepository getInstance() {
+        if (INSTANCE != null)
+            return INSTANCE;
+
+        INSTANCE = new MovieRepository();
+        movieDB = MovieDB.getInstance();
+        movieApi = new MovieApi();
+        return INSTANCE;
+    }
 
     public LiveData<List<Genre>> getGenresFromMovie(int id) {
         return movieDB.movieGenreJoinDao().getGenresFromMovie(id);

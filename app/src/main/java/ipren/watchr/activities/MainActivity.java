@@ -14,7 +14,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -22,6 +21,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ipren.watchr.R;
+import ipren.watchr.repository.Database.MovieDB;
 import ipren.watchr.viewModels.MainViewModel;
 import ipren.watchr.viewModels.MainViewModelInterface;
 
@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // init DB
+        MovieDB.initDB(getApplicationContext());
+
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
 

@@ -49,7 +49,7 @@ public class ListViewModel {
 
     private ListViewModel(Fragment fragment) {
         userRepository = IUserDataRepository.getInstance();
-        movieRepository = new MovieRepository(fragment.getContext().getApplicationContext());
+        movieRepository = IMovieRepository.getInstance();
         user = userRepository.getUserLiveData();
 
         loadingStatus = new MutableLiveData<>();
