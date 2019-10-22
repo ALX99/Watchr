@@ -216,11 +216,11 @@ public class AccountSettingsFragment extends Fragment {
 
 
 
-        oldPasswordInput.addTextChangedListener(new TextForwarder(oldPasswordInput)); // These three methods allows the viewmodel to receive the currentText of respective fields
+        oldPasswordInput.addTextChangedListener(new TextForwarder(oldPasswordInput)); // These three methods allows the ViewModel to receive the current Text of respective fields
         newPasswordInput.addTextChangedListener(new TextForwarder(newPasswordInput)); // settings error messages if need be.
         reTypedPasswordInput.addTextChangedListener(new TextForwarder(reTypedPasswordInput)); //
 
-        settingsViewModel.oldPasswordErrorTxt.observe(this, txt -> oldPasswordInput.setError(txt));// This method observes an errorTxt in the viewmodel corresponding to each input
+        settingsViewModel.oldPasswordErrorTxt.observe(this, txt -> oldPasswordInput.setError(txt));// This method observes an errorTxt in the ViewModel corresponding to each input field
         settingsViewModel.newPasswordErrorTxt.observe(this, txt -> newPasswordInput.setError(txt)); // which is triggered when it receives a badly formatted text from respective inputField
         settingsViewModel.reTypedErrorTxt.observe(this, txt -> reTypedPasswordInput.setError(txt));
 
