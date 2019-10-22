@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.Task;
 
-import ipren.watchr.dataHolders.AuthenticationResponse;
+import ipren.watchr.dataHolders.RequestResponse;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.util.LoginErrorParser;
@@ -19,9 +19,9 @@ import static ipren.watchr.viewModels.util.ViewModelSupportUtils.*;
 public class LoginViewModel extends ViewModel {
 
     public final IUserDataRepository userDataRepository;
-    public final LiveData<AuthenticationResponse> signInResponse = new MutableLiveData();
-    public final LiveData<AuthenticationResponse> createUserResponse = new MutableLiveData();
-    public final LiveData<AuthenticationResponse> passwordResetResponse = new MutableLiveData<>();
+    public final LiveData<RequestResponse> signInResponse = new MutableLiveData();
+    public final LiveData<RequestResponse> createUserResponse = new MutableLiveData();
+    public final LiveData<RequestResponse> passwordResetResponse = new MutableLiveData<>();
     public final LiveData<User> user;
 
 
@@ -60,15 +60,15 @@ public class LoginViewModel extends ViewModel {
         return this.user;
     }
 
-    public LiveData<AuthenticationResponse> getSignInResponse() {
+    public LiveData<RequestResponse> getSignInResponse() {
         return this.signInResponse;
     }
 
-    public LiveData<AuthenticationResponse> getCreateUserResponse() {
+    public LiveData<RequestResponse> getCreateUserResponse() {
         return this.createUserResponse;
     }
 
-    public LiveData<AuthenticationResponse> getPasswordResetResponse() {
+    public LiveData<RequestResponse> getPasswordResetResponse() {
         return this.passwordResetResponse;
     }
 
@@ -118,19 +118,19 @@ public class LoginViewModel extends ViewModel {
     private void updateSignInResponse(Task task) {
         postValue(signingIn, false);
         String error = LoginErrorParser.parseAuthError(task.getException());
-        postValue(signInResponse, new AuthenticationResponse(task.isSuccessful(), error));
+        postValue(signInResponse, new RequestResponse(task.isSuccessful(), error));
     }
 
     private void updateCreateUserResponse(Task task) {
         postValue(registeringUser, false);
         String error = LoginErrorParser.parseAuthError(task.getException());
-        postValue(createUserResponse, new AuthenticationResponse(task.isSuccessful(), error));
+        postValue(createUserResponse, new RequestResponse(task.isSuccessful(), error));
     }
 
     private void updateResetPasswordResponse(Task task) {
         postValue(sendingResetMsg, false);
         Exception exception = task.getException();
-        postValue(passwordResetResponse, new AuthenticationResponse(task.isSuccessful(), exception != null ? exception.getLocalizedMessage() : "Unkown error"));
+        postValue(passwordResetResponse, new RequestResponse(task.isSuccessful(), exception != null ? exception.getLocalizedMessage() : "Unkown error"));
     }
 
     private <T> void postValue(LiveData<T> liveData, T object) {

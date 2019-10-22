@@ -8,28 +8,28 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import ipren.watchr.dataHolders.FireComment;
-import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 //TODO remake this test
 
-public class MockMainRepository implements IUserDataRepository {
+public class MockUserDataRepository implements IUserDataRepository {
 
     private Task authResponse;
     /**
      *
      * @param user Initial user
      */
-    public MockMainRepository(User user){
+    public MockUserDataRepository(User user){
        userLiveData = new MutableLiveData<>(user);
        MockTaskResponse mockTaskResponse = new MockTaskResponse();
        mockTaskResponse.setSuccessful(false);
        authResponse = mockTaskResponse;
     }
 
-    public MockMainRepository(){}
+    public MockUserDataRepository(){}
 
     MutableLiveData<User> userLiveData = new MutableLiveData<>(null);
 
@@ -43,6 +43,11 @@ public class MockMainRepository implements IUserDataRepository {
     @Override
     public LiveData<User> getUserLiveData() {
         return this.userLiveData;
+    }
+
+    @Override
+    public void resetPassword(String email, OnCompleteListener callback) {
+
     }
 
     @Override
@@ -73,9 +78,15 @@ public class MockMainRepository implements IUserDataRepository {
     }
 
     @Override
-    public void updateProfile(String userName, Uri pictureUri) {
+    public void updateProfile(String userName, Uri pictureUri, OnCompleteListener callback) {
 
     }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword, OnCompleteListener callback) {
+
+    }
+
 
     @Override
     public LiveData<PublicProfile> getPublicProfile(String user_id) {
@@ -83,12 +94,12 @@ public class MockMainRepository implements IUserDataRepository {
     }
 
     @Override
-    public LiveData<FireComment[]> getComments(String movie_id, int searchMethod) {
+    public LiveData<Comment[]> getComments(String movie_id, int searchMethod) {
         return null;
     }
 
     @Override
-    public LiveData<FireRating[]> getRatings(String movie_id, int searchMethod) {
+    public LiveData<Rating[]> getRatings(String movie_id, int searchMethod) {
         return null;
     }
 

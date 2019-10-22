@@ -47,4 +47,9 @@ public class MovieApi implements IMovieApi {
     public Call<MovieList> getDiscover(int[] genres, int page) {
         return api.getDiscover(genres, page);
     }
+
+    @Override
+    public Call<MovieList> Search(String text, int page) {
+        return api.Search(text, page);
+    }
 }

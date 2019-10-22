@@ -4,8 +4,8 @@ import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import ipren.watchr.dataHolders.FireComment;
-import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 import static ipren.watchr.repository.IUserDataRepository.*;
@@ -34,11 +34,11 @@ public class AccountViewModel extends ViewModel {
         return this.user;
     }
 
-    public LiveData<FireRating[]> getRatingByUserId(String user_id){
+    public LiveData<Rating[]> getRatingByUserId(String user_id){
           return userDataRepository.getRatings(user_id,SEARCH_METHOD_USER_ID);
     }
 
-    public LiveData<FireComment[]> getCommentsByUserId(String user_id){
+    public LiveData<Comment[]> getCommentsByUserId(String user_id){
         return userDataRepository.getComments(user_id,SEARCH_METHOD_USER_ID);
     }
 

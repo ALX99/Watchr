@@ -14,6 +14,7 @@ import ipren.watchr.dataHolders.Movie;
 public interface IMovieRepository {
     String TRENDING_LIST = "Trending";
     String DISCOVER_LIST = "Discover";
+    String SEARCH_LIST = "Search";
     String BROWSE_LIST = "Browse";
     String RECOMMENDED_LIST = "Recommended";
 
@@ -62,6 +63,24 @@ public interface IMovieRepository {
      */
     LiveData<List<Actor>> getActorsFromMovie(int movieID);
 
+    /**
+     * Search in the DB/API
+     *
+     * @param text       Text to search
+     * @param page       Page number to get
+     * @param forceFetch Force data from the api?
+     * @return The list of movies
+     */
+    LiveData<List<Movie>> Search(String text, int page, boolean forceFetch);
+
+    /**
+     * Get the discover list from the DB/API
+     *
+     * @param genres     The genres to include in the lsit
+     * @param page       Page number to get
+     * @param forceFetch Force data from the api?
+     * @return The list of movies
+     */
     LiveData<List<Movie>> getDiscoverList(int[] genres, int page, boolean forceFetch);
 
 }

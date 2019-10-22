@@ -1,9 +1,6 @@
 package ipren.watchr.viewModels;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +10,7 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
 
-import ipren.watchr.MockClasses.MockMainRepository;
+import ipren.watchr.MockClasses.MockUserDataRepository;
 import ipren.watchr.dataHolders.User;
 
 //TODO remake this test
@@ -25,12 +22,12 @@ public class AccountViewModelTest {
     private final User inititalUser = new User("Fred", "Fred@test.com", null, null, false);
     @Before
     public void setUp(){
-        accountViewModel = new AccountViewModel(new MockMainRepository(inititalUser));
+        accountViewModel = new AccountViewModel(new MockUserDataRepository(inititalUser));
     }
 
     @Test
     public void getUser() {
-        MockMainRepository mockRepo = new MockMainRepository();
+        MockUserDataRepository mockRepo = new MockUserDataRepository();
         accountViewModel = new AccountViewModel(mockRepo);
 
         User testUser = new User("Test", "test@test.com1", null, null, false);

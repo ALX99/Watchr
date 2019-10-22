@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
-import ipren.watchr.dataHolders.FireComment;
-import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.API.Firebase.FireRepositoryManager;
@@ -46,9 +46,9 @@ public interface IUserDataRepository {
     //Firebase database functions
     LiveData<PublicProfile> getPublicProfile(String user_id);
 
-    LiveData<FireComment[]> getComments(String movie_id, int searchMethod);
+    LiveData<Comment[]> getComments(String movie_id, int searchMethod);
 
-    LiveData<FireRating[]> getRatings(String movie_id, int searchMethod);
+    LiveData<Rating[]> getRatings(String movie_id, int searchMethod);
 
     LiveData<String[]> getMovieList(String list, String user_id);
 

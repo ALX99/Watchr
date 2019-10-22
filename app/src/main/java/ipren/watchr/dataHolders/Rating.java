@@ -2,7 +2,7 @@ package ipren.watchr.dataHolders;
 
 import com.google.firebase.firestore.DocumentId;
 
-public class FireRating {
+public class Rating {
     @DocumentId
     private String uID = "";
     private String movie_id = "";
@@ -10,9 +10,9 @@ public class FireRating {
     private int score = 0;
 
     //This is needed to enable firebase to initiate the object
-    public FireRating(){}
+    public Rating(){}
 
-    public FireRating(String movie_id, String user_id, String uID, int score) {
+    public Rating(String movie_id, String user_id, String uID, int score) {
         if (movie_id != null)
             this.movie_id = movie_id;
         if (user_id != null)
