@@ -17,7 +17,7 @@ import com.google.firebase.storage.StorageReference;
 
 import ipren.watchr.dataHolders.User;
 
-public class FirebaseAuthHelper {
+class FirebaseAuthHelper {
     private final MutableLiveData userLiveData = new MutableLiveData(null);
     private FirebaseAuth mAuth;
 
@@ -70,7 +70,7 @@ public class FirebaseAuthHelper {
         mAuth.signOut();
     }
 
-    public void resetPassword(String email, OnCompleteListener callback) {
+    void resetPassword(String email, OnCompleteListener callback) {
         Task task = mAuth.sendPasswordResetEmail(email);
         attachCallback(task, callback);
     }

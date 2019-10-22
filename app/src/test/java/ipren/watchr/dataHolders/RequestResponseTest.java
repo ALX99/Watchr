@@ -1,5 +1,7 @@
 package ipren.watchr.dataHolders;
 
+import com.google.firebase.firestore.util.CustomClassMapper;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -29,5 +31,7 @@ public class RequestResponseTest {
         assertEquals(testValue, autResp.getErrorMsg());
         autResp = new RequestResponse(false , testValue);
         assertEquals(testValue, autResp.getErrorMsg());
+
+
     }
 }

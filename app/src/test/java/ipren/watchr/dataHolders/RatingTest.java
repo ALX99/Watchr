@@ -1,14 +1,25 @@
 package ipren.watchr.dataHolders;
 
+import android.os.Build;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
-
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.O_MR1)
 public class RatingTest {
+    Rating testRating;
+    @Before
+    public void setUp(){
+        testRating = new Rating();
+    }
 
     @Test
     public void getMovie_id() {
-        Rating testRating = new Rating();
         assertEquals("", testRating.getMovie_id());
         testRating = new Rating(null, null,null,0);
         assertEquals("", testRating.getMovie_id());
@@ -19,7 +30,6 @@ public class RatingTest {
 
     @Test
     public void getUser_id() {
-        Rating testRating = new Rating();
         assertEquals("", testRating.getUser_id());
         testRating = new Rating(null, null,null,0);
         assertEquals("", testRating.getUser_id());
@@ -30,7 +40,6 @@ public class RatingTest {
 
     @Test
     public void getuID() {
-        Rating testRating = new Rating();
         assertEquals("", testRating.getuID());
         testRating = new Rating(null, null,null,0);
         assertEquals("", testRating.getuID());
@@ -41,9 +50,11 @@ public class RatingTest {
 
     @Test
     public void getScore() {
-        Rating testRating = new Rating();
         assertEquals(0, testRating.getScore());
         testRating = new Rating(null, null,null,0);
         assertEquals(0, testRating.getScore());
     }
+
+
+
 }
