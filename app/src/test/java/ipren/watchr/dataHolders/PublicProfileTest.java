@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.TextLayoutMode;
 
 import java.util.HashMap;
 
@@ -17,6 +18,7 @@ import static org.junit.Assert.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.O_MR1)
 public class PublicProfileTest {
+
 
     @Test
     public void getUsername() {
@@ -32,13 +34,13 @@ public class PublicProfileTest {
     @Test
     public void getProfilePhotoUri() {
         Uri testUri = Uri.parse("www.test.com/testfile.xml");
-        PublicProfile testProfile = new PublicProfile(testUri, "");
+        PublicProfile testProfile = new PublicProfile(testUri, null);
         assertEquals(testUri, testProfile.getProfilePhotoUri());
 
         Uri expectedURi = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.default_profile_photo);
         testProfile = new PublicProfile(null, null);
         assertEquals(testProfile.getProfilePhotoUri(),expectedURi );
-
-
     }
+
+
 }

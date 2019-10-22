@@ -31,7 +31,7 @@ import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 
-public class FirebaseDatabaseHelper {
+class FirebaseDatabaseHelper {
 
     //These paths are placed on root.
     private final String RATING_PATH = "ratings";
@@ -48,7 +48,6 @@ public class FirebaseDatabaseHelper {
     private final String COMMENT_TXT_ID_FIELD = "text";
     private final String SCORE_ID_FIELD = "score";
     private final String MOVIE_ARRAY_ID_FIELD = "movies";
-
     private final String DATE_CREATED_ID_FIELD = "date_created";
 
     private final String USER_USERNAME_ID_FIELD = "username";
@@ -56,7 +55,7 @@ public class FirebaseDatabaseHelper {
 
     private final String ANDROID_RESOURCE_PREFIX = "android.resource://";
 
-    FirebaseFirestore fireStore;
+    private FirebaseFirestore fireStore;
 
     private HashMap<String, MutableLiveData<Comment[]>> commentsByMovie_id = new HashMap<>();
     private HashMap<String, MutableLiveData<Comment[]>> commentsByUser_id = new HashMap<>();
