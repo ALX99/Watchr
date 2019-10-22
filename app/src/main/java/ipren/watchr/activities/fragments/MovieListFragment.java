@@ -27,6 +27,7 @@ import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.repository.IMovieRepository;
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.ListViewModel;
 
 public class MovieListFragment extends Fragment {
@@ -75,8 +76,6 @@ public class MovieListFragment extends Fragment {
         // Get view model and set correct data
         listViewModel = ListViewModel.getInstance(this);
         String listType = this.getArguments().getString("listType");
-        listViewModel.setListType(listType);
-        listViewModel.refresh();
 
         // Set list layout and adapter
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -87,71 +86,69 @@ public class MovieListFragment extends Fragment {
         connectFilterButton();
         connectSearchView(listType);
 
-        observeViewModel();
+        if (listType.equals(IMovieRepository.BROWSE_LIST)) {
+            listViewModel.initBrowse();
+            handlePublicList();
+        } else if (listType.equals(IMovieRepository.RECOMMENDED_LIST)) {
+            listViewModel.initRecommended();
+            listViewModel.getMovies().observe(this, movies -> {
+                if (movies != null && movies instanceof List) {
+                    movieListAdapter.updateMovieList(movies);
+                    loadingView.setVisibility(View.GONE);
+                }
+            });
+        } else {
+            handleUserList(listType);
+            listViewModel.getUser().observe(this, user -> handleUserList(listType));
+        }
 
         // Fetch fresh data from API on refresh
         refreshLayout.setOnRefreshListener(() -> {
-//            movieList.setVisibility(View.GONE);
-//            listError.setVisibility(View.GONE);
-//            listViewModel.refresh(listType);
+            // TODO: @johan fixa refreshing
             refreshLayout.setRefreshing(false);
         });
     }
 
-    /**
-     * Makes the fragment listen to the live data in the view model
-     */
-    private void observeViewModel() {
-        listViewModel.getMovies().observe(getViewLifecycleOwner(), movies -> {
+    private void handlePublicList() {
+        listViewModel.getMovies().observe(this, movies -> {
             if (movies != null && movies instanceof List) {
                 movieListAdapter.updateMovieList(movies);
-                movieList.setVisibility(View.VISIBLE);
-                listError.setVisibility(View.GONE);
                 loadingView.setVisibility(View.GONE);
-                emptyListView.setVisibility(View.GONE);
-                notLoggedInError.setVisibility(View.GONE);
             }
-            listViewModel.getMovies().removeObservers(getViewLifecycleOwner());
         });
+    }
 
-        listViewModel.getLoggedInStatus().observe(getViewLifecycleOwner(), isLoggedIn -> {
-            if (isLoggedIn != null && isLoggedIn instanceof Boolean) {
-                if (!isLoggedIn) {
-                    movieList.setVisibility(View.GONE);
-                    listError.setVisibility(View.GONE);
+    private void handleUserList(String listType) {
+        // Check if user is logged in
+        if (listViewModel.getUser().getValue() != null) {
+            // Get the movie ids from user repo
+            listViewModel.initMovieIdLists();
+            switch (listType) {
+                case IUserDataRepository.WATCHED_LIST: listViewModel.getWatchedIds().observe(this, this::observeIds); break;
+                case IUserDataRepository.WATCH_LATER_LIST: listViewModel.getWatchLaterIds().observe(this, this::observeIds); break;
+                case IUserDataRepository.FAVORITES_LIST: listViewModel.getFavoritesIds().observe(this, this::observeIds); break;
+            }
+        } else {
+            // Not logged in
+            notLoggedInError.setVisibility(View.VISIBLE);
+            movieList.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
+        }
+    }
+
+    private void observeIds(String[] ids) {
+        if (ids != null) {
+            listViewModel.initUserMovieList(ids);
+            listViewModel.getMovies().observe(this, movies -> {
+                if (movies != null) {
+                    movieListAdapter.updateMovieList(movies);
+                    if (movies.size() == 0) {
+                        emptyListView.setVisibility(View.VISIBLE);
+                    }
                     loadingView.setVisibility(View.GONE);
-                    emptyListView.setVisibility(View.GONE);
-                    notLoggedInError.setVisibility(View.VISIBLE);
                 }
-            }
-            listViewModel.getLoggedInStatus().removeObservers(getViewLifecycleOwner());
-        });
-
-        listViewModel.getEmptyListStatus().observe(getViewLifecycleOwner(), isEmpty -> {
-            if (isEmpty != null && isEmpty instanceof Boolean) {
-                if (isEmpty) {
-                    movieList.setVisibility(View.GONE);
-                    listError.setVisibility(View.GONE);
-                    loadingView.setVisibility(View.GONE);
-                    emptyListView.setVisibility(View.VISIBLE);
-                    notLoggedInError.setVisibility(View.GONE);
-                }
-            }
-            listViewModel.getEmptyListStatus().removeObservers(getViewLifecycleOwner());
-        });
-
-        listViewModel.getLoadingStatus().observe(getViewLifecycleOwner(), isLoading -> {
-            if (isLoading != null && isLoading instanceof Boolean) {
-                if (isLoading) {
-                    movieList.setVisibility(View.GONE);
-                    listError.setVisibility(View.GONE);
-                    loadingView.setVisibility(View.VISIBLE);
-                    emptyListView.setVisibility(View.GONE);
-                    notLoggedInError.setVisibility(View.GONE);
-                }
-            }
-            listViewModel.getLoadingStatus().removeObservers(getViewLifecycleOwner());
-        });
+            });
+        }
     }
 
     /**

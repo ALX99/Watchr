@@ -31,7 +31,6 @@ public class ListViewModel {
 
     // Live data from user repo
     private LiveData<User> user;
-    private LiveData<String[]> movieIds;
     private LiveData<String[]> favoritesIds;
     private LiveData<String[]> watchLaterIds;
     private LiveData<String[]> watchedIds;
@@ -55,53 +54,6 @@ public class ListViewModel {
         loadingStatus = new MutableLiveData<>();
         emptyListStatus = new MutableLiveData<>();
         loggedInStatus = new MutableLiveData<>();
-    }
-
-    public void setListType(String listType) {
-        this.listType = listType;
-    }
-
-    private void setPersonalList(String listType) {
-        if (user.getValue() == null) {
-            loggedInStatus.setValue(false);
-            emptyListStatus.setValue(false);
-        } else {
-            movieIds = userRepository.getMovieList(listType, user.getValue().getUID());
-            if (movieIds.getValue() == null || movieIds.getValue().length == 0) {
-                // Empty list
-                emptyListStatus.setValue(true);
-            } else {
-                // Set list
-                int[] movieIdsInt = convertStringArrayToIntArray(movieIds.getValue());
-                movies = movieRepository.getMoviesByID(movieIdsInt);
-            }
-        }
-    }
-
-    /**
-     * Where the magic happens, sets up the correct movie list based on type and user status
-     */
-    public void refresh() {
-        if (user.getValue() != null) {
-            favoritesIds = userRepository.getMovieList(IUserDataRepository.FAVORITES_LIST, user.getValue().getUID());
-            watchLaterIds = userRepository.getMovieList(IUserDataRepository.WATCH_LATER_LIST, user.getValue().getUID());
-            watchedIds = userRepository.getMovieList(IUserDataRepository.WATCHED_LIST, user.getValue().getUID());
-        }
-
-        switch (listType) {
-            case IMovieRepository.BROWSE_LIST:
-                movies = movieRepository.getMovieList(MovieRepository.TRENDING_LIST, 1, true);
-                break;
-            case IMovieRepository.RECOMMENDED_LIST:
-                // TODO: @johan Make fetching from discover list work
-                movies = movieRepository.getDiscoverList(new int[]{27}, 1, true);
-                break;
-            case IUserDataRepository.FAVORITES_LIST:
-            case IUserDataRepository.WATCH_LATER_LIST:
-            case IUserDataRepository.WATCHED_LIST:
-                setPersonalList(listType);
-                break;
-        }
     }
 
     /**
@@ -136,7 +88,7 @@ public class ListViewModel {
 
     public LiveData<List<Movie>> getMoviesFromQuery(String query) {
         // TODO: @johan Get query from correct method when it's created
-        return movieRepository.getMovieList(query, 1, true);
+        return movieRepository.Search(query, 1, true);
     }
 
     public boolean checkMovieInList(int movieId, String listType) {
@@ -181,5 +133,37 @@ public class ListViewModel {
             intArr[i] = parseInt(strArr[i]);
         }
         return intArr;
+    }
+
+    public void initBrowse() {
+        movies = movieRepository.getMovieList(IMovieRepository.TRENDING_LIST, 1, false);
+    }
+
+    public void initRecommended() {
+        movies = movieRepository.getDiscoverList(new int[]{27}, 1, false);
+    }
+
+    public void initMovieIdLists() {
+        String userId = user.getValue().getUID();
+        watchedIds = userRepository.getMovieList(IUserDataRepository.WATCHED_LIST, userId);
+        watchLaterIds = userRepository.getMovieList(IUserDataRepository.WATCH_LATER_LIST, userId);
+        favoritesIds = userRepository.getMovieList(IUserDataRepository.FAVORITES_LIST, userId);
+    }
+
+    public LiveData<String[]> getWatchedIds() {
+        return watchedIds;
+    }
+
+    public LiveData<String[]> getWatchLaterIds() {
+        return watchLaterIds;
+    }
+
+    public LiveData<String[]> getFavoritesIds() {
+        return favoritesIds;
+    }
+
+    public void initUserMovieList(String[] movieIds) {
+        int[] movieIdsInt = convertStringArrayToIntArray(movieIds);
+        movies = movieRepository.getMoviesByID(movieIdsInt);
     }
 }
