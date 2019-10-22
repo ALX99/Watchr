@@ -11,7 +11,7 @@ public class CommentTest {
     @Test
     public void getMovie_id() {
         String testString = "testValue";
-        Comment testComment = new Comment(testString, "Not used", "Not used", "Not Used");
+        Comment testComment = new Comment(testString, "Not used", "Not used", "Not Used", null);
         assertEquals(testComment.getMovie_id(), testString);
 
     }
@@ -19,7 +19,7 @@ public class CommentTest {
     @Test
     public void getUser_id() {
         String testString = "testValue";
-        Comment testComment = new Comment("not used", testString, "Not used", "Not Used");
+        Comment testComment = new Comment("not used", testString, "Not used", "Not Used", null);
         assertEquals(testComment.getUser_id(), testString);
 
     }
@@ -27,7 +27,7 @@ public class CommentTest {
     @Test
     public void getText() {
         String testString = "testValue";
-        Comment testComment = new Comment("Not used", "Not used", testString, "Not Used");
+        Comment testComment = new Comment("Not used", "Not used", testString, "Not Used", null);
         assertEquals(testComment.getText(), testString);
 
     }
@@ -35,7 +35,7 @@ public class CommentTest {
     @Test
     public void getuID() {
         String testString = "testValue";
-        Comment testComment = new Comment("Not used", "Not used", "Not used", testString);
+        Comment testComment = new Comment("Not used", "Not used", "Not used", testString, null);
         assertEquals(testComment.getuID(), testString);
 
     }

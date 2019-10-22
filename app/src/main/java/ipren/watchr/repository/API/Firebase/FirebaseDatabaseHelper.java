@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -16,8 +17,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +48,8 @@ public class FirebaseDatabaseHelper {
     private final String COMMENT_TXT_ID_FIELD = "text";
     private final String SCORE_ID_FIELD = "score";
     private final String MOVIE_ARRAY_ID_FIELD = "movies";
+
+    private final String DATE_CREATED_ID_FIELD = "date_created";
 
     private final String USER_USERNAME_ID_FIELD = "username";
     private final String USER_PROFILE_URI_ID_FIELD = "photoUri";
@@ -139,10 +144,11 @@ public class FirebaseDatabaseHelper {
 
 
     void addComment(String text, String movie_id, String user_id, OnCompleteListener callback) {
-        Map<String, String> comment = new HashMap<>();
+        Map<String, Object> comment = new HashMap<>();
         comment.put(USER_ID_FIELD, user_id);
         comment.put(MOVIE_ID_FIELD, movie_id);
         comment.put(COMMENT_TXT_ID_FIELD, text);
+        comment.put(DATE_CREATED_ID_FIELD, Calendar.getInstance().getTime());
 
         attachCallback(fireStore.collection(COMMENT_PATH).add(comment), callback);
 
