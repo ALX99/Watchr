@@ -42,28 +42,12 @@ public class AccountSettingsViewModel extends ViewModel {
     public final LiveData<Boolean> savingNewProfileState = new MutableLiveData<>();
     public final LiveData<Boolean> changingPassword = new MutableLiveData<>();
     public final LiveData<Boolean> sendingVerificationEmail = new MutableLiveData<>();
-    public final LiveData<Boolean> checkingUserVerification = new MutableLiveData<>();
+
 
 
    public AccountSettingsViewModel(){
        userDataRepository = IUserDataRepository.getInstance();
        this.liveUser = userDataRepository.getUserLiveData();
-    }
-
-    public LiveData<RequestResponse> getUpdateProfileResponse(){
-       return updateProfileResponse;
-    }
-
-    public LiveData<RequestResponse> getVerificationResponse(){
-       return  sendVerEmailResponse;
-    }
-
-    public LiveData<RequestResponse> getChangePasswordResponse(){
-       return changePasswordResponse;
-    }
-
-    public LiveData<User> getUser() {
-        return liveUser;
     }
 
     public void refreshUsr() {

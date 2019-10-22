@@ -135,7 +135,7 @@ public class LoginFragment extends Fragment {
         loginViewModel.signingIn.observe(this, bool -> loadingButtonEnabled(signInBtn, loginSpinner, bool, bool ? "Signing in..." : "Login"));
 
         //This method observes the result of attempting to log in, if its not successful it will display an error message and shake the button, if it is it inform the user and exit the fragment.
-        loginViewModel.getSignInResponse().observe(this, e -> {
+        loginViewModel.signInResponse.observe(this, e -> {
             signInResponseTxt.setVisibility(View.VISIBLE);
             if (e.isSuccessful()) {
                 exitLoginFragment(true); //Exit the fragment and notify the user that they are now logged in
@@ -179,7 +179,7 @@ public class LoginFragment extends Fragment {
 
 
         //This method observes the result of attempting to register an account, if its not successful it will display an error message and shake the button, if it is it exit the fragment and navigate to the accountsettings fragment  where the user can verify his/hers account.
-        loginViewModel.getCreateUserResponse().observe(this, e -> {
+        loginViewModel.createUserResponse.observe(this, e -> {
             registerUsrResponseTxt.setVisibility(View.VISIBLE);
             if (e.isSuccessful()) {
                 exitLoginFragment(true); //Exit fragment and notify the user that they are logged in;
@@ -210,7 +210,7 @@ public class LoginFragment extends Fragment {
         loginViewModel.sendingResetMsg.observe(this, bool ->
                 loadingButtonEnabled(resetPasswordBtn, resetPasswordSpinner, bool, bool ? "Sending..." : "Reset password"));
         //This method observes the result of attempting to send a reset password email, if its not successful it will display an error message and shake the button,
-        loginViewModel.getPasswordResetResponse().observe(this, e -> { // if it is it the fragment will display a success message
+        loginViewModel.passwordResetResponse.observe(this, e -> { // if it is it the fragment will display a success message
             passwordResetResponse.setVisibility(View.VISIBLE);
             if (e.isSuccessful())
                 setTextAndColor(passwordResetResponse, "Sent!", Color.GREEN); // Display success message

@@ -55,23 +55,6 @@ public class LoginViewModel extends ViewModel {
         this.user = userDataRepository.getUserLiveData();
     }
 
-
-    public LiveData<User> getUser() {
-        return this.user;
-    }
-
-    public LiveData<RequestResponse> getSignInResponse() {
-        return this.signInResponse;
-    }
-
-    public LiveData<RequestResponse> getCreateUserResponse() {
-        return this.createUserResponse;
-    }
-
-    public LiveData<RequestResponse> getPasswordResetResponse() {
-        return this.passwordResetResponse;
-    }
-
     public boolean registerUser() {
         if (regEmailTxt.isEmpty() || regPasswordTxt.isEmpty()) {
             if (regEmailTxt.isEmpty()) postValue(regEmailError, "Please enter your email");
