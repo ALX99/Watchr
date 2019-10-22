@@ -17,11 +17,13 @@ import com.google.firebase.storage.StorageReference;
 
 import ipren.watchr.dataHolders.User;
 
-public class FirebaseAuthAPI {
+class FirebaseAuthHelper {
     private final MutableLiveData userLiveData = new MutableLiveData(null);
     private FirebaseAuth mAuth;
 
-    FirebaseAuthAPI() {
+    private final static String FIRESTORE_PIC_FOLDER = "pics/";
+
+    FirebaseAuthHelper() {
         mAuth = FirebaseAuth.getInstance();
         mAuth.addAuthStateListener(e -> refreshUsr());
         FirebaseStorage.getInstance().setMaxUploadRetryTimeMillis(2000);
@@ -68,7 +70,7 @@ public class FirebaseAuthAPI {
         mAuth.signOut();
     }
 
-    public void resetPassword(String email, OnCompleteListener callback) {
+    void resetPassword(String email, OnCompleteListener callback) {
         Task task = mAuth.sendPasswordResetEmail(email);
         attachCallback(task, callback);
     }
@@ -100,11 +102,14 @@ public class FirebaseAuthAPI {
         }
     }
 
+    // This method attempts to au
     void changePassword(String oldPassword, String newPassword, OnCompleteListener callback){
        FirebaseUser user = mAuth.getCurrentUser();
-       if(user == null)
-           if(callback !=null)
+       if(user == null) {
+           if (callback != null)
                callback.onComplete(null);
+           return;
+       }
 
        user.reauthenticate(EmailAuthProvider.getCredential(user.getEmail(), oldPassword)).addOnCompleteListener( e -> {
            if(e.isSuccessful())
@@ -114,7 +119,14 @@ public class FirebaseAuthAPI {
        });
     }
 
+    // This method takes in a username and an URI and attempts to upload them to the current users account
+    //results are passed to the callback.
     private void uploadProfileChanges(String userName, Uri uri, OnCompleteListener callback) {
+        if(mAuth.getCurrentUser() == null) {
+            if (callback != null)
+                callback.onComplete(null);
+            return;
+        }
         UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
         if (uri != null)
             builder.setPhotoUri(uri);
@@ -131,18 +143,22 @@ public class FirebaseAuthAPI {
 
     }
 
+    //Uploads an image to FireBase storage, the callback either returns a failure or it attempts to
+    // get the URI to the uploaded image, results from that task is passed to the callback
     private void uploadImage(Uri uri, OnCompleteListener callback) {
         StorageReference storageRef = FirebaseStorage.getInstance().
-                getReference().child("pics/" + mAuth.getCurrentUser().getUid());
+                getReference().child(FIRESTORE_PIC_FOLDER + mAuth.getCurrentUser().getUid()); // Address
 
         storageRef.putFile(uri).addOnCompleteListener(e -> {
             if (e.isSuccessful())
-                storageRef.getDownloadUrl().addOnCompleteListener(callback);
+                storageRef.getDownloadUrl().addOnCompleteListener(callback);  //Attempt to get uploaded picture URI, send results to callback
             else
-                callback.onComplete(e);
+                callback.onComplete(e); // Failed to upload picture trigger callback immediately
         });
     }
 
+
+    //Attaches a callback to a task if the callback is not null;
     private void attachCallback(Task task, OnCompleteListener callback) {
         if (callback != null)
             task.addOnCompleteListener(callback);

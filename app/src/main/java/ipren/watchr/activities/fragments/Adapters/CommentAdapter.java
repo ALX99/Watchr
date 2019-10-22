@@ -20,11 +20,11 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.R;
-import ipren.watchr.dataHolders.FireComment;
+import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.viewModels.IMovieViewModel;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
-    private List<FireComment> commments;
+    private List<Comment> commments;
     private Context mContext;
     private IMovieViewModel viewModel;
     private LifecycleOwner owner;
@@ -64,7 +64,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     // Method to update the data
-    public void setData(FireComment[] comments) {
+    public void setData(Comment[] comments) {
         if (comments == null) return;
         this.commments = Arrays.asList(comments);
         notifyDataSetChanged();

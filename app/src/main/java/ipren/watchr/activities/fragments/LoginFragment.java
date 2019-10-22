@@ -29,56 +29,66 @@ import ipren.watchr.viewModels.LoginViewModel;
 
 import static ipren.watchr.activities.Util.ActivityUtils.*;
 
+
+// This class has three included layouts from separate xml files, what elements are included in each layout is shown below.
+//The layouts are set like this:  Reset<->Login<->Register
+// What buttons allow the user to switch between layouts is marked with  NAVIGATION
+// Elements for input are marked INPUT
+// Elements for initiating actions are marked ACTION
+// Elements that just display data are marked DISPLAY
 public class LoginFragment extends Fragment {
 
+    //Initial layout - Login
     @BindView(R.id.login_layout)
-    ConstraintLayout loginLayout;
-    @BindView(R.id.password_text_input)
-    EditText loginPasswordField;
+    ConstraintLayout loginLayout; // Layout root
     @BindView(R.id.email_text_input)
-    EditText loginEmailField;
+    EditText loginEmailField; //INPUT: The users email, used for identification
+    @BindView(R.id.password_text_input)
+    EditText loginPasswordField; //INPUT: The users password. Used for authentication
     @BindView(R.id.login_button)
-    Button signInBtn;
+    Button signInBtn; //ACTION: A button for attempting to log in.
     @BindView(R.id.login_spinner)
-    ProgressBar loginSpinner;
-    @BindView(R.id.start_user_registration_btn)
-    TextView startUserRegistration;
-    @BindView(R.id.start_password_reset_btn)
-    TextView startPasswordReset;
+    ProgressBar loginSpinner; //DISPLAY: A progress spinner that is visible while the application is attempting to signing the user in.
     @BindView(R.id.sign_in_response_txt)
-    TextView signInResponseTxt;
+    TextView signInResponseTxt; //DISPLAY: A text displaying the result of a sign-in attempt.
+    @BindView(R.id.start_password_reset_btn)
+    TextView startPasswordReset; //NAVIGATION: Switches to password reset layout.
+    @BindView(R.id.start_user_registration_btn)
+    TextView startUserRegistration;//NAVIGATION: Switches to user registration layout
 
+    //Layout for account registration
     @BindView(R.id.register_user_layout)
-    ConstraintLayout registerlayout;
-    @BindView(R.id.new_usr_pwd)
-    EditText newUsrPwdField;
-    @BindView(R.id.new_user_retyped_pwd)
-    EditText newUsrReTypedPwdField;
+    ConstraintLayout registerlayout; //Layout root
     @BindView(R.id.new_user_email_input)
-    EditText newUsrEmailField;
+    EditText newUsrEmailField; //INPUT: The users email address.
+    @BindView(R.id.new_usr_pwd)
+    EditText newUsrPwdField; //INPUT: The users preferred password. Must be > 5
+    @BindView(R.id.new_user_retyped_pwd)
+    EditText newUsrReTypedPwdField; //INPUT: The users preferred password retyped.
     @BindView(R.id.register_user_btn)
-    Button registerUsrBtn;
+    Button registerUsrBtn; //ACTION: A button for attempting to register the user
     @BindView(R.id.register_user_spinner)
-    ProgressBar registerUsrBtnSpinner;
+    ProgressBar registerUsrBtnSpinner; //DISPLAY: A progress spinner that is visible while the app is attempting to register the user.
     @BindView(R.id.register_usr_response_txt)
-    TextView registerUsrResponseTxt;
-
-    @BindView(R.id.reset_password_layout)
-    ConstraintLayout resetPasswordLayout;
-    @BindView(R.id.go_to_login_btn)
-    ImageView resetPwBackToLogin;
-    @BindView(R.id.reset_password_btn)
-    Button resetPasswordBtn;
-    @BindView(R.id.forgot_psswd_txt_field)
-    EditText forgotEmailTxtField;
-    LoginViewModel loginViewModel;
-    @BindView(R.id.reset_password_spinner)
-    ProgressBar resetPasswordSpinner;
-    @BindView(R.id.password_reset_response_txt)
-    TextView passwordResetResponse;
+    TextView registerUsrResponseTxt; //DISPLAY: A text showing the results of an attempted account registration
     @BindView(R.id.register_go_to_login_btn)
-    ImageView registerBackToLoginBtn;
+    ImageView registerBackToLoginBtn; //NAVIGATION : Switches to the login layout.
 
+    //Reset password layout
+    @BindView(R.id.reset_password_layout)
+    ConstraintLayout resetPasswordLayout; //Layout root
+    @BindView(R.id.forgot_psswd_txt_field)
+    EditText forgotEmailTxtField; //INPUT: An input field for writing the email to the account which password you forgot.
+    @BindView(R.id.reset_password_btn)
+    Button resetPasswordBtn; //ACTION: A button for attempting to send a verification email
+    @BindView(R.id.reset_password_spinner)
+    ProgressBar resetPasswordSpinner;//DISPLAY: A progress spinner visible while the application is attempting to send a verification email.
+    @BindView(R.id.password_reset_response_txt)
+    TextView passwordResetResponse;//DISPLAY: A text showing the results of an attempt to send a reset password email.
+    @BindView(R.id.go_to_login_btn)
+    ImageView resetPwBackToLogin; //NAVIGATION: Switches to the login layout
+
+    LoginViewModel loginViewModel;
 
     public LoginFragment() {
     }
@@ -86,6 +96,7 @@ public class LoginFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflating layout and binding views with butterknife
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -95,153 +106,160 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Getting the viewmodel by using the activity context to save resources.
+
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
-        initiateRegisterLayout();
-        initiateLoginLayout();
-        initPasswordResetLayout();
+        //These methods can only be called in onViewCreated or later, or it might cause a null pointer
+        initiateLoginLayout(); //Initial layout: Initiates the layout for logging in
+        initiateRegisterLayout(); //Initiates the layout for registering an account
+        initPasswordResetLayout(); //Initiates the layout for resetting your password
 
     }
 
-    //This method must be called after onViewCreated and after the loginViewModel has been fetched
+    //This method must be called after onViewCreated and after the loginViewModel has been fetched or risk nullpointers
+    //This method initiates the Login layout, syncing with LiveData.
     private void initiateLoginLayout() {
 
-        loginEmailField.addTextChangedListener(new TextForwarder(loginEmailField));
-        loginPasswordField.addTextChangedListener(new TextForwarder(loginPasswordField));
+        loginEmailField.addTextChangedListener(new TextForwarder(loginEmailField));       // These methods allows the ViewModel to receive the current Text of respective fields
+        loginPasswordField.addTextChangedListener(new TextForwarder(loginPasswordField)); // settings error messages if need be.
 
-        loginViewModel.logEmailError.observe(this, txt -> loginEmailField.setError(txt));
-        loginViewModel.logPasswordError.observe(this, txt -> loginPasswordField.setError(txt));
+        loginViewModel.logEmailError.observe(this, txt -> loginEmailField.setError(txt));       // This method observes an errorTxt in the ViewModel corresponding to each input field
+        loginViewModel.logPasswordError.observe(this, txt -> loginPasswordField.setError(txt));  // which is triggered when it receives a badly formatted text from respective inputField
 
-        signInBtn.setOnClickListener(e -> {
-            signInResponseTxt.setVisibility(View.INVISIBLE);
-            if (!loginViewModel.signIn()) shakeButton(signInBtn, getContext());
+        signInBtn.setOnClickListener(e -> { //Attempts to sign the user in
+            clearAndHideTextViews(signInResponseTxt);
+            if (!loginViewModel.signIn())
+                shakeButton(signInBtn, getContext()); //The ViewModel can reject the attempt if any fields are badly formatted by returning false, if so the fragment will respond by vibrating the button
         });
-
+        //This method observes the state of signingIn and updates the signInBtn  as a result. Mirroring the state
         loginViewModel.signingIn.observe(this, bool -> loadingButtonEnabled(signInBtn, loginSpinner, bool, bool ? "Signing in..." : "Login"));
 
+        //This method observes the result of attempting to log in, if its not successful it will display an error message and shake the button, if it is it inform the user and exit the fragment.
         loginViewModel.getSignInResponse().observe(this, e -> {
             signInResponseTxt.setVisibility(View.VISIBLE);
             if (e.isSuccessful()) {
-                exitLoginFragment(true);
+                exitLoginFragment(true); //Exit the fragment and notify the user that they are now logged in
             } else {
-                setTextAndColor(signInResponseTxt, e.getErrorMsg(), Color.RED);
-                shakeButton(signInBtn, getContext());
+                setTextAndColor(signInResponseTxt, e.getErrorMsg(), Color.RED); //Display error
+                shakeButton(signInBtn, getContext());  //Vibrate the phone and shake the button
             }
         });
 
-        //This allows the user to switch to the register page
+        //This allows the user to switch to the register account layout
         startUserRegistration.setOnClickListener(e ->
                 transitionBetweenLayouts(loginLayout, registerlayout, Direction.Right, getContext())
         );
-
+        //This allows the user  to switch to the resetPassword layout
         startPasswordReset.setOnClickListener(e ->
                 transitionBetweenLayouts(loginLayout, resetPasswordLayout, Direction.Left, getContext()));
 
 
     }
 
-    //This method must be called after onViewCreated and after the loginViewModel has been fetched
+    //This method must be called after onViewCreated and after the loginViewModel has been fetched or risk nullpointers
+    //This method initiates the register layout, syncing with LiveData.
     private void initiateRegisterLayout() {
 
-        newUsrEmailField.addTextChangedListener(new TextForwarder(newUsrEmailField));
-        newUsrPwdField.addTextChangedListener(new TextForwarder(newUsrPwdField));
-        newUsrReTypedPwdField.addTextChangedListener(new TextForwarder(newUsrReTypedPwdField));
+        newUsrEmailField.addTextChangedListener(new TextForwarder(newUsrEmailField)); // These methods allows the ViewModel to receive the current Text of respective fields
+        newUsrPwdField.addTextChangedListener(new TextForwarder(newUsrPwdField));     // settings error messages if need be.
+        newUsrReTypedPwdField.addTextChangedListener(new TextForwarder(newUsrReTypedPwdField)); //
 
-        loginViewModel.regEmailError.observe(this , txt -> newUsrEmailField.setError(txt));
-        loginViewModel.regPasswordError.observe(this , txt -> newUsrPwdField.setError(txt));
-        loginViewModel.regReTypedPasswordError.observe(this , txt -> newUsrReTypedPwdField.setError(txt));
+        loginViewModel.regEmailError.observe(this, txt -> newUsrEmailField.setError(txt));  // These methods observes an errorTxt in the ViewModel corresponding to each input field
+        loginViewModel.regPasswordError.observe(this, txt -> newUsrPwdField.setError(txt)); // which is triggered when it receives a badly formatted text from respective inputField
+        loginViewModel.regReTypedPasswordError.observe(this, txt -> newUsrReTypedPwdField.setError(txt));
 
-        //Attempt to register the user
-        //This will display an error if any fields are poorly formatted, if not will attempt to register
-        registerUsrBtn.setOnClickListener(e -> {
-            registerUsrResponseTxt.setVisibility(View.INVISIBLE);
-            if (!loginViewModel.registerUser()) shakeButton(registerUsrBtn, getContext());
+
+        registerUsrBtn.setOnClickListener(e -> {          //Attempt to register the user
+            clearAndHideTextViews(registerUsrResponseTxt);
+            if (!loginViewModel.registerUser())   //The ViewModel can reject the attempt if any fields are badly formatted if so it will return false, the fragment will respond by vibrating/shaking the button
+                shakeButton(registerUsrBtn, getContext());
         });
+        //This method observes the state of registering a user and updates the registerUsrBtn  as a result. Mirroring the state
+        loginViewModel.registeringUser.observe(this, bool -> loadingButtonEnabled(registerUsrBtn, registerUsrBtnSpinner, bool, bool ? "Registering..." : "Register"));
 
-        loginViewModel.registeringUser.observe(this, bool -> loadingButtonEnabled(signInBtn, loginSpinner, bool, bool ? "Registering..." : "Register"));
+
+        //This method observes the result of attempting to register an account, if its not successful it will display an error message and shake the button, if it is it exit the fragment and navigate to the accountsettings fragment  where the user can verify his/hers account.
         loginViewModel.getCreateUserResponse().observe(this, e -> {
             registerUsrResponseTxt.setVisibility(View.VISIBLE);
-            loadingButtonEnabled(registerUsrBtn, registerUsrBtnSpinner, false, "Register");
             if (e.isSuccessful()) {
-                exitLoginFragment(true);
-                Navigation.findNavController(getView()).navigate(R.id.action_global_account_settings);
+                exitLoginFragment(true); //Exit fragment and notify the user that they are logged in;
+                Navigation.findNavController(getView()).navigate(R.id.action_global_account_settings); //Navigate to the account settings page so that they can verify their account.
             } else {
-                setTextAndColor(registerUsrResponseTxt, e.getErrorMsg(), Color.RED);
-                shakeButton(registerUsrBtn, getContext());
+                setTextAndColor(registerUsrResponseTxt, e.getErrorMsg(), Color.RED); //Display error
+                shakeButton(registerUsrBtn, getContext()); // Vibrate phone and shake button
             }
         });
-
+        //This allows the user  to switch to the loginLayout
         registerBackToLoginBtn.setOnClickListener(e -> transitionBetweenLayouts(registerlayout, loginLayout, Direction.Left, getContext()));
     }
 
     private void initPasswordResetLayout() {
-        forgotEmailTxtField.addTextChangedListener(new TextForwarder(forgotEmailTxtField));
 
-        loginViewModel.resetEmailError.observe(this, txt -> forgotEmailTxtField.setError(txt));
+        forgotEmailTxtField.addTextChangedListener(new TextForwarder(forgotEmailTxtField));  // These methods allows the ViewModel to receive the current Text of respective fields
+                                                                                            // settings error messages if need be.
 
-        resetPwBackToLogin.setOnClickListener(e -> transitionBetweenLayouts(resetPasswordLayout, loginLayout, Direction.Right, getContext()));
+        loginViewModel.resetEmailError.observe(this, txt -> forgotEmailTxtField.setError(txt));  // This method observes an errorTxt in the ViewModel corresponding to this input field
+                                                                                                        // which is triggered when it receives a badly formatted text from it
 
-
-        resetPasswordBtn.setOnClickListener(e -> {
-            passwordResetResponse.setVisibility(View.INVISIBLE);
-            if (!loginViewModel.resetPassword()) shakeButton(resetPasswordBtn, getContext());
-
+        resetPasswordBtn.setOnClickListener(e -> { //Attempt to send reset password link to current user
+            clearAndHideTextViews(passwordResetResponse);
+            if (!loginViewModel.resetPassword()) shakeButton(resetPasswordBtn, getContext());  //The ViewModel can reject the attempt if any fields are badly formatted if so it will return false, the fragment will respond by vibrating/shaking the button
         });
 
+        //This method observes the state of sending(a)ResetMSG to the specified email and updates the resetPasswordBtn  as a result. Mirroring the state
         loginViewModel.sendingResetMsg.observe(this, bool ->
                 loadingButtonEnabled(resetPasswordBtn, resetPasswordSpinner, bool, bool ? "Sending..." : "Reset password"));
-
-        loginViewModel.getPasswordResetResponse().observe(this, e -> {
+        //This method observes the result of attempting to send a reset password email, if its not successful it will display an error message and shake the button,
+        loginViewModel.getPasswordResetResponse().observe(this, e -> { // if it is it the fragment will display a success message
             passwordResetResponse.setVisibility(View.VISIBLE);
             if (e.isSuccessful())
-                setTextAndColor(passwordResetResponse, "Sent!", Color.GREEN);
+                setTextAndColor(passwordResetResponse, "Sent!", Color.GREEN); // Display success message
             else
-                setTextAndColor(passwordResetResponse, e.getErrorMsg(), Color.RED);
+                setTextAndColor(passwordResetResponse, e.getErrorMsg(), Color.RED); // Display error message
 
         });
 
-
+        //This allows the user to switch to the login fragment
+        resetPwBackToLogin.setOnClickListener(e -> transitionBetweenLayouts(resetPasswordLayout, loginLayout, Direction.Right, getContext()));
     }
 
-
-    private void exitLoginFragment(boolean loginSucess) {
+    //Helper method for exiting the fragment, in the event of a login it will display a message
+    private void exitLoginFragment(boolean loginSuccess) {
         Navigation.findNavController(getView()).popBackStack();
-        if (loginSucess)
+        if (loginSuccess)
             Toast.makeText(getContext(), "Welcome, you are logged in", Toast.LENGTH_SHORT).show();
     }
 
-
+    //Helper class extending a TextWatcher adapter
     class TextForwarder extends TextWatcherAdapter {
-        private EditText textField;
+        private EditText textField; // Observing editText
 
         TextForwarder(EditText textField) {
-            this.textField = textField;
-
+            this.textField = textField; //set editText to observe
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
             String txt = editable.toString();
-
+            //All TextFields in this fragment passing their current txt to the viewmodel
             switch (textField.getId()) {
                 case R.id.new_user_email_input:
-                    loginViewModel.setRegEmailTxt(txt);
+                    loginViewModel.setRegEmailTxt(txt); // Register user layout, new email
                     break;
                 case R.id.new_usr_pwd:
-                    loginViewModel.setRegPasswordTxt(txt);
+                    loginViewModel.setRegPasswordTxt(txt); // Register user layout, new password
                     break;
                 case R.id.new_user_retyped_pwd:
-                    loginViewModel.setRegReTypedPasswordTxt(txt);
+                    loginViewModel.setRegReTypedPasswordTxt(txt);  // Register user layout, retyped new password
                     break;
                 case R.id.password_text_input:
-                    loginViewModel.setLogPasswordTxt(txt);
+                    loginViewModel.setLogPasswordTxt(txt); // Login layout  users password
                     break;
                 case R.id.email_text_input:
-                    loginViewModel.setLogEmailTxt(txt);
+                    loginViewModel.setLogEmailTxt(txt); // Login layout users email
                     break;
                 case R.id.forgot_psswd_txt_field:
-                    loginViewModel.setResetEmailTxt(txt);
+                    loginViewModel.setResetEmailTxt(txt); // Reset password layout email connected to the account with lost password
                     break;
 
             }

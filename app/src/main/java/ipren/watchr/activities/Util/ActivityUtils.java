@@ -72,6 +72,13 @@ public class ActivityUtils {
 
     }
 
+    public static void clearAndHideTextViews(TextView... textViews){
+        for(TextView textView : textViews) {
+            textView.setText("");
+            textView.setVisibility(View.INVISIBLE);
+        }
+    }
+
 
     public static void transitionBetweenLayouts(ViewGroup from, ViewGroup to, Direction dir, Context context) {
         switch (dir) {

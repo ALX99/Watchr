@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 import ipren.watchr.dataHolders.Actor;
-import ipren.watchr.dataHolders.FireComment;
-import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.Comment;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.PublicProfile;
@@ -52,7 +52,7 @@ public interface IMovieViewModel {
      *
      * @return Returns the comments for the currently loaded movie
      */
-    LiveData<FireComment[]> getComments();
+    LiveData<Comment[]> getComments();
 
     /**
      * Gets genres.
@@ -98,7 +98,7 @@ public interface IMovieViewModel {
      *
      * @return the ratings
      */
-    LiveData<FireRating[]> getRatings();
+    LiveData<Rating[]> getRatings();
 
     /**
      * Gets public profile for a user.

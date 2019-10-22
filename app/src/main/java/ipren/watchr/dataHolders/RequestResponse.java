@@ -1,15 +1,15 @@
 package ipren.watchr.dataHolders;
 
-public class AuthenticationResponse {
+public class RequestResponse {
     private boolean successful;
     private String errorMsg = "";
 
-    public AuthenticationResponse(boolean successful, String errorMsg) {
+    public RequestResponse(boolean successful, String errorMsg) {
         this(successful);
         this.errorMsg = errorMsg;
     }
 
-    public AuthenticationResponse(boolean successful) {
+    public RequestResponse(boolean successful) {
         this.successful = successful;
     }
 

@@ -42,7 +42,7 @@ import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
-import ipren.watchr.dataHolders.FireRating;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.IMovieViewModel;
@@ -165,7 +165,6 @@ public class MovieDetails extends Fragment {
         builder.setCancelable(true);
         builder.create();
 
-
         ourRating.setOnClickListener(v -> {
             // Get the rating view
             View ratingView = getLayoutInflater().inflate(R.layout.rating_layout, null);
@@ -184,9 +183,9 @@ public class MovieDetails extends Fragment {
             });
 
             // Display our average of our ratings from FireBase
-            viewModel.getRatings().observe(getViewLifecycleOwner(), fireRatings -> {
-                if (fireRatings != null)
-                    for (FireRating f : fireRatings) {
+            viewModel.getRatings().observe(getViewLifecycleOwner(), ratings -> {
+                if (ratings != null) {
+                    for (Rating f : ratings) {
                         Log.d("RATING", f.getUser_id());
                         if (user != null && f.getUser_id().equals(user.getUID()))
                             rating.setRating((float) (f.getScore() / 2));
@@ -199,7 +198,7 @@ public class MovieDetails extends Fragment {
             double avg = 0;
             double num = 0;
             if (fireRatings != null) {
-                for (FireRating f : fireRatings)
+                for (Rating f : fireRatings)
                     avg += f.getScore();
                 if (fireRatings.length > 0)
                     num = avg / fireRatings.length;
