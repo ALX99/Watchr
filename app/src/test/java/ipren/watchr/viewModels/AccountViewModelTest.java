@@ -1,18 +1,5 @@
 package ipren.watchr.viewModels;
 
-import androidx.lifecycle.LiveData;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-import static org.junit.Assert.*;
-
-import ipren.watchr.MockClasses.DataRepositoryAdapter;
-import ipren.watchr.dataHolders.User;
-
 //TODO remake this test
 //@RunWith(RobolectricTestRunner.class)
 //@Config(sdk = 28)
@@ -22,12 +9,12 @@ public class AccountViewModelTest {
     private final User inititalUser = new User("Fred", "Fred@test.com", null, null, false);
     @Before
     public void setUp(){
-        accountViewModel = new AccountViewModel(new DataRepositoryAdapter(inititalUser));
+        accountViewModel = new AccountViewModel(new UserDataRepositoryAdapter(inititalUser));
     }
 
     @Test
     public void getUser() {
-        DataRepositoryAdapter mockRepo = new DataRepositoryAdapter();
+        UserDataRepositoryAdapter mockRepo = new UserDataRepositoryAdapter();
         accountViewModel = new AccountViewModel(mockRepo);
 
         User testUser = new User("Test", "test@test.com1", null, null, false);

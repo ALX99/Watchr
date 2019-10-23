@@ -15,7 +15,7 @@ import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 //TODO remake this test
 
-public class DataRepositoryAdapter implements IUserDataRepository {
+public class UserDataRepositoryAdapter implements IUserDataRepository {
 
 
     @Override

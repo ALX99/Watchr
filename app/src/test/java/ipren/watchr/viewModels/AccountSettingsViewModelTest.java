@@ -10,17 +10,17 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import ipren.watchr.BuildConfig;
-import ipren.watchr.MockClasses.DataRepositoryAdapter;
+import ipren.watchr.MockClasses.UserDataRepositoryAdapter;
 import ipren.watchr.R;
 
 import static org.junit.Assert.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.O_MR1)
 public class AccountSettingsViewModelTest {
-    AccountSettingsViewModel settingsViewModel = new AccountSettingsViewModel(new DataRepositoryAdapter());
+    AccountSettingsViewModel settingsViewModel = new AccountSettingsViewModel(new UserDataRepositoryAdapter());
     @Before
     public void setUp(){
-        settingsViewModel = new AccountSettingsViewModel(new DataRepositoryAdapter());
+        settingsViewModel = new AccountSettingsViewModel(new UserDataRepositoryAdapter());
     }
 
     @Test
