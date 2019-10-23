@@ -31,7 +31,7 @@ import ipren.watchr.repository.MovieRepository;
 public class MovieRepoTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-    private static int API_TIMEOUT = 3;
+    private static int API_TIMEOUT = 5; // Changing this might fix the API test errors
     private Movie m = new Movie(3, "testMovie");
 
     private MovieDao movieDao;
@@ -87,25 +87,32 @@ public class MovieRepoTest {
         List<Genre> genres = LiveDataTestUtil.getValue(repo.getGenresFromMovie(m.id));
         Assert.assertEquals(g.getName(), genres.get(0).getName());
     }
-    @Test
-    public void getTrendingAPIList() throws Exception{
-        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST, 1, true), API_TIMEOUT);
-        // The list of movies returned from a query in the API is always 20
-        Assert.assertEquals(20,movies.size());
-    }
+
     @Test
     public void getTrendingDB() throws Exception{
         List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST, 1, true), API_TIMEOUT);
         // The list of movies returned from a query in the API is always 20
         Assert.assertEquals(20,movies.size());
     }
-    @Test
-    public void searchTest()  throws Exception{
-        List<Movie> movies = LiveDataTestUtil.getValue(repo.Search("spiderman", 1, true), API_TIMEOUT);
-        Assert.assertEquals(20,movies.size());
-        Assert.assertTrue(!movies.get(0).title.isEmpty());
 
+    @Test
+    public void searchTest() throws Exception {
+        List<Movie> movies = LiveDataTestUtil.getValue(repo.Search("spiderman", 1, true), API_TIMEOUT);
+        Assert.assertEquals(20, movies.size());
+        Assert.assertTrue(!movies.get(0).title.isEmpty());
     }
 
+    @Test
+    public void getTrendingAPIList() throws Exception {
+        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST, 1, true), API_TIMEOUT);
+        // The list of movies returned from a query in the API is always 20
+        Assert.assertEquals(20,movies.size());
+    }
 
+    @Test
+    public void getMoviesByIDTest() throws Exception {
+        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMoviesByID(new int[]{m.id, 99}));
+        Assert.assertEquals(1, movies.size());
+        Assert.assertEquals(m.title, movies.get(0).title);
+    }
 }

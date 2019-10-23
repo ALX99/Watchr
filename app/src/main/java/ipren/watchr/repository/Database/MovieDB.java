@@ -11,7 +11,6 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import ipren.watchr.Helpers.DateConverter;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.GenreList;
@@ -20,6 +19,7 @@ import ipren.watchr.dataHolders.MovieGenreJoin;
 import ipren.watchr.dataHolders.MovieList;
 import ipren.watchr.repository.API.IMovieApi;
 import ipren.watchr.repository.API.MovieApi;
+import ipren.watchr.repository.Database.Util.DateConverter;
 import retrofit2.Call;
 import retrofit2.Response;
 

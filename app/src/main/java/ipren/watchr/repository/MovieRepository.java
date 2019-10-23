@@ -104,11 +104,11 @@ public class MovieRepository implements IMovieRepository {
      */
     private void getList(String list, int page, boolean forceFetch, Call<MovieList> call) {
         new Thread(() -> {
-            List<Movie> movies = movieDB.movieListDao().getMoviesFromListNonLiveData(list, page);
-            if (movies == null || movies.size() == 0 || movies.get(0).getUpdateDate() == null || forceFetch)
+            List<MovieList> movieList = movieDB.movieListDao().getMovieListsNonLivedata(list);
+            if (movieList == null || movieList.size() == 0 || movieList.get(0).getUpdateDate() == null || forceFetch)
                 insertMovieList(call, list, page);
             else {
-                long diff = new Date().getTime() - movies.get(0).getUpdateDate().getTime();
+                long diff = new Date().getTime() - movieList.get(0).getUpdateDate().getTime();
                 if (TimeUnit.MILLISECONDS.toDays(diff) > 1) {
                     Log.d("MOVIE", "The movie list " + list + " has to be updated!");
                     insertMovieList(call, list, page);
@@ -176,7 +176,7 @@ public class MovieRepository implements IMovieRepository {
                 // If this condition is true, it means that the movie has been inserted from
                 // the gathering of a movieList and does not contain the full information
                 // therefore has to be updated
-            }else if (m != null && (m.getUpdateDate() == null)){
+            } else if (m != null && (m.getUpdateDate() == null || m.getActorList() == null)) {
             insertMovie(movieID, UPDATE);}
             else {
                 long diff = new Date().getTime() - m.getUpdateDate().getTime();

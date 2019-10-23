@@ -22,8 +22,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
+import ipren.watchr.activities.Util.Util;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.viewModels.AccountViewModel;
