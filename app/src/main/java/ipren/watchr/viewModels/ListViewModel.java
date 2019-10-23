@@ -1,8 +1,11 @@
 package ipren.watchr.viewModels;
 
+import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -20,10 +23,7 @@ import static java.lang.Integer.parseInt;
 /**
  * The view model for the movies lists, handling the data conversion
  */
-public class ListViewModel {
-
-    // Singleton instance
-    private static ListViewModel instance;
+public class ListViewModel extends AndroidViewModel {
 
     // Repositories
     private IMovieRepository movieRepository;
@@ -43,12 +43,14 @@ public class ListViewModel {
     private MutableLiveData<Boolean> emptyListStatus;
     private MutableLiveData<Boolean> loggedInStatus;
 
-    // Local variables
-    private String listType;
+    public ListViewModel(@NonNull Application application) {
+        super(application);
+        initData(application);
+    }
 
-    private ListViewModel(Fragment fragment) {
+    private void initData(Application application) {
         userRepository = IUserDataRepository.getInstance();
-        movieRepository = new MovieRepository(fragment.getContext().getApplicationContext());
+        movieRepository = new MovieRepository(application);
         user = userRepository.getUserLiveData();
 
         loadingStatus = new MutableLiveData<>();
@@ -56,15 +58,6 @@ public class ListViewModel {
         loggedInStatus = new MutableLiveData<>();
     }
 
-    /**
-     * @return Singleton instance
-     */
-    public static ListViewModel getInstance(Fragment fragment) {
-        if (instance == null) {
-            instance = new ListViewModel(fragment);
-        }
-        return instance;
-    }
 
     public LiveData<List<Movie>> getMovies() {
         return movies;

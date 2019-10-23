@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -74,7 +75,7 @@ public class MovieListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Get view model and set correct data
-        listViewModel = ListViewModel.getInstance(this);
+        listViewModel = ViewModelProviders.of(getActivity()).get(ListViewModel.class);
         String listType = this.getArguments().getString("listType");
 
         // Set list layout and adapter
