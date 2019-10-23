@@ -110,10 +110,13 @@ public class AccountSettingsViewModel extends ViewModel {
 
     private void refreshUpdateUserProfile(Task task){
        postValue(savingNewProfileState, false);
+       if(task.isSuccessful())
+           newProfilePicture = null;
         Exception exception = task.getException();
         postValue(updateProfileResponse ,new RequestResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
     }
     private void refreshEmailVerificationResponse(Task task){
+       postValue(sendingVerificationEmail, false);
         if(task == null){
             postValue(sendVerEmailResponse, new RequestResponse(false, "Email Already verified"));
         }else{
