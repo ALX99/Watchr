@@ -6,12 +6,12 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.databinding.DataBindingUtil;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,17 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ipren.watchr.R;
+import ipren.watchr.activities.Util.Util;
 import ipren.watchr.activities.fragments.MovieListFragmentDirections;
-import ipren.watchr.activities.fragments.listeners.MovieClickListener;
 import ipren.watchr.dataHolders.Movie;
-import ipren.watchr.databinding.ItemMovieBinding;
-import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.ListViewModel;
 
 /**
  * Class for handling the creation and updating of movie cards in the recycler view
  */
-public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements MovieClickListener, Filterable {
+public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements Filterable {
 
     private ListViewModel listViewModel;
     private List<Movie> movieList;
@@ -81,10 +79,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     class MovieViewHolder extends RecyclerView.ViewHolder {
 
-        public ItemMovieBinding itemView;
+        public View itemView;
 
-        public MovieViewHolder(@NonNull ItemMovieBinding itemView) {
-            super(itemView.getRoot());
+        public MovieViewHolder(@NonNull View itemView) {
+            super(itemView);
             this.itemView = itemView;
         }
     }
@@ -114,8 +112,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @NonNull
     @Override
     public MovieListAdapter.MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ItemMovieBinding view = DataBindingUtil.inflate(inflater, R.layout.item_movie, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie, parent, false);
         return new MovieViewHolder(view);
     }
 
@@ -124,79 +121,76 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     @Override
     public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, int position) {
-        holder.itemView.setMovie(movieList.get(position));
-        holder.itemView.setListener(this);
+        ImageView image = holder.itemView.findViewById(R.id.movieImage);
+        TextView title = holder.itemView.findViewById(R.id.movieTitle);
+        TextView overview = holder.itemView.findViewById(R.id.movieOverview);
+        TextView rating = holder.itemView.findViewById(R.id.movieRating);
+        TextView genres = holder.itemView.findViewById(R.id.movieGenres);
+        ConstraintLayout layout = holder.itemView.findViewById(R.id.movieLayout);
+        ImageButton watchedButton = holder.itemView.findViewById(R.id.watchedButton);
+        ImageButton watchLaterButton = holder.itemView.findViewById(R.id.watchLaterButton);
+        ImageButton favoriteButton = holder.itemView.findViewById(R.id.favoriteButton);
 
-        // TODO: @johan Refactor and fix this (gives error)
-//        if (checkMovieInList(getMovieId(holder.itemView.getRoot()), IUserDataRepository.FAVORITES_LIST)) {
-//            changeButtonColor(holder.itemView.favoriteButton, R.color.colorAccent);
-//        } else {
-//            changeButtonColor(holder.itemView.favoriteButton, R.color.text);
-//        }
+        title.setText(movieList.get(position).title);
+        overview.setText(movieList.get(position).overview);
+        rating.setText("Rating: " + movieList.get(position).getVoteAverage());
+        Util.loadImage(image, "https://image.tmdb.org/t/p//w154" + movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
+
+        // Tap to go to movie details
+        layout.setOnClickListener(v -> {
+            MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
+            // Pass the movie id
+            action.setMovieId(movieList.get(position).id);
+            Navigation.findNavController(layout).navigate(action);
+        });
+    }
+
+//    /**
+//     * Navigates to the detail screen when card is clicked
+//     */
+//    public void onMovieClicked(View v) {
+//        int id = getMovieId(v);
 //
-//        if (checkMovieInList(getMovieId(holder.itemView.getRoot()), IUserDataRepository.WATCH_LATER_LIST)) {
-//            changeButtonColor(holder.itemView.addButton, R.color.colorAccent);
-//        } else {
-//            changeButtonColor(holder.itemView.addButton, R.color.text);
-//        }
+//        MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
+//        action.setMovieId(id);
+//        Navigation.findNavController(v).navigate(action);
+//    }
 //
-//        if (checkMovieInList(getMovieId(holder.itemView.getRoot()), IUserDataRepository.WATCHED_LIST)) {
-//            changeButtonColor(holder.itemView.watchedButton, R.color.colorAccent);
-//        } else {
-//            changeButtonColor(holder.itemView.watchedButton, R.color.text);
-//        }
-    }
-
-    /**
-     * Navigates to the detail screen when card is clicked
-     */
-    @Override
-    public void onMovieClicked(View v) {
-        int id = getMovieId(v);
-
-        MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
-        action.setMovieId(id);
-        Navigation.findNavController(v).navigate(action);
-    }
-
-    /**
-     * Adds/removes the movie to the favorite list
-     */
-    @Override
-    public void onFavoriteClicked(View v) {
-        ConstraintLayout parent = (ConstraintLayout) v.getParent();
-        int id = getMovieId(parent);
-        // TODO: @johan Fix multiple buttons being highlighted because ViewHolders is being reused
-        buttonHandler(v, id, "Favorites");
-    }
-
-    /**
-     * Adds/removes the movie to the watch later list
-     */
-    @Override
-    public void onWatchLaterClicked(View v) {
-        ConstraintLayout parent = (ConstraintLayout) v.getParent();
-        int id = getMovieId(parent);
-        buttonHandler(v, id, "Watch_Later");
-    }
-
-    /**
-     * Adds/removes the movie to the watched list
-     */
-    @Override
-    public void onWatchedClicked(View v) {
-        ConstraintLayout parent = (ConstraintLayout) v.getParent();
-        int id = getMovieId(parent);
-        buttonHandler(v, id, "Watched");
-    }
-
-    /**
-     * Returns the current movie id from context
-     */
-    private int getMovieId(View v) {
-        String idString = ((TextView) v.findViewById(R.id.movieId)).getText().toString();
-        return Integer.valueOf(idString);
-    }
+//    /**
+//     * Adds/removes the movie to the favorite list
+//     */
+//    public void onFavoriteClicked(View v) {
+//        ConstraintLayout parent = (ConstraintLayout) v.getParent();
+//        int id = getMovieId(parent);
+//        // TODO: @johan Fix multiple buttons being highlighted because ViewHolders is being reused
+//        buttonHandler(v, id, "Favorites");
+//    }
+//
+//    /**
+//     * Adds/removes the movie to the watch later list
+//     */
+//    public void onWatchLaterClicked(View v) {
+//        ConstraintLayout parent = (ConstraintLayout) v.getParent();
+//        int id = getMovieId(parent);
+//        buttonHandler(v, id, "Watch_Later");
+//    }
+//
+//    /**
+//     * Adds/removes the movie to the watched list
+//     */
+//    public void onWatchedClicked(View v) {
+//        ConstraintLayout parent = (ConstraintLayout) v.getParent();
+//        int id = getMovieId(parent);
+//        buttonHandler(v, id, "Watched");
+//    }
+//
+//    /**
+//     * Returns the current movie id from context
+//     */
+//    private int getMovieId(View v) {
+//        String idString = ((TextView) v.findViewById(R.id.movieId)).getText().toString();
+//        return Integer.valueOf(idString);
+//    }
 
     /**
      * Handles the updating of the buttons
