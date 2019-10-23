@@ -144,7 +144,7 @@
             app:argType="integer" />
     </fragment>
     <action
-        android:id="@+id/action_global_MovieListFragment"
+        android:id="@+id/action_global_browseFragment"
         app:destination="@id/MovieListFragment"
         app:exitAnim="@anim/fade_out"
         app:launchSingleTop="true" />

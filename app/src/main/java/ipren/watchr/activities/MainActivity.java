@@ -11,9 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -42,10 +44,13 @@ public class MainActivity extends AppCompatActivity {
         // Set up navigation
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
-        connectBottomNav(bottomNav);
+        NavigationUI.setupWithNavController(bottomNav, navController);
 
         // Get model
         mainViewModel = getViewModel();
+
+        DrawerLayout filterDrawer = findViewById(R.id.filter_drawer);
+        filterDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         connectProfileButton();
 
@@ -54,33 +59,14 @@ public class MainActivity extends AppCompatActivity {
         toolbar.requestFocus();
     }
 
-    private void connectBottomNav(BottomNavigationView bottomNav) {
-        bottomNav.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.MovieListFragment:
-                    navController.navigate(R.id.action_global_MovieListFragment);
-                    return true;
-                case R.id.recommendedFragment:
-                    navController.navigate(R.id.action_global_recommendedFragment);
-                    return true;
-                case R.id.watchLaterFragment:
-                    navController.navigate(R.id.action_global_watchLaterFragment);
-                    return true;
-                case R.id.favoritesFragment:
-                    navController.navigate(R.id.action_global_favoritesFragment);
-                    return true;
-                case R.id.watchedFragment:
-                    navController.navigate(R.id.action_global_watchedFragment);
-                    return true;
-            }
-            return false;
-        });
-    }
-
     //This method can be overridden and allows us to inject a ViewModel for testing
     @VisibleForTesting
     protected MainViewModelInterface getViewModel() {
         return ViewModelProviders.of(this).get(MainViewModel.class);
+    }
+
+    public NavController getNavController() {
+        return navController;
     }
 
     /**
