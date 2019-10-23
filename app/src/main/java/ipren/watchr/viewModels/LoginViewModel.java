@@ -132,7 +132,7 @@ public class LoginViewModel extends ViewModel {
 
     public void setRegPasswordTxt(String regPasswordTxt) {
         this.regPasswordTxt = regPasswordTxt;
-        updatePasswordErrorTxt(regPasswordError, regPasswordTxt);
+        updatePasswordErrorTxt(regPasswordError, regPasswordTxt, 5);
     }
 
     public void setRegReTypedPasswordTxt(String regReTypedPasswordTxt) {
@@ -147,7 +147,7 @@ public class LoginViewModel extends ViewModel {
 
     public void setLogPasswordTxt(String logPasswordTxt) {
         this.logPasswordTxt = logPasswordTxt;
-        updatePasswordErrorTxt(logPasswordError, logPasswordTxt);
+        updatePasswordErrorTxt(logPasswordError, logPasswordTxt,5);
     }
 
     public void setResetEmailTxt(String resetEmailTxt) {

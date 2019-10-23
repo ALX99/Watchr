@@ -2,6 +2,7 @@ package ipren.watchr.viewModels;
 
 import android.net.Uri;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -26,6 +27,7 @@ public class AccountSettingsViewModel extends ViewModel {
     private String username = "";
     private Uri newProfilePicture;
 
+    private final int minPasswordLength = 6;
 
 
     private IUserDataRepository userDataRepository;
@@ -45,10 +47,18 @@ public class AccountSettingsViewModel extends ViewModel {
 
 
 
-   public AccountSettingsViewModel(){
+    @VisibleForTesting
+    public AccountSettingsViewModel(IUserDataRepository userDataRepository){
+        this.userDataRepository = userDataRepository;
+        this.liveUser = userDataRepository.getUserLiveData();
+    }
+
+
+    public AccountSettingsViewModel(){
        userDataRepository = IUserDataRepository.getInstance();
        this.liveUser = userDataRepository.getUserLiveData();
     }
+
 
     public void refreshUsr() {
         userDataRepository.refreshUsr();
@@ -114,12 +124,12 @@ public class AccountSettingsViewModel extends ViewModel {
 
     public void setOldPassword(String oldPassword) {
         this.oldPassword = oldPassword;
-        updatePasswordErrorTxt(oldPasswordErrorTxt,oldPassword);
+        updatePasswordErrorTxt(oldPasswordErrorTxt,oldPassword, minPasswordLength);
     }
 
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
-        updatePasswordErrorTxt(newPasswordErrorTxt,newPassword);
+        updatePasswordErrorTxt(newPasswordErrorTxt,newPassword, minPasswordLength);
     }
 
     public void setReTypedPassword(String reTypedPassword) {
@@ -129,7 +139,7 @@ public class AccountSettingsViewModel extends ViewModel {
 
     public void setUsername(String username) {
         this.username = username;
-        setStringTooLongErroTxt(usernameErrorTxt, username, 15);
+        setStringTooLongErrorTxt(usernameErrorTxt, username, 15);
     }
 
 
