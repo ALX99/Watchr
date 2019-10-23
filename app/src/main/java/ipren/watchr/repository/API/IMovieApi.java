@@ -27,6 +27,6 @@ public interface IMovieApi {
     @GET("discover/movie?api_key=" + Constants.API_KEY + "&language=en-US&sort_by=popularity.desc&include_adult=true&include_video=true")
     Call<MovieList> getDiscover(@Query("with_genres") int[] genres, @Query("page") int page);
 
-    @GET("search/company?api_key=" + Constants.API_KEY)
+    @GET("search/movie?api_key=" + Constants.API_KEY)
     Call<MovieList> Search(@Query("query") String text, @Query("page") int page);
 }

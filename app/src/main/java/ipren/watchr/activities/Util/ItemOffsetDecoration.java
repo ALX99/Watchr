@@ -1,4 +1,4 @@
-package ipren.watchr.Helpers;
+package ipren.watchr.activities.Util;
 
 import android.content.Context;
 import android.graphics.Rect;

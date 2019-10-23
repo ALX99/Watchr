@@ -55,23 +55,6 @@ public class LoginViewModel extends ViewModel {
         this.user = userDataRepository.getUserLiveData();
     }
 
-
-    public LiveData<User> getUser() {
-        return this.user;
-    }
-
-    public LiveData<RequestResponse> getSignInResponse() {
-        return this.signInResponse;
-    }
-
-    public LiveData<RequestResponse> getCreateUserResponse() {
-        return this.createUserResponse;
-    }
-
-    public LiveData<RequestResponse> getPasswordResetResponse() {
-        return this.passwordResetResponse;
-    }
-
     public boolean registerUser() {
         if (regEmailTxt.isEmpty() || regPasswordTxt.isEmpty()) {
             if (regEmailTxt.isEmpty()) postValue(regEmailError, "Please enter your email");
@@ -149,7 +132,7 @@ public class LoginViewModel extends ViewModel {
 
     public void setRegPasswordTxt(String regPasswordTxt) {
         this.regPasswordTxt = regPasswordTxt;
-        updatePasswordErrorTxt(regPasswordError, regPasswordTxt);
+        updatePasswordErrorTxt(regPasswordError, regPasswordTxt, 6);
     }
 
     public void setRegReTypedPasswordTxt(String regReTypedPasswordTxt) {
@@ -164,7 +147,7 @@ public class LoginViewModel extends ViewModel {
 
     public void setLogPasswordTxt(String logPasswordTxt) {
         this.logPasswordTxt = logPasswordTxt;
-        updatePasswordErrorTxt(logPasswordError, logPasswordTxt);
+        updatePasswordErrorTxt(logPasswordError, logPasswordTxt,6);
     }
 
     public void setResetEmailTxt(String resetEmailTxt) {

@@ -117,8 +117,8 @@ public class FireRepositoryManager implements IUserDataRepository {
     }
 
     @Override
-    public LiveData<String[]> getMovieList(String list, String user_id) {
-        return firestoreDatabase.getMovieListByUserID(list, user_id);
+    public LiveData<String[]> getMovieList(String list, String id) {
+        return firestoreDatabase.getMovieListByUserID(list, id);
     }
 
     @Override

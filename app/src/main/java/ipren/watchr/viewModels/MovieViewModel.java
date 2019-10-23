@@ -10,10 +10,10 @@ import java.util.List;
 
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Comment;
-import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.PublicProfile;
+import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.repository.IUserDataRepository;
@@ -30,7 +30,7 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
-        movieRepository = new MovieRepository(application.getApplicationContext());
+        movieRepository = new MovieRepository();
         userDataRepository = IUserDataRepository.getInstance();
     }
 

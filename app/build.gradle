@@ -69,13 +69,13 @@ android {
     lintOptions {
         // Disable Autofill "autofillHints" warnings, since they use API > 26,
         // we use 21.
-        disable 'SmallSp', 'Autofill', 'ContentDescription', "ClickableViewAccessibility"
+        disable 'SmallSp', 'Autofill', 'ContentDescription', "ClickableViewAccessibility", 'HardcodedText'
     }
     dataBinding.enabled = true
 }
 
-dependencies {
 
+dependencies {
     def room_version = "2.2.0"
 
 
@@ -95,6 +95,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation "android.arch.core:core-testing:1.1.1"
+    testImplementation "android.arch.core:core-testing:1.1.1"
 
     // CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.0.1'
@@ -124,7 +125,7 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
-    implementation 'com.google.firebase:firebase-firestore:21.1.1'
+    implementation 'com.google.firebase:firebase-firestore:21.2.0'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
 
     // RxJava for handling asynchronous tasks
@@ -142,4 +143,5 @@ dependencies {
 
     // Paging
     implementation "androidx.paging:paging-runtime:2.1.0"
+
 }

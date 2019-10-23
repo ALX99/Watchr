@@ -36,9 +36,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.Constants;
-import ipren.watchr.Helpers.ItemOffsetDecoration;
-import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
+import ipren.watchr.activities.Util.ItemOffsetDecoration;
+import ipren.watchr.activities.Util.Util;
 import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
@@ -94,6 +94,10 @@ public class MovieDetails extends Fragment {
     ProgressBar popularity;
     @BindView(R.id.runtime)
     TextView runtime;
+    @BindView(R.id.adult)
+    TextView adult;
+    @BindView(R.id.language)
+    TextView language;
     @BindView(R.id.watched)
     AppCompatCheckBox watchedCheckbox;
     @BindView(R.id.watchLater)
@@ -182,7 +186,8 @@ public class MovieDetails extends Fragment {
                 }
             });
 
-            // Display our average of our ratings from FireBase
+            // Display the average of our ratings from FireBase in the rating
+            // AppCompactRatingBar layout
             viewModel.getRatings().observe(getViewLifecycleOwner(), ratings -> {
                 if (ratings != null) {
                     for (Rating f : ratings) {
@@ -194,13 +199,17 @@ public class MovieDetails extends Fragment {
             });
         });
 
-        //
+        // Display the average of our ratings in the movieDetails layout
         viewModel.getRatings().observe(getViewLifecycleOwner(), fireRatings -> {
             double avg = 0;
+            double num = 0;
             if (fireRatings != null) {
                 for (Rating f : fireRatings)
                     avg += f.getScore();
-                ourRatingText.setText(new DecimalFormat("#.#").format(avg / fireRatings.length));
+                if (fireRatings.length > 0)
+                    num = avg / fireRatings.length;
+                ourRatingText.setText(new DecimalFormat("#.#").format(num));
+                ourRating.setProgress((int) Math.round(num));
             }
         });
     }
@@ -275,6 +284,10 @@ public class MovieDetails extends Fragment {
             status.setText(String.format(getResources().getString(R.string.status), Movie.getStatus()));
             // Runtime
             runtime.setText(String.format(getResources().getString(R.string.runtime), Movie.getRuntime()));
+            // Adult
+            adult.setText(String.format(getResources().getString(R.string.adult), Movie.isAdult()));
+            // Language
+            language.setText(String.format(getResources().getString(R.string.language), Movie.getOriginalLanguage()));
             // Release date
             releaseDate.setText(Movie.getReleaseDate());
             // Vote score

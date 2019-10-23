@@ -27,14 +27,19 @@ import androidx.navigation.Navigation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.TextWatcherAdapter;
+import ipren.watchr.activities.Util.Util;
 import ipren.watchr.viewModels.AccountSettingsViewModel;
 
-import static ipren.watchr.activities.Util.ActivityUtils.*;
-
 import static android.app.Activity.RESULT_OK;
+import static ipren.watchr.activities.Util.ActivityUtils.Direction;
+import static ipren.watchr.activities.Util.ActivityUtils.clearAndHideTextViews;
+import static ipren.watchr.activities.Util.ActivityUtils.createTempPictureFile;
+import static ipren.watchr.activities.Util.ActivityUtils.loadingButtonEnabled;
+import static ipren.watchr.activities.Util.ActivityUtils.setTextAndColor;
+import static ipren.watchr.activities.Util.ActivityUtils.shakeButton;
+import static ipren.watchr.activities.Util.ActivityUtils.transitionBetweenLayouts;
 
 // This class has three included layouts from separate xml files, what elements are included in each layout is shown below.
 // What buttons allow the user to switch between layouts is marked with  NAVIGATION
@@ -125,7 +130,7 @@ public class AccountSettingsFragment extends Fragment {
         initChangePasswordLayout(); // Initiates the layout for changing password.
 
         //Syncing to Livedata<User> if user == null no user is logged in and this fragment should not exist.
-        settingsViewModel.getUser().observe(this, user -> {
+        settingsViewModel.liveUser.observe(this, user -> {
             if (user == null) {
                 Navigation.findNavController(getView()).popBackStack();
                 return;
@@ -172,7 +177,7 @@ public class AccountSettingsFragment extends Fragment {
     private void initEmailVerificationLayout() {
         verifyLayoutBackBtn.setOnClickListener(e -> Navigation.findNavController(getView()).popBackStack()); //Exits application
 
-        settingsViewModel.getUser().observe(this, user -> { // This method works as a callback for checking if the user is verified. Setting error texts and informing that the checkUser action is completed
+        settingsViewModel.liveUser.observe(this, user -> { // This method works as a callback for checking if the user is verified. Setting error texts and informing that the checkUser action is completed
             if (user == null) return;                               // .refreshUsr(); Triggers Livedata<user>.
             if (!checkIfUsrIsVerifiedBtn.isEnabled()) {
                 checkUserVerificationRespTxt.setVisibility(View.VISIBLE);
@@ -201,7 +206,7 @@ public class AccountSettingsFragment extends Fragment {
         settingsViewModel.sendingVerificationEmail.observe(this, bool -> loadingButtonEnabled(sendEmailVerBtn, sendingEmailVerSpinner, bool, bool ? "Sending..." : "RE-SEND VERIFICATION"));
 
         //This method observes the result from a send verification action and displays the result.
-        settingsViewModel.getVerificationResponse().observe(this, e -> {
+        settingsViewModel.sendVerEmailResponse.observe(this, e -> {
             sendEmailVerRespTxt.setVisibility(View.VISIBLE);
             if (e.isSuccessful())
                 setTextAndColor(sendEmailVerRespTxt, "Email sent!", Color.GREEN);
@@ -236,7 +241,7 @@ public class AccountSettingsFragment extends Fragment {
         settingsViewModel.changingPassword.observe(this, bool -> loadingButtonEnabled(savePasswordBtn, savePasswordSpinner, bool, bool ? "Saving..." : "save password"));
 
         //This method observes the result from a save password action and displays the result. Also clears the previous password fields
-        settingsViewModel.getChangePasswordResponse().observe(this, e -> {
+        settingsViewModel.changePasswordResponse.observe(this, e -> {
             changePasswordResponse.setVisibility(View.VISIBLE);
             if (e.isSuccessful()) {
                 oldPasswordInput.setText("");
@@ -262,7 +267,7 @@ public class AccountSettingsFragment extends Fragment {
         settingsBackBtn.setOnClickListener(e -> Navigation.findNavController(getView()).popBackStack()); //Exit button for leaving the fragment
         goToPasswordChangeBtn.setOnClickListener(e -> transitionBetweenLayouts(verifiedUserLayout, changePasswordLayout, Direction.Right, getContext())); //Switches to the change password layout
 
-        settingsViewModel.getUser().observe(this, e -> { // Sets fields to reflect the current logged in user, if user is null(it should never be here) it simply returns as no value can be extracted.
+        settingsViewModel.liveUser.observe(this, e -> { // Sets fields to reflect the current logged in user, if user is null(it should never be here) it simply returns as no value can be extracted.
             if (e == null) return;
             userEmailTxt.setText(String.format(getResources().getString(R.string.email), e.getEmail()));
             usernameInputField.setText(e.getUserName());
@@ -287,7 +292,7 @@ public class AccountSettingsFragment extends Fragment {
         profilePic.setOnClickListener(e -> chooseGalleryOrCamera()); // Attempts to fetch a new profile picture by either camera or gallery
 
         //This method observes the result from a save profile action and displays the result.
-        settingsViewModel.getUpdateProfileResponse().observe(this, e -> {
+        settingsViewModel.updateProfileResponse.observe(this, e -> {
             updateProfileResponseTxt.setVisibility(View.VISIBLE);
             if (e.isSuccessful())
                 setTextAndColor(updateProfileResponseTxt, "Success!", Color.GREEN);

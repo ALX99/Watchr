@@ -16,13 +16,13 @@ public class ViewModelSupportUtils {
     }
 
     public static void updateEmailErrorTxt(LiveData<String> live, String text) {
-        if (!isEmailFormat(text))
+        if (!isEmailFormat(text) && !text.isEmpty())
             postValue(live, "Not an email address");
     }
 
-    public static void updatePasswordErrorTxt(LiveData<String> live, String text) {
-        if (!text.isEmpty() && text.length() < 6)
-            postValue(live, "Must be more than five characters");
+    public static void updatePasswordErrorTxt(LiveData<String> live, String text, int minChars) {
+        if (!text.isEmpty() && text.length() < minChars)
+            postValue(live, "Password is too short");
     }
 
     public static void updatePasswordMatchErrorTxt(LiveData<String> live, String pw, String rePw) {
@@ -34,7 +34,7 @@ public class ViewModelSupportUtils {
         return email != null && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public static void setStringTooLongErroTxt(LiveData<String> live, String username, int maxChars){
+    public static void setStringTooLongErrorTxt(LiveData<String> live, String username, int maxChars){
         if(username.length() > maxChars)
             postValue(live, "Max 15 characters");
     }

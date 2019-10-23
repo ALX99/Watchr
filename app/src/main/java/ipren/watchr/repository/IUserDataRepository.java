@@ -46,11 +46,11 @@ public interface IUserDataRepository {
     //Firebase database functions
     LiveData<PublicProfile> getPublicProfile(String user_id);
 
-    LiveData<Comment[]> getComments(String movie_id, int searchMethod);
+    LiveData<Comment[]> getComments(String id, int searchMethod);
 
-    LiveData<Rating[]> getRatings(String movie_id, int searchMethod);
+    LiveData<Rating[]> getRatings(String id, int searchMethod);
 
-    LiveData<String[]> getMovieList(String list, String user_id);
+    LiveData<String[]> getMovieList(String list, String id);
 
     void addMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback);
 
