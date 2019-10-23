@@ -29,5 +29,7 @@
     <string name="uid">UID: %1$s</string>
     <string name="status">Status: %1$s</string>
     <string name="runtime">Runtime: %1$smin</string>
+    <string name="adult">Adult: %1$b</string>
+    <string name="language">Language: %1$s</string>
 
 </resources>

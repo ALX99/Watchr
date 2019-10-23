@@ -1,4 +1,4 @@
-package ipren.watchr.Helpers;
+package ipren.watchr.repository.Database.Util;
 
 import androidx.room.TypeConverter;
 

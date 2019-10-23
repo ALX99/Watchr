@@ -31,9 +31,6 @@ import ipren.watchr.viewModels.ListViewModel;
  */
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements MovieClickListener, Filterable {
 
-    // Singleton instance
-    private static MovieListAdapter instance;
-
     private ListViewModel listViewModel;
     private List<Movie> movieList;
     private List<Movie> movieListFull;
@@ -95,19 +92,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     /**
      * Creates a movie adapter with a list of movies
      */
-    private MovieListAdapter(ListViewModel listViewModel) {
+    public MovieListAdapter(ListViewModel listViewModel) {
         this.movieList = new ArrayList<>();
         this.listViewModel = listViewModel;
-    }
-
-    /**
-     * @return Singleton instance
-     */
-    public static MovieListAdapter getInstance(ListViewModel listViewModel) {
-        if (instance == null) {
-            instance = new MovieListAdapter(listViewModel);
-        }
-        return instance;
     }
 
     /**

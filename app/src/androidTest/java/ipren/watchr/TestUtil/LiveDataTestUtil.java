@@ -11,24 +11,40 @@ import java.util.concurrent.TimeUnit;
 public class LiveDataTestUtil {
 
 
-    /**
-     * Get the value from a LiveData object. We're waiting for LiveData to emit, for 2 seconds.
-     * Once we got a notification via onChanged, we stop observing.
-     */
+    // Used when we want to return the first LiveData onChanged value
     public static <T> T getValue(final LiveData<T> liveData) throws InterruptedException {
+        return getVal(liveData, 0);
+    }
+
+    // Used when we don't want to return the first LiveData onChanged value
+    // for example when we might be trying to get something from the api, the movie repository will return
+    // null first which we don't want the value of
+    public static <T> T getValue(final LiveData<T> liveData, int timeout) throws InterruptedException {
+        return getVal(liveData, timeout);
+    }
+
+
+    // Get a value from a LiveData object
+    private static <T> T getVal(final LiveData<T> liveData, int timeout) throws InterruptedException {
         final Object[] data = new Object[1];
         final CountDownLatch latch = new CountDownLatch(1);
+        boolean timeoutSet = timeout != 0;
         Observer<T> observer = new Observer<T>() {
             @Override
             public void onChanged(@Nullable T o) {
                 data[0] = o;
-                latch.countDown();
-                liveData.removeObserver(this);
+                // Don't stop observing if we have our own timeout
+                if (!timeoutSet) {
+                    latch.countDown();
+                    liveData.removeObserver(this);
+                }
             }
         };
         liveData.observeForever(observer);
-        latch.await(2, TimeUnit.SECONDS);
-        //noinspection unchecked
+        if (timeoutSet)
+            latch.await(timeout, TimeUnit.SECONDS);
+        else
+            latch.await(3, TimeUnit.SECONDS);
         return (T) data[0];
     }
 }

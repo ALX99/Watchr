@@ -27,6 +27,9 @@ public interface MovieListDao extends BaseDao<MovieList> {
             "AND movie_lists.page =:page")
     List<Movie> getMoviesFromListNonLiveData(String listID, int page);
 
+    @Query("SELECT * FROM movie_lists WHERE list_id =:listID")
+    List<MovieList> getMovieListsNonLivedata(String listID);
+
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM movies " +
             "INNER JOIN movie_lists " +

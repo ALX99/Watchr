@@ -1,8 +1,11 @@
 package ipren.watchr.viewModels;
 
+import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -20,10 +23,7 @@ import static java.lang.Integer.parseInt;
 /**
  * The view model for the movies lists, handling the data conversion
  */
-public class ListViewModel {
-
-    // Singleton instance
-    private static ListViewModel instance;
+public class ListViewModel extends AndroidViewModel {
 
     // Repositories
     private IMovieRepository movieRepository;
@@ -31,7 +31,6 @@ public class ListViewModel {
 
     // Live data from user repo
     private LiveData<User> user;
-    private LiveData<String[]> movieIds;
     private LiveData<String[]> favoritesIds;
     private LiveData<String[]> watchLaterIds;
     private LiveData<String[]> watchedIds;
@@ -44,12 +43,14 @@ public class ListViewModel {
     private MutableLiveData<Boolean> emptyListStatus;
     private MutableLiveData<Boolean> loggedInStatus;
 
-    // Local variables
-    private String listType;
+    public ListViewModel(@NonNull Application application) {
+        super(application);
+        initData(application);
+    }
 
-    private ListViewModel(Fragment fragment) {
+    private void initData(Application application) {
         userRepository = IUserDataRepository.getInstance();
-        movieRepository = new MovieRepository(fragment.getContext().getApplicationContext());
+        movieRepository = new MovieRepository(application);
         user = userRepository.getUserLiveData();
 
         loadingStatus = new MutableLiveData<>();
@@ -57,62 +58,6 @@ public class ListViewModel {
         loggedInStatus = new MutableLiveData<>();
     }
 
-    public void setListType(String listType) {
-        this.listType = listType;
-    }
-
-    private void setPersonalList(String listType) {
-        if (user.getValue() == null) {
-            loggedInStatus.setValue(false);
-            emptyListStatus.setValue(false);
-        } else {
-            movieIds = userRepository.getMovieList(listType, user.getValue().getUID());
-            if (movieIds.getValue() == null || movieIds.getValue().length == 0) {
-                // Empty list
-                emptyListStatus.setValue(true);
-            } else {
-                // Set list
-                int[] movieIdsInt = convertStringArrayToIntArray(movieIds.getValue());
-                movies = movieRepository.getMoviesByID(movieIdsInt);
-            }
-        }
-    }
-
-    /**
-     * Where the magic happens, sets up the correct movie list based on type and user status
-     */
-    public void refresh() {
-        if (user.getValue() != null) {
-            favoritesIds = userRepository.getMovieList(IUserDataRepository.FAVORITES_LIST, user.getValue().getUID());
-            watchLaterIds = userRepository.getMovieList(IUserDataRepository.WATCH_LATER_LIST, user.getValue().getUID());
-            watchedIds = userRepository.getMovieList(IUserDataRepository.WATCHED_LIST, user.getValue().getUID());
-        }
-
-        switch (listType) {
-            case IMovieRepository.BROWSE_LIST:
-                movies = movieRepository.getMovieList(MovieRepository.TRENDING_LIST, 1, true);
-                break;
-            case IMovieRepository.RECOMMENDED_LIST:
-                // TODO: @johan Make fetching from discover list work
-                movies = movieRepository.getDiscoverList(new int[]{27}, 1, true);
-                break;
-            case IUserDataRepository.FAVORITES_LIST:
-            case IUserDataRepository.WATCH_LATER_LIST:
-            case IUserDataRepository.WATCHED_LIST:
-                setPersonalList(listType);
-                break;
-        }
-    }
-
-    /**
-     * @return Singleton instance
-     */
-    public static ListViewModel getInstance(Fragment fragment) {
-        if (instance == null) {
-            instance = new ListViewModel(fragment);
-        }
-        return instance;
-    }
 
     public LiveData<List<Movie>> getMovies() {
         return movies;
@@ -136,7 +81,7 @@ public class ListViewModel {
 
     public LiveData<List<Movie>> getMoviesFromQuery(String query) {
         // TODO: @johan Get query from correct method when it's created
-        return movieRepository.getMovieList(query, 1, true);
+        return movieRepository.Search(query, 1, true);
     }
 
     public boolean checkMovieInList(int movieId, String listType) {
@@ -181,5 +126,37 @@ public class ListViewModel {
             intArr[i] = parseInt(strArr[i]);
         }
         return intArr;
+    }
+
+    public void initBrowse() {
+        movies = movieRepository.getMovieList(IMovieRepository.TRENDING_LIST, 1, false);
+    }
+
+    public void initRecommended() {
+        movies = movieRepository.getDiscoverList(new int[]{27}, 1, false);
+    }
+
+    public void initMovieIdLists() {
+        String userId = user.getValue().getUID();
+        watchedIds = userRepository.getMovieList(IUserDataRepository.WATCHED_LIST, userId);
+        watchLaterIds = userRepository.getMovieList(IUserDataRepository.WATCH_LATER_LIST, userId);
+        favoritesIds = userRepository.getMovieList(IUserDataRepository.FAVORITES_LIST, userId);
+    }
+
+    public LiveData<String[]> getWatchedIds() {
+        return watchedIds;
+    }
+
+    public LiveData<String[]> getWatchLaterIds() {
+        return watchLaterIds;
+    }
+
+    public LiveData<String[]> getFavoritesIds() {
+        return favoritesIds;
+    }
+
+    public void initUserMovieList(String[] movieIds) {
+        int[] movieIdsInt = convertStringArrayToIntArray(movieIds);
+        movies = movieRepository.getMoviesByID(movieIdsInt);
     }
 }

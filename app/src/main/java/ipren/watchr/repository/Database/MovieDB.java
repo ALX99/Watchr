@@ -11,7 +11,6 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import ipren.watchr.Helpers.DateConverter;
 import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.GenreList;
@@ -20,6 +19,7 @@ import ipren.watchr.dataHolders.MovieGenreJoin;
 import ipren.watchr.dataHolders.MovieList;
 import ipren.watchr.repository.API.IMovieApi;
 import ipren.watchr.repository.API.MovieApi;
+import ipren.watchr.repository.Database.Util.DateConverter;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -38,17 +38,22 @@ public abstract class MovieDB extends RoomDatabase {
     };
 
     // Singleton
-    public static synchronized MovieDB getInstance(Context context) {
-        if (INSTANCE != null)
-            return INSTANCE;
+    public static synchronized MovieDB getInstance() {
+        return INSTANCE;
+    }
 
+    // Room requires a context to associate the DB with
+    // Easier to init it like this so we don't have to
+    // pass around the context all the time
+    public static synchronized void initDB(Context context) {
+        // Do nothing if instance already set
+        if (INSTANCE != null)
+            return;
         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                 MovieDB.class, DB_NAME)
                 .fallbackToDestructiveMigration()
                 .addCallback(dbCallback)
                 .build();
-        return INSTANCE;
-
     }
 
     public abstract ActorDao actorDao();

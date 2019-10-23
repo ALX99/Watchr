@@ -18,11 +18,13 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
+import ipren.watchr.activities.Util.Util;
+import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.viewModels.AccountViewModel;
 
@@ -40,6 +42,8 @@ public class AccountFragment extends Fragment {
     TextView movies_rated_count;
     @BindView(R.id.avrage_rating)
     TextView averageRating;
+    @BindView(R.id.time_watched_count)
+    TextView time_watched_count;
     @BindView(R.id.watch_later_count)
     TextView watch_later_count;
     @BindView(R.id.comments_made_count)
@@ -116,8 +120,17 @@ public class AccountFragment extends Fragment {
             setAverageScore(averageRating, calculateAverageRating(res));
         });
         accountViewModel.getFavoritesList(uID).observe(this, res -> postListSize(favorite_count, res));
-        accountViewModel.getWatchedList(uID).observe(this, res -> postListSize(movies_watched_count, res));
         accountViewModel.getWatchLaterList(uID).observe(this, res -> postListSize(watch_later_count, res));
+        accountViewModel.getWatchedList(uID).observe(this, res -> {
+            postListSize(movies_watched_count, res);
+            if (res == null)
+                return;
+            int[] ids = new int[res.length];
+            for (int i = 0; i < res.length; i++)
+                ids[i] = Integer.parseInt(res[i]);
+            accountViewModel.getMovies(ids).observe(this, movies -> time_watched_count.setText(String.valueOf(calcWatchtime(movies))));
+        });
+
     }
 
 
@@ -146,6 +159,16 @@ public class AccountFragment extends Fragment {
             total += rating.getScore();
         }
         return (total / list.length);
+    }
+
+    private int calcWatchtime(List<Movie> movies) {
+        if (movies == null)
+            return 0;
+        int time = 0;
+        for (Movie m : movies)
+            if (m.getRuntime() != null)
+                time += Integer.valueOf(m.getRuntime());
+        return time;
     }
 
 

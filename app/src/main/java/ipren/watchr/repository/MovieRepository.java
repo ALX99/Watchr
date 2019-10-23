@@ -1,6 +1,5 @@
 package ipren.watchr.repository;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -26,19 +25,30 @@ import retrofit2.Response;
 public class MovieRepository implements IMovieRepository {
     private static final int INSERT = 1;
     private static final int UPDATE = 2;
-    private MovieDB movieDB;
-    private IMovieApi movieApi;
+    private static MovieDB movieDB;
+    private static IMovieApi movieApi;
+    private static IMovieRepository INSTANCE;
 
-    /**
-     * Instantiates a new Movie repository.
-     *
-     * @param context the context
-     */
-    public MovieRepository(Context context) {
-        movieDB = MovieDB.getInstance(context);
+    public MovieRepository() {
+
+    }
+
+    // Used with junit tests
+    public MovieRepository(MovieDB movieDB) {
+        this.movieDB = movieDB;
         movieApi = new MovieApi();
     }
 
+    // Singleton
+    public static IMovieRepository getInstance() {
+        if (INSTANCE != null)
+            return INSTANCE;
+
+        INSTANCE = new MovieRepository();
+        movieDB = MovieDB.getInstance();
+        movieApi = new MovieApi();
+        return INSTANCE;
+    }
 
     public LiveData<List<Genre>> getGenresFromMovie(int id) {
         return movieDB.movieGenreJoinDao().getGenresFromMovie(id);
@@ -94,11 +104,11 @@ public class MovieRepository implements IMovieRepository {
      */
     private void getList(String list, int page, boolean forceFetch, Call<MovieList> call) {
         new Thread(() -> {
-            List<Movie> movies = movieDB.movieListDao().getMoviesFromListNonLiveData(list, page);
-            if (movies == null || movies.size() == 0 || movies.get(0).getUpdateDate() == null || forceFetch)
+            List<MovieList> movieList = movieDB.movieListDao().getMovieListsNonLivedata(list);
+            if (movieList == null || movieList.size() == 0 || movieList.get(0).getUpdateDate() == null || forceFetch)
                 insertMovieList(call, list, page);
             else {
-                long diff = new Date().getTime() - movies.get(0).getUpdateDate().getTime();
+                long diff = new Date().getTime() - movieList.get(0).getUpdateDate().getTime();
                 if (TimeUnit.MILLISECONDS.toDays(diff) > 1) {
                     Log.d("MOVIE", "The movie list " + list + " has to be updated!");
                     insertMovieList(call, list, page);
@@ -122,16 +132,14 @@ public class MovieRepository implements IMovieRepository {
                 if (!response.isSuccessful())
                     return;
                 Date d = new Date();
+                // Insert all the movies
                 List<Movie> movies = response.body().getMovies();
+                Log.d("MOVIE", "Fetching done, inserting " + movies.size() + " movies");
                 new Thread(() -> {
-                    // We don't update the movie entries here
-                    for (Movie m : movies) {
-                        // If the movie doesn't exist in the DB already we have to insert it
-                        if (movieDB.movieDao().getMovieByIDNonLiveObject(m.getId()) == null)
-                            movieDB.movieDao().insert(m);
-                        // Associate the movie with the movieList
+                    movieDB.movieDao().insert(movies);
+                    for (Movie m : movies)
                         movieDB.movieListDao().insert(new MovieList(m.id, list, page, d));
-                    }
+
                 }).start();
             }
             @Override
@@ -162,13 +170,14 @@ public class MovieRepository implements IMovieRepository {
     public LiveData<Movie> getMovieByID(int movieID) {
         new Thread(() -> {
             Movie m = movieDB.movieDao().getMovieByIDNonLiveObject(movieID);
-            if (m == null)
+            if (m == null) {
+                Log.d("MOVIE", "The movie " + movieID + " is null");
                 insertMovie(movieID, INSERT);
                 // If this condition is true, it means that the movie has been inserted from
                 // the gathering of a movieList and does not contain the full information
                 // therefore has to be updated
-            else if (m != null && (m.getUpdateDate() == null || m.getActorList() == null))
-                insertMovie(movieID, UPDATE);
+            } else if (m != null && (m.getUpdateDate() == null || m.getActorList() == null)) {
+            insertMovie(movieID, UPDATE);}
             else {
                 long diff = new Date().getTime() - m.getUpdateDate().getTime();
                 if (TimeUnit.MILLISECONDS.toDays(diff) > 7) {
@@ -193,8 +202,10 @@ public class MovieRepository implements IMovieRepository {
         movieCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
-                if (!response.isSuccessful())
+                if (!response.isSuccessful()){
+                    Log.d("MOVIE", "FAIL");
                     return;
+                }
                 Movie movie = response.body();
                 // Insert stuff to db :)
                 new Thread(() -> {
