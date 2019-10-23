@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import ipren.watchr.Helpers.Util;
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.Util;
 import ipren.watchr.activities.fragments.MovieListFragmentDirections;
