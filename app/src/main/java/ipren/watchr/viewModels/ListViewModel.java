@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.Arrays;
 import java.util.List;
 
+import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IMovieRepository;
@@ -45,6 +46,7 @@ public class ListViewModel extends AndroidViewModel {
 
     private void initData(Application application) {
         userRepository = IUserDataRepository.getInstance();
+        // TODO: @johan Fixa detta!!
         movieRepository = new MovieRepository(application);
         user = userRepository.getUserLiveData();
     }
@@ -138,5 +140,9 @@ public class ListViewModel extends AndroidViewModel {
     public void initUserMovieList(String[] movieIds) {
         int[] movieIdsInt = convertStringArrayToIntArray(movieIds);
         movies = movieRepository.getMoviesByID(movieIdsInt);
+    }
+
+    public LiveData<List<Genre>> getGenres(int movieId) {
+        return movieRepository.getGenresFromMovie(movieId);
     }
 }

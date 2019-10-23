@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -23,11 +24,15 @@
             <TextView
                 android:id="@+id/movieTitle"
                 style="@style/Title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:maxLength="30"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Movie title"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/movieImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,6 +45,7 @@
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:maxLines="3"
+                android:text="Movie overview"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/movieImage"
                 app:layout_constraintTop_toBottomOf="@+id/movieTitle" />
@@ -90,21 +96,30 @@
             <TextView
                 android:id="@+id/movieRating"
                 style="@style/Text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Movie rating"
                 app:layout_constraintBottom_toTopOf="@+id/movieGenres"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/movieImage" />
 
             <TextView
                 android:id="@+id/movieGenres"
                 style="@style/Text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="Genres: Horror"
                 app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/movieImage" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

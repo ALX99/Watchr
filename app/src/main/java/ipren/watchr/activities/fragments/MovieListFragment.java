@@ -179,8 +179,8 @@ public class MovieListFragment extends Fragment {
                     moviesLiveData.observe(getViewLifecycleOwner(), movies -> {
                         if (movies != null) {
                             movieListAdapter.updateMovieList(movies);
+                            moviesLiveData.removeObservers(getViewLifecycleOwner());
                         }
-                        moviesLiveData.removeObservers(getViewLifecycleOwner());
                     });
                     return false;
                 }
