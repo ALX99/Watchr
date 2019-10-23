@@ -79,34 +79,37 @@ public class MovieListFragment extends Fragment {
 
         // Set list layout and adapter
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
-        movieListAdapter = MovieListAdapter.getInstance(listViewModel);
+        movieListAdapter = new MovieListAdapter(listViewModel);
         movieList.setAdapter(movieListAdapter);
 
         // Connect toolbar search and filter
         connectFilterButton();
         connectSearchView(listType);
 
-        if (listType.equals(IMovieRepository.BROWSE_LIST)) {
-            listViewModel.initBrowse();
-            handlePublicList();
-        } else if (listType.equals(IMovieRepository.RECOMMENDED_LIST)) {
-            listViewModel.initRecommended();
-            listViewModel.getMovies().observe(this, movies -> {
-                if (movies != null && movies instanceof List) {
-                    movieListAdapter.updateMovieList(movies);
-                    loadingView.setVisibility(View.GONE);
-                }
-            });
-        } else {
-            handleUserList(listType);
-            listViewModel.getUser().observe(this, user -> handleUserList(listType));
-        }
+        handleNavigation(listType);
 
         // Fetch fresh data from API on refresh
         refreshLayout.setOnRefreshListener(() -> {
-            // TODO: @johan fixa refreshing
+            handleNavigation(listType);
             refreshLayout.setRefreshing(false);
         });
+    }
+
+    private void handleNavigation(String listType) {
+        switch (listType) {
+            case IMovieRepository.BROWSE_LIST:
+                listViewModel.initBrowse();
+                handlePublicList();
+                break;
+            case IMovieRepository.RECOMMENDED_LIST:
+                listViewModel.initRecommended();
+                handlePublicList();
+                break;
+            default:
+                // TODO: @johan Fix the overlap that occurs when on a user list and you log in or out
+                handleUserList(listType);
+                listViewModel.getUser().observe(this, user -> handleUserList(listType));
+        }
     }
 
     private void handlePublicList() {
