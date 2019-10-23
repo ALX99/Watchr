@@ -23,7 +23,7 @@ import ipren.watchr.repository.Database.Util.DateConverter;
 import retrofit2.Call;
 import retrofit2.Response;
 
-@Database(entities = {Movie.class, Actor.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 13)
+@Database(entities = {Movie.class, Actor.class, Genre.class, MovieGenreJoin.class, MovieList.class}, version = 14)
 @TypeConverters(DateConverter.class)
 public abstract class MovieDB extends RoomDatabase {
     private static MovieDB INSTANCE; // Database instance
