@@ -38,11 +38,6 @@ public class ListViewModel extends AndroidViewModel {
     // Live data from movie repo
     private LiveData<List<Movie>> movies;
 
-    // Local live data
-    private MutableLiveData<Boolean> loadingStatus;
-    private MutableLiveData<Boolean> emptyListStatus;
-    private MutableLiveData<Boolean> loggedInStatus;
-
     public ListViewModel(@NonNull Application application) {
         super(application);
         initData(application);
@@ -52,10 +47,6 @@ public class ListViewModel extends AndroidViewModel {
         userRepository = IUserDataRepository.getInstance();
         movieRepository = new MovieRepository(application);
         user = userRepository.getUserLiveData();
-
-        loadingStatus = new MutableLiveData<>();
-        emptyListStatus = new MutableLiveData<>();
-        loggedInStatus = new MutableLiveData<>();
     }
 
 
@@ -65,18 +56,6 @@ public class ListViewModel extends AndroidViewModel {
 
     public LiveData<User> getUser() {
         return user;
-    }
-
-    public MutableLiveData<Boolean> getLoadingStatus() {
-        return loadingStatus;
-    }
-
-    public MutableLiveData<Boolean> getEmptyListStatus() {
-        return emptyListStatus;
-    }
-
-    public MutableLiveData<Boolean> getLoggedInStatus() {
-        return loggedInStatus;
     }
 
     public LiveData<List<Movie>> getMoviesFromQuery(String query) {
@@ -120,6 +99,7 @@ public class ListViewModel extends AndroidViewModel {
     /**
      * Converts an array of integer strings to an array of ints
      */
+    // TODO: @johan Maybe put this in util?
     private int[] convertStringArrayToIntArray(String[] strArr) {
         int[] intArr = new int[strArr.length];
         for (int i = 0; i < strArr.length; i++) {
