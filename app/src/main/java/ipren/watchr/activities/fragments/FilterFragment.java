@@ -1,8 +1,11 @@
 package ipren.watchr.activities.fragments;
 
+import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -10,23 +13,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ipren.watchr.R;
+import ipren.watchr.viewModels.FilterViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class FilterFragment extends Fragment {
 
+    private FilterViewModel mViewModel;
 
-    public FilterFragment() {
-        // Required empty public constructor
+    public static FilterFragment newInstance() {
+        return new FilterFragment();
     }
 
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.filter_fragment, container, false);
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_filter, container, false);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel = ViewModelProviders.of(getActivity()).get(FilterViewModel.class);
+        // TODO: Use the ViewModel
     }
 
 }
