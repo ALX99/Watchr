@@ -86,8 +86,8 @@ public class LoginViewModelTest {
         loginViewModel.setLogPasswordTxt("123456");
         assertEquals("123456", loginViewModel.getLogPasswordTxt());
         assertNull(loginViewModel.logPasswordError.getValue());
-        loginViewModel.setLogPasswordTxt("1234");
-        assertEquals("1234", loginViewModel.getLogPasswordTxt());
+        loginViewModel.setLogPasswordTxt("12345");
+        assertEquals("12345", loginViewModel.getLogPasswordTxt());
         assertNotNull(loginViewModel.logPasswordError.getValue());
     }
 
