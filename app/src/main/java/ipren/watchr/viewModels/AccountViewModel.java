@@ -20,29 +20,25 @@ import static ipren.watchr.repository.IUserDataRepository.WATCH_LATER_LIST;
 
 public class AccountViewModel extends ViewModel {
 
-    LiveData<User> user;
+    public final LiveData<User> user;
 
     private IUserDataRepository userDataRepository;
-    private IMovieRepository repository;
+    private IMovieRepository movieRepository;
     @VisibleForTesting
-    public AccountViewModel(IUserDataRepository iMainRepository) {
+    public AccountViewModel(IUserDataRepository iMainRepository, IMovieRepository movieRepository) {
         userDataRepository = iMainRepository;
-        repository = IMovieRepository.getInstance();
+        this.movieRepository = movieRepository;
         this.user = userDataRepository.getUserLiveData();
     }
 
     public AccountViewModel() {
         userDataRepository = IUserDataRepository.getInstance();
-        repository = IMovieRepository.getInstance();
+        movieRepository = IMovieRepository.getInstance();
         this.user = userDataRepository.getUserLiveData();
     }
 
     public void signOut() {
         userDataRepository.signOutUser();
-    }
-
-    public LiveData<User> getUser() {
-        return this.user;
     }
 
     public LiveData<Rating[]> getRatingByUserId(String user_id){
@@ -65,7 +61,7 @@ public class AccountViewModel extends ViewModel {
     }
 
     public LiveData<List<Movie>> getMovies(int[] ids) {
-        return repository.getMoviesByID(ids);
+        return movieRepository.getMoviesByID(ids);
     }
 
 

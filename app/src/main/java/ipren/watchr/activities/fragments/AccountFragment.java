@@ -92,7 +92,7 @@ public class AccountFragment extends Fragment {
         configAccBtn.setOnClickListener(e ->
                 Navigation.findNavController(fragmentView).navigate(R.id.action_global_account_settings));
 
-        accountViewModel.getUser().observe(this, e -> {
+        accountViewModel.user.observe(this, e -> {
             if(e == null) {
                 Navigation.findNavController(getView()).popBackStack();
                 return;

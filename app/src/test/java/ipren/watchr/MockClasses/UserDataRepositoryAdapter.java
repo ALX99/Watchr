@@ -69,17 +69,17 @@ public class UserDataRepositoryAdapter implements IUserDataRepository {
     }
 
     @Override
-    public LiveData<Comment[]> getComments(String movie_id, int searchMethod) {
+    public LiveData<Comment[]> getComments(String id, int searchMethod) {
         return null;
     }
 
     @Override
-    public LiveData<Rating[]> getRatings(String movie_id, int searchMethod) {
+    public LiveData<Rating[]> getRatings(String id, int searchMethod) {
         return null;
     }
 
     @Override
-    public LiveData<String[]> getMovieList(String list, String user_id) {
+    public LiveData<String[]> getMovieList(String list, String id) {
         return null;
     }
 
