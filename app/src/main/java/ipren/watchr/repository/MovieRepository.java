@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import ipren.watchr.dataHolders.Actor;
@@ -89,7 +90,7 @@ public class MovieRepository implements IMovieRepository {
      * @return The movie list
      */
     public LiveData<List<Movie>> Search(String text, int page, boolean forceFetch) {
-        String list = IMovieRepository.SEARCH_LIST + text.toLowerCase();
+        String list = IMovieRepository.SEARCH_LIST + text.toLowerCase(Locale.getDefault());
         getList(list, page, forceFetch, movieApi.Search(text, page));
         return movieDB.movieListDao().getMoviesFromList(list, page);
     }

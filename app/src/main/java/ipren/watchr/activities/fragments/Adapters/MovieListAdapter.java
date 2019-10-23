@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.MovieListFragmentDirections;
@@ -53,10 +54,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             if (constraint == null || constraint.length() == 0) {
                 filteredMovieList.addAll(movieListFull);
             } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
+                String filterPattern = constraint.toString().toLowerCase(Locale.getDefault()).trim();
 
                 for (Movie movie : movieListFull) {
-                    if (movie.title.toLowerCase().contains(filterPattern)) {
+                    if (movie.title.toLowerCase(Locale.getDefault()).contains(filterPattern)) {
                         filteredMovieList.add(movie);
                     }
                 }

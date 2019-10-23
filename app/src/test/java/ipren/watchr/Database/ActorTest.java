@@ -1,9 +1,10 @@
 package ipren.watchr.Database;
 
+import android.os.Build;
+
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -11,6 +12,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.List;
 
@@ -21,7 +24,8 @@ import ipren.watchr.repository.Database.ActorDao;
 import ipren.watchr.repository.Database.MovieDB;
 import ipren.watchr.repository.Database.MovieDao;
 
-@RunWith(AndroidJUnit4ClassRunner.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.O_MR1)
 public class ActorTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();

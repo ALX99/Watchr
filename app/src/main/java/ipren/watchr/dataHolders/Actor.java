@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
@@ -14,7 +15,8 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity(tableName = "actors", foreignKeys = @ForeignKey(entity = Movie.class,
         parentColumns = "id",
         childColumns = "movie_id",
-        onDelete = CASCADE))
+        onDelete = CASCADE),
+        indices = {@Index("movie_id")})
 public class Actor {
     @PrimaryKey
     @NonNull
