@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import java.util.Arrays;
 import java.util.List;
 
+import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IMovieRepository;
@@ -23,7 +25,7 @@ import static java.lang.Integer.parseInt;
 /**
  * The view model for the movies lists, handling the data conversion
  */
-public class ListViewModel extends AndroidViewModel {
+public class ListViewModel extends ViewModel {
 
     // Repositories
     private IMovieRepository movieRepository;
@@ -38,17 +40,12 @@ public class ListViewModel extends AndroidViewModel {
     // Live data from movie repo
     private LiveData<List<Movie>> movies;
 
-    public ListViewModel(@NonNull Application application) {
-        super(application);
-        initData(application);
-    }
-
-    private void initData(Application application) {
+    public ListViewModel() {
         userRepository = IUserDataRepository.getInstance();
+        // TODO: @johan Fixa detta!!
         movieRepository = IMovieRepository.getInstance();
         user = userRepository.getUserLiveData();
     }
-
 
     public LiveData<List<Movie>> getMovies() {
         return movies;
@@ -59,8 +56,7 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Movie>> getMoviesFromQuery(String query) {
-        // TODO: @johan Get query from correct method when it's created
-        return movieRepository.Search(query, 1, true);
+        return movieRepository.Search(query, 1, false);
     }
 
     public boolean checkMovieInList(int movieId, String listType) {
@@ -138,5 +134,9 @@ public class ListViewModel extends AndroidViewModel {
     public void initUserMovieList(String[] movieIds) {
         int[] movieIdsInt = convertStringArrayToIntArray(movieIds);
         movies = movieRepository.getMoviesByID(movieIdsInt);
+    }
+
+    public LiveData<List<Genre>> getGenres(int movieId) {
+        return movieRepository.getGenresFromMovie(movieId);
     }
 }
