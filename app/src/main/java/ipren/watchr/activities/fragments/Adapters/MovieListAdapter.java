@@ -12,17 +12,21 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.Util;
 import ipren.watchr.activities.fragments.MovieListFragmentDirections;
+import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.ListViewModel;
 
 /**
@@ -31,6 +35,7 @@ import ipren.watchr.viewModels.ListViewModel;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements Filterable {
 
     private ListViewModel listViewModel;
+    private Fragment fragment;
     private List<Movie> movieList;
     private List<Movie> movieListFull;
 
@@ -76,6 +81,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     };
 
     /**
+     * Creates a movie adapter with a list of movies
+     */
+    public MovieListAdapter(ListViewModel listViewModel, Fragment fragment) {
+        this.movieList = new ArrayList<>();
+        this.listViewModel = listViewModel;
+        this.fragment = fragment;
+    }
+
+    /**
      * Class for holding a movie view layout
      */
     class MovieViewHolder extends RecyclerView.ViewHolder {
@@ -86,14 +100,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             super(itemView);
             this.itemView = itemView;
         }
-    }
-
-    /**
-     * Creates a movie adapter with a list of movies
-     */
-    public MovieListAdapter(ListViewModel listViewModel) {
-        this.movieList = new ArrayList<>();
-        this.listViewModel = listViewModel;
     }
 
     /**
@@ -129,24 +135,102 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         TextView title = holder.itemView.findViewById(R.id.movieTitle);
         TextView overview = holder.itemView.findViewById(R.id.movieOverview);
         TextView rating = holder.itemView.findViewById(R.id.movieRating);
-        TextView genreView = holder.itemView.findViewById(R.id.movieGenres);
+        TextView genresView = holder.itemView.findViewById(R.id.movieGenres);
         ConstraintLayout layout = holder.itemView.findViewById(R.id.movieLayout);
         ImageButton watchedButton = holder.itemView.findViewById(R.id.watchedButton);
         ImageButton watchLaterButton = holder.itemView.findViewById(R.id.watchLaterButton);
         ImageButton favoriteButton = holder.itemView.findViewById(R.id.favoriteButton);
+
+        // Fetch genres and set to view
+        listViewModel.getGenres(movieId).observe(fragment.getActivity(), genres -> {
+            if (genres != null && genres.size() > 0) {
+                String genresString = "";
+                for (Genre genre : genres) {
+                    genresString += genre.getName() + " ";
+                }
+                genresView.setText("Genres: " + genresString);
+                listViewModel.getGenres(movieId).removeObservers(fragment.getActivity());
+            }
+        });
 
         // Set UI components
         title.setText(movieList.get(position).title);
         overview.setText(movieList.get(position).overview);
         rating.setText("Rating: " + movieList.get(position).getVoteAverage());
 
-        // TODO: @johan Set genres
-//        listViewModel.getGenres(movieId).observe(holder, genres -> {
-//
-//        });
-
         Util.loadImage(image, "https://image.tmdb.org/t/p//w154" + movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
-        // TODO: @johan Color the buttons correctly
+
+
+
+
+
+
+        // TODO: @johan Refactor this
+        // Color watched button
+        listViewModel.getUser().observe(fragment.getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                listViewModel.initMovieIdLists();
+                listViewModel.getWatchedIds().observe(fragment.getActivity(), ids -> {
+                    if (ids != null) {
+                        if (Arrays.asList(ids).contains(String.valueOf(movieId))) {
+                            changeButtonColor(watchedButton, R.color.colorAccent);
+                        } else {
+                            changeButtonColor(watchedButton, R.color.text);
+                        }
+                    } else {
+                        changeButtonColor(watchedButton, R.color.text);
+                    }
+                });
+            } else {
+                changeButtonColor(watchedButton, R.color.text);
+            }
+        });
+
+        // Color watch later button
+        listViewModel.getUser().observe(fragment.getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                listViewModel.initMovieIdLists();
+                listViewModel.getWatchLaterIds().observe(fragment.getActivity(), ids -> {
+                    if (ids != null) {
+                        if (Arrays.asList(ids).contains(String.valueOf(movieId))) {
+                            changeButtonColor(watchLaterButton, R.color.colorAccent);
+                        } else {
+                            changeButtonColor(watchLaterButton, R.color.text);
+                        }
+                    } else {
+                        changeButtonColor(watchLaterButton, R.color.text);
+                    }
+                });
+            } else {
+                changeButtonColor(watchLaterButton, R.color.text);
+            }
+        });
+
+        // Color favorites button
+        listViewModel.getUser().observe(fragment.getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                listViewModel.initMovieIdLists();
+                listViewModel.getFavoritesIds().observe(fragment.getActivity(), ids -> {
+                    if (ids != null) {
+                        if (Arrays.asList(ids).contains(String.valueOf(movieId))) {
+                            changeButtonColor(favoriteButton, R.color.colorAccent);
+                        } else {
+                            changeButtonColor(favoriteButton, R.color.text);
+                        }
+                    } else {
+                        changeButtonColor(favoriteButton, R.color.text);
+                    }
+                });
+            } else {
+                changeButtonColor(favoriteButton, R.color.text);
+            }
+        });
+
+
+
+
+
+
 
         // Set up on click listeners
         layout.setOnClickListener(v -> {
