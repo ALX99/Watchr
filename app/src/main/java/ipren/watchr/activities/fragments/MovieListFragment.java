@@ -84,6 +84,10 @@ public class MovieListFragment extends Fragment {
         listViewModel = ViewModelProviders.of(getActivity()).get(ListViewModel.class);
         String listType = this.getArguments().getString("listType");
 
+        if (listViewModel.getUser().getValue() != null) {
+            listViewModel.initMovieIdLists();
+        }
+
         // Set list layout and adapter
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
         movieListAdapter = new MovieListAdapter(listViewModel, this);
@@ -130,7 +134,6 @@ public class MovieListFragment extends Fragment {
         // Check if user is logged in
         if (listViewModel.getUser().getValue() != null) {
             // Get the movie ids from user repo
-            listViewModel.initMovieIdLists();
             switch (listType) {
                 case IUserDataRepository.WATCHED_LIST: listViewModel.getWatchedIds().observe(this, this::observeIds); break;
                 case IUserDataRepository.WATCH_LATER_LIST: listViewModel.getWatchLaterIds().observe(this, this::observeIds); break;
