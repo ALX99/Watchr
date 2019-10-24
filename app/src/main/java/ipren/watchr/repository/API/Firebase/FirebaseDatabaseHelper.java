@@ -3,6 +3,7 @@ package ipren.watchr.repository.API.Firebase;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -67,6 +68,10 @@ class FirebaseDatabaseHelper {
     //user_id -> (movie_list , LiveData<movie_id[]>)
     private HashMap<String, HashMap<String, MutableLiveData<String[]>>> movieListByUser_id = new HashMap<>();
 
+    @VisibleForTesting
+    FirebaseDatabaseHelper(FirebaseFirestore firestore) {
+        this.fireStore  = firestore;
+    }
 
     FirebaseDatabaseHelper() {
         fireStore = FirebaseFirestore.getInstance();
@@ -258,7 +263,7 @@ class FirebaseDatabaseHelper {
 
                 dataList.postValue(newSet.toArray((T[]) Array.newInstance(type, newSet.size())));
             } catch (Exception e) {
-                dataList.postValue(((T[])Array.newInstance(type, 0)));
+                dataList.postValue(((T[]) Array.newInstance(type, 0)));
                 Log.e("FireStore", "Could not parse response into registered type");
             }
 

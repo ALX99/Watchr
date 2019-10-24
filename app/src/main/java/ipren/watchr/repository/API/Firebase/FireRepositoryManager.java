@@ -2,9 +2,11 @@ package ipren.watchr.repository.API.Firebase;
 
 import android.net.Uri;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Rating;
@@ -21,6 +23,12 @@ public class FireRepositoryManager implements IUserDataRepository {
     private FirebaseDatabaseHelper firestoreDatabase;
 
     private LiveData<User> currentLoggedUser;
+
+    @VisibleForTesting
+    FireRepositoryManager(FirebaseAuthHelper firebaseAuthHelper, FirebaseDatabaseHelper firestoreDatabase){
+        this.firebaseAuthHelper = firebaseAuthHelper;
+        this.firestoreDatabase = firestoreDatabase;
+    }
 
     private FireRepositoryManager() {
         firebaseAuthHelper = new FirebaseAuthHelper();

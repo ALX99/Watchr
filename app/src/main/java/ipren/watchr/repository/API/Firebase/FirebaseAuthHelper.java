@@ -2,6 +2,7 @@ package ipren.watchr.repository.API.Firebase;
 
 import android.net.Uri;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -22,6 +23,13 @@ class FirebaseAuthHelper {
     private FirebaseAuth mAuth;
 
     private final static String FIRESTORE_PIC_FOLDER = "pics/";
+
+
+    @VisibleForTesting
+    FirebaseAuthHelper(FirebaseAuth mAuth) {
+        this.mAuth = mAuth;
+
+    }
 
     FirebaseAuthHelper() {
         mAuth = FirebaseAuth.getInstance();
@@ -61,8 +69,8 @@ class FirebaseAuthHelper {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful())
                 task.getResult().getUser().sendEmailVerification();
-
-            callback.onComplete(task);
+            if(callback != null)
+                callback.onComplete(task);
         });
     }
 
@@ -71,8 +79,7 @@ class FirebaseAuthHelper {
     }
 
     void resetPassword(String email, OnCompleteListener callback) {
-        Task task = mAuth.sendPasswordResetEmail(email);
-        attachCallback(task, callback);
+        attachCallback(mAuth.sendPasswordResetEmail(email), callback);
     }
 
 
