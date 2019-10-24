@@ -1,13 +1,8 @@
 package ipren.watchr.viewModels;
 
-import android.app.Application;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.Arrays;
@@ -18,7 +13,6 @@ import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.repository.IUserDataRepository;
-import ipren.watchr.repository.MovieRepository;
 
 import static java.lang.Integer.parseInt;
 
@@ -55,8 +49,8 @@ public class ListViewModel extends ViewModel {
         return user;
     }
 
-    public LiveData<List<Movie>> getMoviesFromQuery(String query) {
-        return movieRepository.Search(query, 1, false);
+    public void getMoviesFromQuery(String query) {
+        movies = movieRepository.Search(query, 1, false);
     }
 
     public boolean checkMovieInList(int movieId, String listType) {
