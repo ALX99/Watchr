@@ -116,14 +116,6 @@ public class LoginViewModel extends ViewModel {
         postValue(passwordResetResponse, new RequestResponse(task.isSuccessful(), exception != null ? exception.getLocalizedMessage() : "Unkown error"));
     }
 
-    private <T> void postValue(LiveData<T> liveData, T object) {
-        try {
-            ((MutableLiveData<T>) liveData).postValue(object);
-        } catch (Exception e) {
-            Log.e("Watchr", "unable to post value");
-        }
-
-    }
 
     public void setRegEmailTxt(String regEmailTxt) {
         this.regEmailTxt = regEmailTxt;
@@ -156,7 +148,8 @@ public class LoginViewModel extends ViewModel {
     }
 
 
-    // Because java.
+    //These fields are currently not used in any activity because we are only using a vertical layout, and activity reconstruction wont happen unless its killed by android.
+    //Normally you'd use them to sync the activity data after a reconstruction
     public String getRegEmailTxt() {
         return regEmailTxt;
     }
