@@ -17,20 +17,22 @@ import static ipren.watchr.repository.IUserDataRepository.FAVORITES_LIST;
 import static ipren.watchr.repository.IUserDataRepository.SEARCH_METHOD_USER_ID;
 import static ipren.watchr.repository.IUserDataRepository.WATCHED_LIST;
 import static ipren.watchr.repository.IUserDataRepository.WATCH_LATER_LIST;
-
+//This class provides data for the AccountFragment Activity.Functions as an abstraction layer between the API and activity/view
 public class AccountViewModel extends ViewModel {
 
-    public final LiveData<User> user;
+    public final LiveData<User> user; // The current user singed in
 
-    private IUserDataRepository userDataRepository;
-    private IMovieRepository movieRepository;
+    private IUserDataRepository userDataRepository; //Handles user data
+
+    private IMovieRepository movieRepository; //Handles movie information
+
     @VisibleForTesting
     public AccountViewModel(IUserDataRepository iMainRepository, IMovieRepository movieRepository) {
         userDataRepository = iMainRepository;
         this.movieRepository = movieRepository;
         this.user = userDataRepository.getUserLiveData();
     }
-
+    //Default constructor used by ViewModelProviders
     public AccountViewModel() {
         userDataRepository = IUserDataRepository.getInstance();
         movieRepository = IMovieRepository.getInstance();
@@ -40,6 +42,7 @@ public class AccountViewModel extends ViewModel {
     public void signOut() {
         userDataRepository.signOutUser();
     }
+
 
     public LiveData<Rating[]> getRatingByUserId(String user_id){
           return userDataRepository.getRatings(user_id,SEARCH_METHOD_USER_ID);
