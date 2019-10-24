@@ -4,12 +4,14 @@ package ipren.watchr.activities;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
@@ -104,12 +106,25 @@ public class MainActivity extends AppCompatActivity {
      */
     private void handleProfileFragment() {
         int currentID = navController.getCurrentDestination().getId();
-        if (currentID == R.id.loginFragment || currentID == R.id.accountFragment || currentID == R.id.accountSettingsFragment)
+        if (currentID == R.id.loginFragment || currentID == R.id.accountFragment || currentID == R.id.accountSettingsFragment) {
             navController.popBackStack();
-        else if (mainViewModel.getUser().getValue() == null)
+        } else if (mainViewModel.getUser().getValue() == null) {
             navController.navigate(R.id.action_global_loginFragment);
-        else
+            hideSearchAndFilter();
+        } else {
             navController.navigate(R.id.action_global_accountFragment);
+            hideSearchAndFilter();
+        }
+    }
+
+    private void hideSearchAndFilter() {
+        // Get the search view from toolbar and hide
+        SearchView searchView = findViewById(R.id.toolbar_search);
+        searchView.setVisibility(View.GONE);
+
+        // Get the filter button from toolbar and show
+        ImageButton filterBtn = findViewById(R.id.toolbar_filter);
+        filterBtn.setVisibility(View.GONE);
     }
 
 }

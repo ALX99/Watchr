@@ -86,7 +86,7 @@ public class MovieListFragment extends Fragment {
 
         // Set list layout and adapter
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
-        movieListAdapter = new MovieListAdapter(listViewModel);
+        movieListAdapter = new MovieListAdapter(listViewModel, this);
         movieList.setAdapter(movieListAdapter);
 
         connectFilterButton();
