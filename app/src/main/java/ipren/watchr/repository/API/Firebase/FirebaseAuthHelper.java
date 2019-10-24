@@ -144,6 +144,7 @@ class FirebaseAuthHelper {
             if (e.isSuccessful())
                 refreshUsr();
 
+            if(callback != null)
                 callback.onComplete(e);
 
         });

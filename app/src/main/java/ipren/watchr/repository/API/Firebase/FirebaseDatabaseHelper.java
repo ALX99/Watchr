@@ -133,7 +133,7 @@ class FirebaseDatabaseHelper {
                             return;
                         //if list does not exist result will be null;
                         try {
-                            List<String> movies = (List<String>) res.get("movies");
+                            List<String> movies = (List<String>) res.get(MOVIE_ARRAY_ID_FIELD);
                             movieList.postValue(movies.toArray(new String[movies.size()]));
                         } catch (Exception e) {
                             movieList.postValue(new String[0]);
@@ -167,7 +167,7 @@ class FirebaseDatabaseHelper {
 
         rating.put(USER_ID_FIELD, user_id);
         rating.put(MOVIE_ID_FIELD, movie_id);
-        rating.put(SCORE_ID_FIELD, Integer.valueOf(score));
+        rating.put(SCORE_ID_FIELD, score);
 
         //This method updates existing documents if they exists or creates if they dont. Also removes duplicates if there are any
         fireStore.collection(RATING_PATH).whereEqualTo(MOVIE_ID_FIELD, movie_id).whereEqualTo(USER_ID_FIELD, user_id).get().addOnCompleteListener(e -> {

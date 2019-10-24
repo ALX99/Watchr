@@ -19,14 +19,6 @@ public interface MovieListDao extends BaseDao<MovieList> {
             "WHERE movie_lists.list_id = :listID")
     LiveData<List<Movie>> getAllMoviesFromList(String listID);
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM movies " +
-            "INNER JOIN movie_lists " +
-            " ON movies.id =movie_lists.movie_id " +
-            "WHERE movie_lists.list_id = :listID " +
-            "AND movie_lists.page =:page")
-    List<Movie> getMoviesFromListNonLiveData(String listID, int page);
-
     @Query("SELECT * FROM movie_lists WHERE list_id =:listID")
     List<MovieList> getMovieListsNonLivedata(String listID);
 
@@ -39,7 +31,7 @@ public interface MovieListDao extends BaseDao<MovieList> {
     LiveData<List<Movie>> getMoviesFromList(String listID, int page);
 
     @Query("DELETE FROM movie_lists WHERE movie_id = :movieID AND list_id = :listID")
-    void removeMovieFromList(int movieID, int listID);
+    void removeMovieFromList(int movieID, String listID);
 
     @Query("DELETE FROM movie_lists")
     void NUKE();

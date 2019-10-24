@@ -38,13 +38,10 @@ public class Actor {
     @SerializedName("order")
     private int order; // Some actors play more important roles than others
 
-    public Actor(String ID, int movieID, String name, String character, int order, String pictureLink) {
+    public Actor(String ID, int movieID, String name) {
         this.ID = ID;
         this.movieID = movieID;
         this.name = name;
-        this.character = character;
-        this.order = order;
-        this.pictureLink = new StringBuilder().append("https://image.tmdb.org/t/p/original").append(pictureLink).toString();
     }
 
     public Actor(int movieID, Actor a) {
@@ -54,6 +51,18 @@ public class Actor {
         character = a.getCharacter();
         pictureLink = a.getPictureLink();
         order = a.getOrder();
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public void setCharacter(String character) {
+        this.character = character;
+    }
+
+    public void setPictureLink(String pictureLink) {
+        this.pictureLink = new StringBuilder().append("https://image.tmdb.org/t/p/original").append(pictureLink).toString();
     }
 
     public String getID() {
