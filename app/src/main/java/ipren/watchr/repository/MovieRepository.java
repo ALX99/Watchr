@@ -78,7 +78,7 @@ public class MovieRepository implements IMovieRepository {
      */
     public LiveData<List<Movie>> getDiscoverList(int[] genres, int page, boolean forceFetch) {
         Arrays.sort(genres);
-        String list = IMovieRepository.DISCOVER_LIST + genres.toString();
+        String list = IMovieRepository.DISCOVER_LIST + Arrays.toString(genres);
         getList(list, page, forceFetch, movieApi.getDiscover(genres, page));
         return movieDB.movieListDao().getMoviesFromList(list, page);
     }
@@ -105,7 +105,7 @@ public class MovieRepository implements IMovieRepository {
      */
     private void getList(String list, int page, boolean forceFetch, Call<MovieList> call) {
         new Thread(() -> {
-            List<MovieList> movieList = movieDB.movieListDao().getMovieListsNonLivedata(list);
+            List<MovieList> movieList = movieDB.movieListDao().getMovieListsNonLivedata(list,page);
             if (movieList == null || movieList.size() == 0 || movieList.get(0).getUpdateDate() == null || forceFetch)
                 insertMovieList(call, list, page);
             else {
