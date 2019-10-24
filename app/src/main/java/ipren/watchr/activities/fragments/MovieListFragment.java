@@ -1,6 +1,7 @@
 package ipren.watchr.activities.fragments;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -25,6 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
+import ipren.watchr.activities.MainActivity;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.repository.IMovieRepository;
@@ -106,7 +112,6 @@ public class MovieListFragment extends Fragment {
                 handlePublicList();
                 break;
             default:
-                // TODO: @johan Fix the overlap that occurs when on a user list and you log in or out
                 handleUserList(listType);
                 listViewModel.getUser().observe(this, user -> handleUserList(listType));
         }
@@ -133,9 +138,11 @@ public class MovieListFragment extends Fragment {
             }
         } else {
             // Not logged in
+            // TODO: @johan Bugfix: movie list shows instead of not logged in error when user logs out from a list view
             notLoggedInError.setVisibility(View.VISIBLE);
             movieList.setVisibility(View.GONE);
             loadingView.setVisibility(View.GONE);
+            emptyListView.setVisibility(View.GONE);
         }
     }
 
@@ -147,7 +154,10 @@ public class MovieListFragment extends Fragment {
                     movieListAdapter.updateMovieList(movies);
                     if (movies.size() == 0) {
                         emptyListView.setVisibility(View.VISIBLE);
+                    } else {
+                        movieList.setVisibility(View.VISIBLE);
                     }
+                    notLoggedInError.setVisibility(View.GONE);
                     loadingView.setVisibility(View.GONE);
                 }
             });
@@ -179,8 +189,8 @@ public class MovieListFragment extends Fragment {
                     moviesLiveData.observe(getViewLifecycleOwner(), movies -> {
                         if (movies != null) {
                             movieListAdapter.updateMovieList(movies);
+                            moviesLiveData.removeObservers(getViewLifecycleOwner());
                         }
-                        moviesLiveData.removeObservers(getViewLifecycleOwner());
                     });
                     return false;
                 }
@@ -216,7 +226,12 @@ public class MovieListFragment extends Fragment {
         filterBtn.setVisibility(View.VISIBLE);
 
         filterBtn.setOnClickListener(v -> {
-            Toast.makeText(this.getContext(), "Clicked the filter button", Toast.LENGTH_SHORT).show();
+            DrawerLayout filterDrawer = getActivity().findViewById(R.id.filter_drawer);
+            if (filterDrawer.isDrawerOpen(GravityCompat.END)) {
+                filterDrawer.closeDrawer(GravityCompat.END);
+            } else {
+                filterDrawer.openDrawer(GravityCompat.END);
+            }
         });
     }
 }

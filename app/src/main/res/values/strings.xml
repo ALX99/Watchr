@@ -32,4 +32,7 @@
     <string name="adult">Adult: %1$b</string>
     <string name="language">Language: %1$s</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

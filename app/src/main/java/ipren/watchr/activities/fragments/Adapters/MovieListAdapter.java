@@ -122,40 +122,53 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     @Override
     public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, int position) {
+        int movieId = movieList.get(position).getId();
+
+        // Get all UI components from movie card
         ImageView image = holder.itemView.findViewById(R.id.movieImage);
         TextView title = holder.itemView.findViewById(R.id.movieTitle);
         TextView overview = holder.itemView.findViewById(R.id.movieOverview);
         TextView rating = holder.itemView.findViewById(R.id.movieRating);
-        TextView genres = holder.itemView.findViewById(R.id.movieGenres);
+        TextView genreView = holder.itemView.findViewById(R.id.movieGenres);
         ConstraintLayout layout = holder.itemView.findViewById(R.id.movieLayout);
         ImageButton watchedButton = holder.itemView.findViewById(R.id.watchedButton);
         ImageButton watchLaterButton = holder.itemView.findViewById(R.id.watchLaterButton);
         ImageButton favoriteButton = holder.itemView.findViewById(R.id.favoriteButton);
 
+        // Set UI components
         title.setText(movieList.get(position).title);
         overview.setText(movieList.get(position).overview);
         rating.setText("Rating: " + movieList.get(position).getVoteAverage());
-        Util.loadImage(image, "https://image.tmdb.org/t/p//w154" + movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
 
-        // Tap to go to movie details
+        // TODO: @johan Set genres
+//        listViewModel.getGenres(movieId).observe(holder, genres -> {
+//
+//        });
+
+        Util.loadImage(image, "https://image.tmdb.org/t/p//w154" + movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
+        // TODO: @johan Color the buttons correctly
+
+        // Set up on click listeners
         layout.setOnClickListener(v -> {
             MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
             // Pass the movie id
             action.setMovieId(movieList.get(position).id);
             Navigation.findNavController(layout).navigate(action);
         });
+
+        watchedButton.setOnClickListener(v -> {
+            Toast.makeText(v.getContext(), "Added " + movieId + " to watched", Toast.LENGTH_SHORT).show();
+        });
+
+        watchLaterButton.setOnClickListener(v -> {
+            Toast.makeText(v.getContext(), "Added " + movieId + " to watch later", Toast.LENGTH_SHORT).show();
+        });
+
+        favoriteButton.setOnClickListener(v -> {
+            Toast.makeText(v.getContext(), "Added " + movieId + " to favorites", Toast.LENGTH_SHORT).show();
+        });
     }
 
-//    /**
-//     * Navigates to the detail screen when card is clicked
-//     */
-//    public void onMovieClicked(View v) {
-//        int id = getMovieId(v);
-//
-//        MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
-//        action.setMovieId(id);
-//        Navigation.findNavController(v).navigate(action);
-//    }
 //
 //    /**
 //     * Adds/removes the movie to the favorite list
