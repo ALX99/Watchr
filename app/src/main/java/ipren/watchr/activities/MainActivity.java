@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,8 +25,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import ipren.watchr.R;
+import ipren.watchr.activities.fragments.FilterFragment;
 import ipren.watchr.repository.Database.MovieDB;
 import ipren.watchr.viewModels.MainViewModel;
 import ipren.watchr.viewModels.MainViewModelInterface;
@@ -51,8 +55,47 @@ public class MainActivity extends AppCompatActivity {
         // Get model
         mainViewModel = getViewModel();
 
+
+
+
+
+        // TODO: @johan Temporary, refactor this
+        // Set up filter drawer
         DrawerLayout filterDrawer = findViewById(R.id.filter_drawer);
         filterDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+        // Set up the rating spinner
+        Spinner ratingSpinner = findViewById(R.id.rating_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> ratingAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.rating_spinner, R.layout.spinner_item);
+        // Specify the layout to use when the list of choices appears
+        ratingAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        ratingSpinner.setAdapter(ratingAdapter);
+
+        // Set up the rating spinner
+        Spinner genreSpinner = findViewById(R.id.genre_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> genreAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.genre_spinner, R.layout.spinner_item);
+        // Specify the layout to use when the list of choices appears
+        genreAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        genreSpinner.setAdapter(genreAdapter);
+
+        // Set up the rating spinner
+        Spinner orderBySpinner = findViewById(R.id.order_by_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> orderByAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.order_by_spinner, R.layout.spinner_item);
+        // Specify the layout to use when the list of choices appears
+        orderByAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        orderBySpinner.setAdapter(orderByAdapter);
+
+
+
+
+
+
 
         connectProfileButton();
 
