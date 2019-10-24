@@ -60,12 +60,20 @@ public class Movie {
     @SerializedName("genres")
     private Genre[] genres;
     @Ignore
+    @SerializedName("genre_ids")
+    private int[] genre_ids;
+    @Ignore
     @SerializedName("credits")
     private ActorList actorList;
+
 
     public Movie(int id, String title) {
         this.id = id;
         this.title = title;
+    }
+
+    public int[] getGenre_ids() {
+        return genre_ids;
     }
 
     public Date getUpdateDate() {
