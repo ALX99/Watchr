@@ -131,7 +131,7 @@ public class AccountSettingsFragment extends Fragment {
 
         //Syncing to Livedata<User> if user == null no user is logged in and this fragment should not exist.
         settingsViewModel.liveUser.observe(this, user -> {
-            if (user == null) 
+            if (user == null)
                 return;
 
             showEmailVerifiedLayout(user.isVerified()); // Sets initial layout and transitions to the verified layout if a user has become verified while activity is active
