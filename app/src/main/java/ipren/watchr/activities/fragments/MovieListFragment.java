@@ -1,7 +1,6 @@
 package ipren.watchr.activities.fragments;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,10 +15,8 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -30,7 +26,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
-import ipren.watchr.activities.MainActivity;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.repository.IMovieRepository;
@@ -54,6 +49,16 @@ public class MovieListFragment extends Fragment {
 
     private ListViewModel listViewModel;
     private MovieListAdapter movieListAdapter;
+    // Observer to update the movieList
+    private Observer<List<Movie>> movieObserver = new Observer<List<Movie>>() {
+        @Override
+        public void onChanged(List<Movie> movies) {
+            if (movies != null) {
+                movieListAdapter.updateMovieList(movies);
+                loadingView.setVisibility(View.GONE);
+            }
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,9 +89,13 @@ public class MovieListFragment extends Fragment {
         listViewModel = ViewModelProviders.of(getActivity()).get(ListViewModel.class);
         String listType = this.getArguments().getString("listType");
 
+        if (listViewModel.getUser().getValue() != null) {
+            listViewModel.initMovieIdLists();
+        }
+
         // Set list layout and adapter
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
-        movieListAdapter = new MovieListAdapter(listViewModel);
+        movieListAdapter = new MovieListAdapter(listViewModel, this);
         movieList.setAdapter(movieListAdapter);
 
         connectFilterButton();
@@ -105,32 +114,22 @@ public class MovieListFragment extends Fragment {
         switch (listType) {
             case IMovieRepository.BROWSE_LIST:
                 listViewModel.initBrowse();
-                handlePublicList();
                 break;
             case IMovieRepository.RECOMMENDED_LIST:
                 listViewModel.initRecommended();
-                handlePublicList();
                 break;
             default:
                 handleUserList(listType);
                 listViewModel.getUser().observe(this, user -> handleUserList(listType));
         }
+        listViewModel.getMovies().observe(getActivity(), movieObserver);
     }
 
-    private void handlePublicList() {
-        listViewModel.getMovies().observe(this, movies -> {
-            if (movies != null && movies instanceof List) {
-                movieListAdapter.updateMovieList(movies);
-                loadingView.setVisibility(View.GONE);
-            }
-        });
-    }
 
     private void handleUserList(String listType) {
         // Check if user is logged in
         if (listViewModel.getUser().getValue() != null) {
             // Get the movie ids from user repo
-            listViewModel.initMovieIdLists();
             switch (listType) {
                 case IUserDataRepository.WATCHED_LIST: listViewModel.getWatchedIds().observe(this, this::observeIds); break;
                 case IUserDataRepository.WATCH_LATER_LIST: listViewModel.getWatchLaterIds().observe(this, this::observeIds); break;
@@ -146,7 +145,7 @@ public class MovieListFragment extends Fragment {
         }
     }
 
-    private void observeIds(String[] ids) {
+    public void observeIds(String[] ids) {
         if (ids != null) {
             listViewModel.initUserMovieList(ids);
             listViewModel.getMovies().observe(this, movies -> {
@@ -179,42 +178,24 @@ public class MovieListFragment extends Fragment {
         // Get rid of magnifying glass on keyboard.
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
-        if (listType.equals(IMovieRepository.BROWSE_LIST)) {
-            // If browse, update list directly from API data
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    // Get live data from query, observe it to make it async and then stop observing it
-                    LiveData<List<Movie>> moviesLiveData = listViewModel.getMoviesFromQuery(query);
-                    moviesLiveData.observe(getViewLifecycleOwner(), movies -> {
-                        if (movies != null) {
-                            movieListAdapter.updateMovieList(movies);
-                            moviesLiveData.removeObservers(getViewLifecycleOwner());
-                        }
-                    });
-                    return false;
-                }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Remove the current observer
+                listViewModel.getMovies().removeObserver(movieObserver);
+                // Load new movies from a query
+                listViewModel.getMoviesFromQuery(query);
+                // Observe them
+                listViewModel.getMovies().observe(getActivity(), movieObserver);
+                return false;
+            }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    return false;
-                }
-            });
-        } else {
-            // Filter current list
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    movieListAdapter.getFilter().filter(newText);
-                    return false;
-                }
-            });
-        }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                movieListAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 
     /**

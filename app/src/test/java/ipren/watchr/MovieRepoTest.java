@@ -68,8 +68,8 @@ public class MovieRepoTest {
     public void getActorsTest() throws Exception {
         // Insert new actors
         ActorDao actorDao = actorDao = db.actorDao();
-        Actor a = new Actor("1", m.id, "Chris Pratt", "Joker", 1, "pictureLink");
-        Actor b = new Actor("2", m.id, "Chris Pratt", "Joker", 2, "pictureLink");
+        Actor a = new Actor("1", m.id, "Chris Pratt");
+        Actor b = new Actor("2", m.id, "Chris Pratt");
         actorDao.insert(a);
         actorDao.insert(b);
 
@@ -117,5 +117,11 @@ public class MovieRepoTest {
         List<Movie> movies = LiveDataTestUtil.getValue(repo.getMoviesByID(new int[]{m.id, 99}));
         Assert.assertEquals(1, movies.size());
         Assert.assertEquals(m.title, movies.get(0).title);
+    }
+    @Test
+    public void testGetActors() throws Exception{
+        db.actorDao().insert(new Actor("1",m.id, "Chris Pratt"));
+        List<Actor> a = LiveDataTestUtil.getValue(repo.getActorsFromMovie(m.id));
+        Assert.assertEquals(a.get(0).getName(),a.get(0).getName());
     }
 }

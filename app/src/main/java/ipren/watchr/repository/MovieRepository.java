@@ -138,9 +138,12 @@ public class MovieRepository implements IMovieRepository {
                 Log.d("MOVIE", "Fetching done, inserting " + movies.size() + " movies");
                 new Thread(() -> {
                     movieDB.movieDao().insert(movies);
-                    for (Movie m : movies)
+                    for (Movie m : movies) {
                         movieDB.movieListDao().insert(new MovieList(m.id, list, page, d));
-
+                        Log.d("MOVIE", "inserting " + m.title + " in " + list);
+                        for (int i : m.getGenre_ids())
+                            movieDB.movieGenreJoinDao().insert(new MovieGenreJoin(m.id, i));
+                    }
                 }).start();
             }
             @Override

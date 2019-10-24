@@ -16,13 +16,17 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.Util;
+import ipren.watchr.activities.fragments.MovieListFragment;
 import ipren.watchr.activities.fragments.MovieListFragmentDirections;
+import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.ListViewModel;
 
 /**
@@ -31,6 +35,7 @@ import ipren.watchr.viewModels.ListViewModel;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> implements Filterable {
 
     private ListViewModel listViewModel;
+    private MovieListFragment fragment;
     private List<Movie> movieList;
     private List<Movie> movieListFull;
 
@@ -76,6 +81,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     };
 
     /**
+     * Creates a movie adapter with a list of movies
+     */
+    public MovieListAdapter(ListViewModel listViewModel, MovieListFragment fragment) {
+        this.movieList = new ArrayList<>();
+        this.listViewModel = listViewModel;
+        this.fragment = fragment;
+    }
+
+    /**
      * Class for holding a movie view layout
      */
     class MovieViewHolder extends RecyclerView.ViewHolder {
@@ -86,14 +100,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             super(itemView);
             this.itemView = itemView;
         }
-    }
-
-    /**
-     * Creates a movie adapter with a list of movies
-     */
-    public MovieListAdapter(ListViewModel listViewModel) {
-        this.movieList = new ArrayList<>();
-        this.listViewModel = listViewModel;
     }
 
     /**
@@ -122,31 +128,109 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     @Override
     public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, int position) {
-        int movieId = movieList.get(position).getId();
+        int movieIdInt = movieList.get(position).getId();
+        String movieIdStr = String.valueOf(movieIdInt);
 
         // Get all UI components from movie card
         ImageView image = holder.itemView.findViewById(R.id.movieImage);
         TextView title = holder.itemView.findViewById(R.id.movieTitle);
         TextView overview = holder.itemView.findViewById(R.id.movieOverview);
         TextView rating = holder.itemView.findViewById(R.id.movieRating);
-        TextView genreView = holder.itemView.findViewById(R.id.movieGenres);
+        TextView genresView = holder.itemView.findViewById(R.id.movieGenres);
         ConstraintLayout layout = holder.itemView.findViewById(R.id.movieLayout);
         ImageButton watchedButton = holder.itemView.findViewById(R.id.watchedButton);
         ImageButton watchLaterButton = holder.itemView.findViewById(R.id.watchLaterButton);
         ImageButton favoriteButton = holder.itemView.findViewById(R.id.favoriteButton);
+
+        // Fetch genres and set to view
+        listViewModel.getGenres(movieIdInt).observe(fragment.getActivity(), genres -> {
+            if (genres != null && genres.size() > 0) {
+                String genresString = "";
+                for (Genre genre : genres) {
+                    genresString += genre.getName() + " ";
+                }
+                genresView.setText("Genres: " + genresString);
+                listViewModel.getGenres(movieIdInt).removeObservers(fragment.getActivity());
+            }
+        });
 
         // Set UI components
         title.setText(movieList.get(position).title);
         overview.setText(movieList.get(position).overview);
         rating.setText("Rating: " + movieList.get(position).getVoteAverage());
 
-        // TODO: @johan Set genres
-//        listViewModel.getGenres(movieId).observe(holder, genres -> {
-//
-//        });
-
         Util.loadImage(image, "https://image.tmdb.org/t/p//w154" + movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
-        // TODO: @johan Color the buttons correctly
+
+
+
+
+
+
+        // TODO: @johan Refactor this
+        // Color watched button
+        listViewModel.getUser().observe(fragment, user -> {
+            if (user != null) {
+                listViewModel.initMovieIdLists();
+                listViewModel.getWatchedIds().observe(fragment, ids -> {
+                    if (ids != null) {
+                        if (Arrays.asList(ids).contains(movieIdStr)) {
+                            changeButtonColor(watchedButton, R.color.colorAccent);
+                        } else {
+                            changeButtonColor(watchedButton, R.color.text);
+                        }
+                    } else {
+                        changeButtonColor(watchedButton, R.color.text);
+                    }
+                });
+            } else {
+                changeButtonColor(watchedButton, R.color.text);
+            }
+        });
+
+        // Color watch later button
+        listViewModel.getUser().observe(fragment, user -> {
+            if (user != null) {
+                listViewModel.initMovieIdLists();
+                listViewModel.getWatchLaterIds().observe(fragment, ids -> {
+                    if (ids != null) {
+                        if (Arrays.asList(ids).contains(movieIdStr)) {
+                            changeButtonColor(watchLaterButton, R.color.colorAccent);
+                        } else {
+                            changeButtonColor(watchLaterButton, R.color.text);
+                        }
+                    } else {
+                        changeButtonColor(watchLaterButton, R.color.text);
+                    }
+                });
+            } else {
+                changeButtonColor(watchLaterButton, R.color.text);
+            }
+        });
+
+        // Color favorites button
+        listViewModel.getUser().observe(fragment, user -> {
+            if (user != null) {
+                listViewModel.initMovieIdLists();
+                listViewModel.getFavoritesIds().observe(fragment, ids -> {
+                    if (ids != null) {
+                        if (Arrays.asList(ids).contains(movieIdStr)) {
+                            changeButtonColor(favoriteButton, R.color.colorAccent);
+                        } else {
+                            changeButtonColor(favoriteButton, R.color.text);
+                        }
+                    } else {
+                        changeButtonColor(favoriteButton, R.color.text);
+                    }
+                });
+            } else {
+                changeButtonColor(favoriteButton, R.color.text);
+            }
+        });
+
+
+
+
+
 
         // Set up on click listeners
         layout.setOnClickListener(v -> {
@@ -156,75 +240,75 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             Navigation.findNavController(layout).navigate(action);
         });
 
+
+
+
+
+
+
+        // TODO: @johan Refactor this
         watchedButton.setOnClickListener(v -> {
-            Toast.makeText(v.getContext(), "Added " + movieId + " to watched", Toast.LENGTH_SHORT).show();
+            if (listViewModel.getUser().getValue() != null) {
+                listViewModel.getWatchedIds().observe(fragment, ids -> {
+                    if (ids != null) {
+                        List<String> idList = Arrays.asList(ids);
+                        if (idList.contains(movieIdStr)) {
+                            listViewModel.removeMovieFromList(movieIdStr, IUserDataRepository.WATCHED_LIST);
+                            changeButtonColor(watchedButton, R.color.text);
+                        } else {
+                            listViewModel.addMovieToList(movieIdStr, IUserDataRepository.WATCHED_LIST);
+                            changeButtonColor(watchedButton, R.color.colorAccent);
+                        }
+                        listViewModel.getWatchedIds().removeObservers(fragment);
+//                        // TODO: @johan Add or remove live if on the user list
+                    }
+                });
+            } else {
+                Toast.makeText(fragment.getContext(), "Please log in to use this feature", Toast.LENGTH_SHORT).show();
+            }
         });
 
         watchLaterButton.setOnClickListener(v -> {
-            Toast.makeText(v.getContext(), "Added " + movieId + " to watch later", Toast.LENGTH_SHORT).show();
+            if (listViewModel.getUser().getValue() != null) {
+                listViewModel.getWatchLaterIds().observe(fragment, ids -> {
+                    if (ids != null) {
+                        List<String> idList = Arrays.asList(ids);
+                        if (idList.contains(movieIdStr)) {
+                            listViewModel.removeMovieFromList(movieIdStr, IUserDataRepository.WATCH_LATER_LIST);
+                            changeButtonColor(watchLaterButton, R.color.text);
+                        } else {
+                            listViewModel.addMovieToList(movieIdStr, IUserDataRepository.WATCH_LATER_LIST);
+                            changeButtonColor(watchLaterButton, R.color.colorAccent);
+                        }
+                        listViewModel.getWatchLaterIds().removeObservers(fragment);
+//                        // TODO: @johan Add or remove live if on the user list
+                    }
+                });
+            } else {
+                Toast.makeText(fragment.getContext(), "Please log in to use this feature", Toast.LENGTH_SHORT).show();
+            }
         });
 
         favoriteButton.setOnClickListener(v -> {
-            Toast.makeText(v.getContext(), "Added " + movieId + " to favorites", Toast.LENGTH_SHORT).show();
+            if (listViewModel.getUser().getValue() != null) {
+                listViewModel.getFavoritesIds().observe(fragment, ids -> {
+                    if (ids != null) {
+                        List<String> idList = Arrays.asList(ids);
+                        if (idList.contains(movieIdStr)) {
+                            listViewModel.removeMovieFromList(movieIdStr, IUserDataRepository.FAVORITES_LIST);
+                            changeButtonColor(favoriteButton, R.color.text);
+                        } else {
+                            listViewModel.addMovieToList(movieIdStr, IUserDataRepository.FAVORITES_LIST);
+                            changeButtonColor(favoriteButton, R.color.colorAccent);
+                        }
+                        listViewModel.getFavoritesIds().removeObservers(fragment);
+//                        // TODO: @johan Add or remove live if on the user list
+                    }
+                });
+            } else {
+                Toast.makeText(fragment.getContext(), "Please log in to use this feature", Toast.LENGTH_SHORT).show();
+            }
         });
-    }
-
-//
-//    /**
-//     * Adds/removes the movie to the favorite list
-//     */
-//    public void onFavoriteClicked(View v) {
-//        ConstraintLayout parent = (ConstraintLayout) v.getParent();
-//        int id = getMovieId(parent);
-//        // TODO: @johan Fix multiple buttons being highlighted because ViewHolders is being reused
-//        buttonHandler(v, id, "Favorites");
-//    }
-//
-//    /**
-//     * Adds/removes the movie to the watch later list
-//     */
-//    public void onWatchLaterClicked(View v) {
-//        ConstraintLayout parent = (ConstraintLayout) v.getParent();
-//        int id = getMovieId(parent);
-//        buttonHandler(v, id, "Watch_Later");
-//    }
-//
-//    /**
-//     * Adds/removes the movie to the watched list
-//     */
-//    public void onWatchedClicked(View v) {
-//        ConstraintLayout parent = (ConstraintLayout) v.getParent();
-//        int id = getMovieId(parent);
-//        buttonHandler(v, id, "Watched");
-//    }
-//
-//    /**
-//     * Returns the current movie id from context
-//     */
-//    private int getMovieId(View v) {
-//        String idString = ((TextView) v.findViewById(R.id.movieId)).getText().toString();
-//        return Integer.valueOf(idString);
-//    }
-
-    /**
-     * Handles the updating of the buttons
-     */
-    private void buttonHandler(View v, int id, String listType) {
-        int status = listViewModel.updateMovieInList(id, listType);
-        if (status == 1) {
-            // Added movie to list
-            changeButtonColor((ImageButton) v, R.color.colorAccent);
-        } else if (status == -1) {
-            // Removed movie from list
-            changeButtonColor((ImageButton) v, R.color.text);
-        } else {
-            // Please log in
-            Toast.makeText(v.getContext(), "Please log in to use this feature", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean checkMovieInList(int id, String listType) {
-        return listViewModel.checkMovieInList(id, listType);
     }
 
     /**

@@ -29,7 +29,7 @@ import ipren.watchr.repository.Database.MovieDao;
 public class ActorTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-    private Actor a = new Actor("1", 1, "Chris Pratt", "Joker", 2, "pictureLink");
+    private Actor a = new Actor("1", 1, "Chris Pratt");
     private Movie m = new Movie(1, "testMovie");
     private ActorDao actorDao;
     private MovieDao movieDao;
@@ -56,7 +56,7 @@ public class ActorTest {
         actorDao.insert(a);
         List<Actor> actors = LiveDataTestUtil.getValue(actorDao.getActorsFromMovie(1));
         Assert.assertEquals(a.getCharacter(), actors.get(0).getCharacter());
-        Actor newA = new Actor("2", 1, "Chris lol", "Joker", 2, "pictureLink");
+        Actor newA = new Actor("2", 1, "Chris lol");
         actorDao.insert(newA);
         Assert.assertEquals(2, LiveDataTestUtil.getValue(actorDao.getActorsFromMovie(m.getId())).size());
 
