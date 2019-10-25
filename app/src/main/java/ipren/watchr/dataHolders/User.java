@@ -14,7 +14,7 @@ public class User {
     private String UID = "UID missing"; // The users unique ID
     private Uri userProfilePictureUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.default_profile_photo); // The users profilePic may never be null. The default variable points to a local image.
 
-    //Null save constructor, it is important that none of these fields are set to null, and that a userProfilePic is always present.
+    //Null safe constructor, it is important that none of these fields are set to null, and that a userProfilePic is always present.
     public User(String userName, String email, Uri userProfilePictureUri, String UID, boolean isVerified) {
         if (userName != null)
             this.userName = userName;

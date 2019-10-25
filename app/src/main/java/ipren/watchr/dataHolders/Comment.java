@@ -22,7 +22,7 @@ public class Comment {
     //This is needed to enable firebase to initiate the object
     public Comment() {
     }
-    //Null save constructor
+    //Null safe constructor
     public Comment(String movie_id, String user_id, String text, String uID, Date date_created) {
         if(movie_id != null)
             this.movie_id = movie_id;

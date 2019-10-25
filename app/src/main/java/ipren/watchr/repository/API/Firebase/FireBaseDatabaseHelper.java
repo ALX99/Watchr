@@ -112,8 +112,9 @@ class FireBaseDatabaseHelper {
                                 .document(list)
                                 .set(entry);
                         attachCallback(task, callback);
-                    } else if (callback != null)
-                        callback.onComplete(e);
+                    } else
+                        triggerCallback(callback, e);
+
                 });
     }
 
@@ -191,8 +192,9 @@ class FireBaseDatabaseHelper {
                     }
                 }
 
-            } else if (callback != null)
-                callback.onComplete(e);
+            } else
+                triggerCallback(callback, e);
+
         });
 
     }
@@ -276,12 +278,6 @@ class FireBaseDatabaseHelper {
         return dataList;
     }
 
-    //Attaches a callback to a task if its not null
-    private void attachCallback(Task task, OnCompleteListener callback) {
-        if (callback != null)
-            task.addOnCompleteListener(callback);
-    }
-
     //Checks if an URI is a resource on the device
     private boolean isUriLocal(Uri uri) {
         if (uri == null)
@@ -291,4 +287,16 @@ class FireBaseDatabaseHelper {
         return false;
 
     }
+    //Attaches a callback to a task if its not null
+    private void attachCallback(Task task, OnCompleteListener callback) {
+        if (callback != null)
+            task.addOnCompleteListener(callback);
+    }
+    //Passes value to callback if it is not null
+    private void triggerCallback(OnCompleteListener callback, Task task){
+        if(callback != null)
+            callback.onComplete(task);
+    }
+
+
 }

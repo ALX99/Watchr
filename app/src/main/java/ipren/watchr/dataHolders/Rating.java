@@ -11,7 +11,7 @@ public class Rating {
 
     //This is needed to enable firebase to initiate the object
     public Rating(){}
-    //Null save constructor
+    //Null safe constructor
     public Rating(String movie_id, String user_id, String uID, int score) {
         if (movie_id != null)
             this.movie_id = movie_id;

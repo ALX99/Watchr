@@ -55,7 +55,7 @@ class FireBaseAuthHelper {
     void resendVerificationEmail(OnCompleteListener callback) {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser == null || firebaseUser.isEmailVerified()) {
-            callback.onComplete(null);
+            triggerCallback(callback, null);
             return;
         }
 
@@ -77,8 +77,8 @@ class FireBaseAuthHelper {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful())
                 task.getResult().getUser().sendEmailVerification();
-            if (callback != null)
-                callback.onComplete(task);
+
+            triggerCallback(callback, task);
         });
     }
 
@@ -96,16 +96,16 @@ class FireBaseAuthHelper {
     void changePassword(String oldPassword, String newPassword, OnCompleteListener callback) {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
-            if (callback != null)
-                callback.onComplete(null);
+            triggerCallback(callback, null);
             return;
         }
 
         user.reauthenticate(EmailAuthProvider.getCredential(user.getEmail(), oldPassword)).addOnCompleteListener(e -> {
             if (e.isSuccessful())
                 attachCallback(user.updatePassword(newPassword), callback);
-            else if (callback != null)
-                callback.onComplete(e);
+            else
+                triggerCallback(callback, e);
+
         });
     }
 
@@ -119,8 +119,8 @@ class FireBaseAuthHelper {
             uploadImage(uri, e -> {
                 if (e.isSuccessful())
                     uploadProfileChanges(userName, (Uri) e.getResult(), callback);
-                else if (callback != null)
-                    callback.onComplete(e);
+                else
+                    triggerCallback(callback,e);
 
             });
         } else {
@@ -147,8 +147,7 @@ class FireBaseAuthHelper {
     //results are passed to the callback.
     private void uploadProfileChanges(String userName, Uri uri, OnCompleteListener callback) {
         if (mAuth.getCurrentUser() == null) {
-            if (callback != null)
-                callback.onComplete(null);
+            triggerCallback(callback, null);
             return;
         }
         UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
@@ -161,8 +160,7 @@ class FireBaseAuthHelper {
             if (e.isSuccessful())
                 refreshUsr();
 
-            if (callback != null)
-                callback.onComplete(e);
+            triggerCallback(callback, e);
 
         });
 
@@ -187,6 +185,10 @@ class FireBaseAuthHelper {
     private void attachCallback(Task task, OnCompleteListener callback) {
         if (callback != null)
             task.addOnCompleteListener(callback);
-
+    }
+    //Passes value to callback if it is not null
+    private void triggerCallback(OnCompleteListener callback, Task task){
+        if(callback != null)
+            callback.onComplete(task);
     }
 }

@@ -20,7 +20,7 @@ public class CommentTest {
     }
     @Test
     public void getMovie_id() {
-        assertNull(nullConstructor.getMovie_id());
+        assertNotNull(nullConstructor.getMovie_id());
         Comment testComment = new Comment(testString, "Not used", "Not used", "Not Used", testDate);
         assertEquals(testComment.getMovie_id(), testString);
         testComment = new Comment(testString, null, null, null, null);
@@ -30,7 +30,7 @@ public class CommentTest {
 
     @Test
     public void getUser_id() {
-        assertNull(nullConstructor.getUser_id());
+        assertNotNull(nullConstructor.getUser_id());
         Comment testComment = new Comment("not used", testString, "Not used", "Not Used", testDate);
         assertEquals(testComment.getUser_id(), testString);
         testComment = new Comment(null, testString,null , null, null);
@@ -40,7 +40,7 @@ public class CommentTest {
 
     @Test
     public void getText() {
-        assertNull(nullConstructor.getText());
+        assertNotNull(nullConstructor.getText());
         Comment testComment = new Comment("Not used", "Not used", testString, "Not Used", testDate);
         assertEquals(testComment.getText(), testString);
         testComment = new Comment(null, null, testString, null, null);
@@ -50,7 +50,7 @@ public class CommentTest {
 
     @Test
     public void getuID() {
-        assertNull(nullConstructor.getUID());
+        assertNotNull(nullConstructor.getUID());
         Comment testComment = new Comment("Not used", "Not used", "Not used", testString, testDate);
         assertEquals(testComment.getUID(), testString);
         testComment = new Comment(null, null , null, testString, null);
@@ -60,7 +60,7 @@ public class CommentTest {
 
     @Test
     public void getDate(){
-        assertNull(nullConstructor.getDate_created());
+        assertNotNull(nullConstructor.getDate_created());
         Comment testComment = new Comment("Not used", "Not used", "Not used", "Not used", testDate);
         assertEquals(testComment.getDate_created(), testDate);
         testComment = new Comment(null, null , null, null, testDate);
