@@ -163,7 +163,6 @@ public class MovieListFragment extends Fragment {
             }
         } else {
             // Not logged in
-            // TODO: @johan Bugfix: movie list shows instead of not logged in error when user logs out from a list view
             notLoggedInError.setVisibility(View.VISIBLE);
             movieList.setVisibility(View.GONE);
             loadingView.setVisibility(View.GONE);

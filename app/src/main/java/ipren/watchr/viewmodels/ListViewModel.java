@@ -33,7 +33,6 @@ public class ListViewModel extends ViewModel {
 
     public ListViewModel() {
         userRepository = IUserDataRepository.getInstance();
-        // TODO: @johan Fixa detta!!
         movieRepository = IMovieRepository.getInstance();
         user = userRepository.getUserLiveData();
     }

@@ -173,70 +173,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         Util.loadImage(image, "https://image.tmdb.org/t/p//w154" + movieList.get(position).getPosterPath(), Util.getProgressDrawable(image.getContext()));
 
-
-        // TODO: @johan Refactor this
-        // Color watched button
-        listViewModel.getUser().observe(fragment, user -> {
-            if (user != null) {
-                listViewModel.initMovieIdLists();
-                listViewModel.getWatchedIds().observe(fragment, ids -> {
-                    if (ids != null) {
-                        if (Arrays.asList(ids).contains(movieIdStr)) {
-                            changeButtonColor(watchedButton, R.color.colorAccent);
-                        } else {
-                            changeButtonColor(watchedButton, R.color.text);
-                        }
-                    } else {
-                        changeButtonColor(watchedButton, R.color.text);
-                    }
-                });
-            } else {
-                changeButtonColor(watchedButton, R.color.text);
-            }
-        });
-
-        // Color watch later button
-        listViewModel.getUser().observe(fragment, user -> {
-            if (user != null) {
-                listViewModel.initMovieIdLists();
-                listViewModel.getWatchLaterIds().observe(fragment, ids -> {
-                    if (ids != null) {
-                        if (Arrays.asList(ids).contains(movieIdStr)) {
-                            changeButtonColor(watchLaterButton, R.color.colorAccent);
-                        } else {
-                            changeButtonColor(watchLaterButton, R.color.text);
-                        }
-                    } else {
-                        changeButtonColor(watchLaterButton, R.color.text);
-                    }
-                });
-            } else {
-                changeButtonColor(watchLaterButton, R.color.text);
-            }
-        });
-
-        // Color favorites button
-        listViewModel.getUser().observe(fragment, user -> {
-            if (user != null) {
-                listViewModel.initMovieIdLists();
-                listViewModel.getFavoritesIds().observe(fragment, ids -> {
-                    if (ids != null) {
-                        if (Arrays.asList(ids).contains(movieIdStr)) {
-                            changeButtonColor(favoriteButton, R.color.colorAccent);
-                        } else {
-                            changeButtonColor(favoriteButton, R.color.text);
-                        }
-                    } else {
-                        changeButtonColor(favoriteButton, R.color.text);
-                    }
-                });
-            } else {
-                changeButtonColor(favoriteButton, R.color.text);
-            }
-        });
-
-
-        // Set up on click listeners
         layout.setOnClickListener(v -> {
             MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
             // Pass the movie id
@@ -244,8 +180,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             Navigation.findNavController(layout).navigate(action);
         });
 
+        initButtonColors(movieIdStr, watchedButton, watchLaterButton, favoriteButton);
+        initButtonListeners(movieIdStr, watchedButton, watchLaterButton, favoriteButton);
+    }
 
-        // TODO: @johan Refactor this
+    /**
+     * Initializes the button listeners
+     */
+    private void initButtonListeners(String movieIdStr, ImageButton watchedButton, ImageButton watchLaterButton, ImageButton favoriteButton) {
         watchedButton.setOnClickListener(v -> {
             if (listViewModel.getUser().getValue() != null) {
                 listViewModel.getWatchedIds().observe(fragment, ids -> {
@@ -259,7 +201,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                             changeButtonColor(watchedButton, R.color.colorAccent);
                         }
                         listViewModel.getWatchedIds().removeObservers(fragment);
-//                        // TODO: @johan Add or remove live if on the user list
                     }
                 });
             } else {
@@ -280,7 +221,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                             changeButtonColor(watchLaterButton, R.color.colorAccent);
                         }
                         listViewModel.getWatchLaterIds().removeObservers(fragment);
-//                        // TODO: @johan Add or remove live if on the user list
                     }
                 });
             } else {
@@ -301,11 +241,72 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                             changeButtonColor(favoriteButton, R.color.colorAccent);
                         }
                         listViewModel.getFavoritesIds().removeObservers(fragment);
-//                        // TODO: @johan Add or remove live if on the user list
                     }
                 });
             } else {
                 Toast.makeText(fragment.getContext(), "Please log in to use this feature", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Initializes the correct start color of the buttons (needs heavy refactoring)
+     */
+    private void initButtonColors(String movieIdStr, ImageButton watchedButton, ImageButton watchLaterButton, ImageButton favoriteButton) {
+        listViewModel.getUser().observe(fragment, user -> {
+            if (user != null) {
+                listViewModel.initMovieIdLists();
+                listViewModel.getWatchedIds().observe(fragment, ids -> {
+                    if (ids != null) {
+                        if (Arrays.asList(ids).contains(movieIdStr)) {
+                            changeButtonColor(watchedButton, R.color.colorAccent);
+                        } else {
+                            changeButtonColor(watchedButton, R.color.text);
+                        }
+                    } else {
+                        changeButtonColor(watchedButton, R.color.text);
+                    }
+                });
+            } else {
+                changeButtonColor(watchedButton, R.color.text);
+            }
+        });
+
+        listViewModel.getUser().observe(fragment, user -> {
+            if (user != null) {
+                listViewModel.initMovieIdLists();
+                listViewModel.getWatchLaterIds().observe(fragment, ids -> {
+                    if (ids != null) {
+                        if (Arrays.asList(ids).contains(movieIdStr)) {
+                            changeButtonColor(watchLaterButton, R.color.colorAccent);
+                        } else {
+                            changeButtonColor(watchLaterButton, R.color.text);
+                        }
+                    } else {
+                        changeButtonColor(watchLaterButton, R.color.text);
+                    }
+                });
+            } else {
+                changeButtonColor(watchLaterButton, R.color.text);
+            }
+        });
+
+        listViewModel.getUser().observe(fragment, user -> {
+            if (user != null) {
+                listViewModel.initMovieIdLists();
+                listViewModel.getFavoritesIds().observe(fragment, ids -> {
+                    if (ids != null) {
+                        if (Arrays.asList(ids).contains(movieIdStr)) {
+                            changeButtonColor(favoriteButton, R.color.colorAccent);
+                        } else {
+                            changeButtonColor(favoriteButton, R.color.text);
+                        }
+                    } else {
+                        changeButtonColor(favoriteButton, R.color.text);
+                    }
+                });
+            } else {
+                changeButtonColor(favoriteButton, R.color.text);
             }
         });
     }
