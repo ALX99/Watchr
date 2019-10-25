@@ -10,7 +10,8 @@ import com.google.android.gms.tasks.Task;
 import ipren.watchr.dataHolders.RequestResponse;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
-import ipren.watchr.viewModels.util.LoginErrorParser;
+
+import static ipren.watchr.viewModels.util.ErrorParser.*;
 
 import static ipren.watchr.viewModels.util.ViewModelSupportUtils.*;
 
@@ -103,20 +104,17 @@ public class LoginViewModel extends ViewModel {
     //Callback function, posts the response to corresponding LiveData and sets the state of "signIn" to false.
     private void updateSignInResponse(Task task) {
         postValue(signingIn, false);
-        String error = LoginErrorParser.parseAuthError(task.getException());
-        postValue(signInResponse, new RequestResponse(task.isSuccessful(), error));
+        postValue(signInResponse, new RequestResponse(task.isSuccessful(), parseError(task.getException())));
     }
     //Callback function, posts the response  to corresponding LiveData and sets the state of "registeringUser" to false.
     private void updateCreateUserResponse(Task task) {
         postValue(registeringUser, false);
-        String error = LoginErrorParser.parseAuthError(task.getException());
-        postValue(registerUserResponse, new RequestResponse(task.isSuccessful(), error));
+        postValue(registerUserResponse, new RequestResponse(task.isSuccessful(), parseError(task.getException())));
     }
     //Callback function, posts the response to corresponding LiveData  and sets the state of "sendingResetMSg" to false.
     private void updateResetPasswordResponse(Task task) {
         postValue(sendingResetMsg, false);
-        Exception exception = task.getException();
-        postValue(passwordResetResponse, new RequestResponse(task.isSuccessful(), exception != null ? exception.getLocalizedMessage() : "Unkown error"));
+        postValue(passwordResetResponse, new RequestResponse(task.isSuccessful(), parseError(task.getException())));
     }
 
     // The following setters update the mirrored value in the viewModel so that it can be used for logic and syncing activity fields in the event of a reconstruction. It also sets a corresponding error if the value is invalid
