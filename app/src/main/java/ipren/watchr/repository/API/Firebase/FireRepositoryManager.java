@@ -15,8 +15,8 @@ import ipren.watchr.repository.IUserDataRepository;
 //This class manages request to both FireBaseAuthHelper and FireBaseDataBaseManager as well as syncing data with the two API's
 //This class functions as controller/manager for the repository
 public class FireRepositoryManager implements IUserDataRepository {
-
-    private static IUserDataRepository fireApiManager;
+    //Singleton
+    private static FireRepositoryManager fireApiManager;
 
     private FireBaseAuthHelper firebaseAuthHelper;
 
