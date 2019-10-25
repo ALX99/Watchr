@@ -31,7 +31,7 @@ public class Util {
     /**
      * Overloaded method, converts URI to string
      */
-    public static void loadImage(ImageView imageView, Uri uri, CircularProgressDrawable progressDrawable){
+    public static void loadImage(ImageView imageView, Uri uri, CircularProgressDrawable progressDrawable) {
         loadImage(imageView, uri.toString(), progressDrawable);
     }
 

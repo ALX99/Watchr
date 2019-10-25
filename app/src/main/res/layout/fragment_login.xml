@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
@@ -13,11 +12,11 @@
 
 
         <ImageView
-            android:contentDescription="App logo"
             android:id="@+id/movieImage"
             android:layout_width="239dp"
             android:layout_height="190dp"
             android:layout_marginTop="55dp"
+            android:contentDescription="App logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -46,12 +45,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movieImage" />
-        <include android:id="@+id/reset_password_layout"
+
+        <include
+            android:id="@+id/reset_password_layout"
             layout="@layout/reset_password"
-            android:layout_marginTop="55dp"
-            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="55dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +60,6 @@
 
 
             />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

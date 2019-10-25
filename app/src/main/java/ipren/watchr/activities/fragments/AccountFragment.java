@@ -24,9 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.Util;
-import ipren.watchr.dataHolders.Movie;
-import ipren.watchr.dataHolders.Rating;
-import ipren.watchr.viewModels.AccountViewModel;
+import ipren.watchr.dataholders.Movie;
+import ipren.watchr.dataholders.Rating;
+import ipren.watchr.viewmodels.AccountViewModel;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -35,8 +35,6 @@ import static android.content.Context.VIBRATOR_SERVICE;
 // Elements for initiating actions are marked ACTION
 // Elements that just display data are marked DISPLAY
 public class AccountFragment extends Fragment {
-
-    private AccountViewModel accountViewModel;
 
     @BindView(R.id.configure_acc_btn)
     ImageView configAccBtn; //Navigation: Navigates to account settings.
@@ -64,7 +62,7 @@ public class AccountFragment extends Fragment {
     TextView emailTxtField; //Display: this field shows the account linked email.
     @BindView(R.id.profile_img_acc)
     ImageView profilePicImg; // Display the current users profile picture
-
+    private AccountViewModel accountViewModel;
 
 
     public AccountFragment() {
@@ -99,7 +97,7 @@ public class AccountFragment extends Fragment {
 
         //Syncs the view to user live data, and fetches and syncs
         accountViewModel.user.observe(this, e -> {
-            if(e == null) {
+            if (e == null) {
                 Navigation.findNavController(getView()).popBackStack();
                 return;
             }
@@ -110,7 +108,7 @@ public class AccountFragment extends Fragment {
             Util.loadImage((profilePicImg),
                     e.getUserProfilePictureUri().toString(),
                     Util.getProgressDrawable(getContext()));
-            if(e.isVerified())
+            if (e.isVerified())
                 userNotVerifiedTxt.setVisibility(View.GONE);
             //Fetches user statistics and syncs them with view
             postUserStatistics(uID);
@@ -140,7 +138,6 @@ public class AccountFragment extends Fragment {
     }
 
 
-
     //Parses a Double and sets a a textColor/text corresponding
     private void setAverageScore(TextView textView, Double value) {
         if (value == null || value.isNaN()) {
@@ -156,6 +153,7 @@ public class AccountFragment extends Fragment {
                 textView.setTextColor(Color.parseColor("#FFA500"));
         }
     }
+
     //Calculates average score for a user, this breaks separation of concern somewhat,but this way we do not have to pass fragment context to the viewModel. And we can make a bit less complex code.
     private Double calculateAverageRating(Rating[] list) { //
         double total = 0;
@@ -166,6 +164,7 @@ public class AccountFragment extends Fragment {
         }
         return (total / list.length);
     }
+
     //Same as with the method above
     private int calcWatchtime(List<Movie> movies) {
         if (movies == null)

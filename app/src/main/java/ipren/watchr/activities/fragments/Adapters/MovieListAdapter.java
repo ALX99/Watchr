@@ -24,10 +24,10 @@ import ipren.watchr.R;
 import ipren.watchr.activities.Util.Util;
 import ipren.watchr.activities.fragments.MovieListFragment;
 import ipren.watchr.activities.fragments.MovieListFragmentDirections;
-import ipren.watchr.dataHolders.Genre;
-import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataholders.Genre;
+import ipren.watchr.dataholders.Movie;
 import ipren.watchr.repository.IUserDataRepository;
-import ipren.watchr.viewModels.ListViewModel;
+import ipren.watchr.viewmodels.ListViewModel;
 
 /**
  * Class for handling the creation and updating of movie cards in the recycler view
@@ -38,6 +38,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     private MovieListFragment fragment;
     private List<Movie> movieList;
     private List<Movie> movieListFull;
+    private List<Integer> ids = new ArrayList<>();
 
     /**
      * Search and filter handling
@@ -57,7 +58,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                 String filterPattern = constraint.toString().toLowerCase(Locale.getDefault()).trim();
 
                 for (Movie movie : movieListFull) {
-                    if (movie.title.toLowerCase(Locale.getDefault()).contains(filterPattern)) {
+                    if (movie.getTitle().toLowerCase(Locale.getDefault()).contains(filterPattern)) {
                         filteredMovieList.add(movie);
                     }
                 }
@@ -90,24 +91,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     }
 
     /**
-     * Class for holding a movie view layout
-     */
-    class MovieViewHolder extends RecyclerView.ViewHolder {
-
-        public View itemView;
-
-        public MovieViewHolder(@NonNull View itemView) {
-            super(itemView);
-            this.itemView = itemView;
-        }
-    }
-
-    /**
      * Clears and updates the list and layouts with new content
      */
     public void updateMovieList(List<Movie> newMovieList) {
         movieList.clear();
+        ids.clear();
         movieList.addAll(newMovieList);
+        for (Movie m : newMovieList)
+            ids.add(m.getId());
         // Create a copy of the full list so we can filter the other
         movieListFull = new ArrayList<>(movieList);
         notifyDataSetChanged();
@@ -116,6 +107,21 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public void updateFilteredMovieList(List<Movie> filteredMovieList) {
         movieList.clear();
         movieList.addAll(filteredMovieList);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Adds more movies to the current list
+     *
+     * @param newMovieList The movies to be added
+     */
+    public void addMoreMovies(List<Movie> newMovieList) {
+        // Don't add already displayed movies
+        for (Movie m : newMovieList)
+            if (!ids.contains(m.getId())) {
+                movieList.add(m);
+                ids.add(m.getId());
+            }
         notifyDataSetChanged();
     }
 
@@ -161,15 +167,11 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         });
 
         // Set UI components
-        title.setText(movieList.get(position).title);
-        overview.setText(movieList.get(position).overview);
+        title.setText(movieList.get(position).getTitle());
+        overview.setText(movieList.get(position).getOverview());
         rating.setText("Rating: " + movieList.get(position).getVoteAverage());
 
-        Util.loadImage(image, "https://image.tmdb.org/t/p//w154" + movieList.get(position).posterPath, Util.getProgressDrawable(image.getContext()));
-
-
-
-
+        Util.loadImage(image, "https://image.tmdb.org/t/p//w154" + movieList.get(position).getPosterPath(), Util.getProgressDrawable(image.getContext()));
 
 
         // TODO: @johan Refactor this
@@ -234,22 +236,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         });
 
 
-
-
-
-
         // Set up on click listeners
         layout.setOnClickListener(v -> {
             MovieListFragmentDirections.ActionDetail action = MovieListFragmentDirections.actionDetail();
             // Pass the movie id
-            action.setMovieId(movieList.get(position).id);
+            action.setMovieId(movieList.get(position).getId());
             Navigation.findNavController(layout).navigate(action);
         });
-
-
-
-
-
 
 
         // TODO: @johan Refactor this
@@ -346,5 +339,18 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     public List<Movie> getMovieListFull() {
         return movieListFull;
+    }
+
+    /*
+     * Class for holding a movie view layout
+     */
+    class MovieViewHolder extends RecyclerView.ViewHolder {
+
+        public View itemView;
+
+        public MovieViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.itemView = itemView;
+        }
     }
 }

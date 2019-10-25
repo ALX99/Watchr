@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import ipren.watchr.dataHolders.Actor;
-import ipren.watchr.dataHolders.Genre;
-import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataholders.Actor;
+import ipren.watchr.dataholders.Genre;
+import ipren.watchr.dataholders.Movie;
+import ipren.watchr.repository.room.MovieRepository;
 
 /**
  * The interface Movie repository.
@@ -17,6 +18,13 @@ public interface IMovieRepository {
     String SEARCH_LIST = "Search";
     String BROWSE_LIST = "Browse";
     String RECOMMENDED_LIST = "Recommended";
+    int MOVIE_DAY_TIMEOUT = 3;
+    int LIST_DAY_TIMEOUT = 3;
+
+    // Singleton method to get instance
+    static IMovieRepository getInstance() {
+        return MovieRepository.getInstance();
+    }
 
     /**
      * Gets a movie by its ID.
@@ -82,10 +90,5 @@ public interface IMovieRepository {
      * @return The list of movies
      */
     LiveData<List<Movie>> getDiscoverList(int[] genres, int page, boolean forceFetch);
-
-    // Singleton method to get instance
-    static IMovieRepository getInstance() {
-        return MovieRepository.getInstance();
-    }
 }
 

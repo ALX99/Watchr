@@ -14,7 +14,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.Util;
-import ipren.watchr.dataHolders.Actor;
+import ipren.watchr.dataholders.Actor;
 
 public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
 

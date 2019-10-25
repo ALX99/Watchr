@@ -6,11 +6,12 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
-import ipren.watchr.dataHolders.Comment;
-import ipren.watchr.dataHolders.Rating;
-import ipren.watchr.dataHolders.PublicProfile;
-import ipren.watchr.dataHolders.User;
-import ipren.watchr.repository.API.Firebase.FireRepositoryManager;
+import ipren.watchr.dataholders.Comment;
+import ipren.watchr.dataholders.PublicProfile;
+import ipren.watchr.dataholders.Rating;
+import ipren.watchr.dataholders.User;
+import ipren.watchr.repository.firebase.FireRepositoryManager;
+
 //Interface used for managing user related data such as
 public interface IUserDataRepository {
     int SEARCH_METHOD_MOVIE_ID = 0; //Notifies that the String provided is a MOVIE_ID
@@ -27,7 +28,7 @@ public interface IUserDataRepository {
 
     LiveData<User> getUserLiveData();
 
-    void resetPassword(String email, OnCompleteListener callback );
+    void resetPassword(String email, OnCompleteListener callback);
 
     void registerUser(String email, String password, OnCompleteListener callback);
 
@@ -41,7 +42,7 @@ public interface IUserDataRepository {
 
     void updateProfile(String userName, Uri pictureUri, OnCompleteListener callback);
 
-    void changePassword(String oldPassword, String newPassword , OnCompleteListener callback);
+    void changePassword(String oldPassword, String newPassword, OnCompleteListener callback);
 
     //Firebase database functions
     LiveData<PublicProfile> getPublicProfile(String user_id);

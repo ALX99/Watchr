@@ -3,15 +3,13 @@ package ipren.watchr.MockClasses;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
-import ipren.watchr.dataHolders.Comment;
-import ipren.watchr.dataHolders.Rating;
-import ipren.watchr.dataHolders.PublicProfile;
-import ipren.watchr.dataHolders.User;
+import ipren.watchr.dataholders.Comment;
+import ipren.watchr.dataholders.PublicProfile;
+import ipren.watchr.dataholders.Rating;
+import ipren.watchr.dataholders.User;
 import ipren.watchr.repository.IUserDataRepository;
 //TODO remake this test
 
