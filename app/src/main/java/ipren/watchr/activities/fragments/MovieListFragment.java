@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,6 +48,7 @@ public class MovieListFragment extends Fragment {
     @BindView(R.id.emptyListView)
     TextView emptyListView;
 
+    private int currentPage = 1;
     private ListViewModel listViewModel;
     private MovieListAdapter movieListAdapter;
     // Observer to update the movieList
@@ -54,7 +56,10 @@ public class MovieListFragment extends Fragment {
         @Override
         public void onChanged(List<Movie> movies) {
             if (movies != null) {
-                movieListAdapter.updateMovieList(movies);
+                if (currentPage == 1)
+                    movieListAdapter.updateMovieList(movies);
+                else // If not on page 1 we want to load more movies
+                    movieListAdapter.addMoreMovies(movies);
                 loadingView.setVisibility(View.GONE);
             }
         }
@@ -84,6 +89,7 @@ public class MovieListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        currentPage = 1; // Set currentPage to 1
 
         // Get view model and set correct data
         listViewModel = ViewModelProviders.of(getActivity()).get(ListViewModel.class);
@@ -95,28 +101,40 @@ public class MovieListFragment extends Fragment {
 
         // Set list layout and adapter
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Scroll listener for loading more movies
+        movieList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                // When reached bottom of the recyclerView
+                if (!recyclerView.canScrollVertically(1) && (listType.equals(IMovieRepository.RECOMMENDED_LIST) || listType.equals(IMovieRepository.BROWSE_LIST))) {
+                    Toast.makeText(getContext(), "Loading more movies...", Toast.LENGTH_SHORT).show();
+                    currentPage++;
+                    loadMovies(listType);
+                }
+            }
+        });
         movieListAdapter = new MovieListAdapter(listViewModel, this);
         movieList.setAdapter(movieListAdapter);
 
         connectFilterButton();
-        connectSearchView(listType);
+        connectSearchView();
 
-        handleNavigation(listType);
+        loadMovies(listType);
 
         // Fetch fresh data from API on refresh
         refreshLayout.setOnRefreshListener(() -> {
-            handleNavigation(listType);
+            loadMovies(listType);
             refreshLayout.setRefreshing(false);
         });
     }
 
-    private void handleNavigation(String listType) {
+    private void loadMovies(String listType) {
         switch (listType) {
             case IMovieRepository.BROWSE_LIST:
-                listViewModel.initBrowse();
+                listViewModel.initBrowse(currentPage);
                 break;
             case IMovieRepository.RECOMMENDED_LIST:
-                listViewModel.initRecommended();
+                listViewModel.initRecommended(currentPage);
                 break;
             default:
                 handleUserList(listType);
@@ -124,7 +142,6 @@ public class MovieListFragment extends Fragment {
         }
         listViewModel.getMovies().observe(getActivity(), movieObserver);
     }
-
 
     private void handleUserList(String listType) {
         // Check if user is logged in
@@ -166,7 +183,7 @@ public class MovieListFragment extends Fragment {
     /**
      * Find and setup the search bar
      */
-    private void connectSearchView(String listType) {
+    private void connectSearchView() {
         // Get the search view from toolbar and show
         SearchView searchView = getActivity().findViewById(R.id.toolbar_search);
         searchView.setVisibility(View.VISIBLE);
@@ -184,7 +201,7 @@ public class MovieListFragment extends Fragment {
                 // Remove the current observer
                 listViewModel.getMovies().removeObserver(movieObserver);
                 // Load new movies from a query
-                listViewModel.getMoviesFromQuery(query);
+                listViewModel.getMoviesFromQuery(query, currentPage);
                 // Observe them
                 listViewModel.getMovies().observe(getActivity(), movieObserver);
                 return false;

@@ -38,6 +38,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     private MovieListFragment fragment;
     private List<Movie> movieList;
     private List<Movie> movieListFull;
+    private List<Integer> ids = new ArrayList<>();
 
     /**
      * Search and filter handling
@@ -107,9 +108,27 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     public void updateMovieList(List<Movie> newMovieList) {
         movieList.clear();
+        ids.clear();
         movieList.addAll(newMovieList);
+        for (Movie m : newMovieList)
+            ids.add(m.id);
         // Create a copy of the full list so we can filter the other
         movieListFull = new ArrayList<>(movieList);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Adds more movies to the current list
+     *
+     * @param newMovieList The movies to be added
+     */
+    public void addMoreMovies(List<Movie> newMovieList) {
+        // Don't add already displayed movies
+        for (Movie m : newMovieList)
+            if (!ids.contains(m.id)) {
+                movieList.add(m);
+                ids.add(m.id);
+            }
         notifyDataSetChanged();
     }
 

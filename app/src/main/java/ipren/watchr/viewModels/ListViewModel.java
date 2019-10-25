@@ -49,8 +49,8 @@ public class ListViewModel extends ViewModel {
         return user;
     }
 
-    public void getMoviesFromQuery(String query) {
-        movies = movieRepository.Search(query, 1, false);
+    public void getMoviesFromQuery(String query, int page) {
+        movies = movieRepository.Search(query, page, false);
     }
 
     public boolean checkMovieInList(int movieId, String listType) {
@@ -98,12 +98,12 @@ public class ListViewModel extends ViewModel {
         return intArr;
     }
 
-    public void initBrowse() {
-        movies = movieRepository.getMovieList(IMovieRepository.TRENDING_LIST, 1, false);
+    public void initBrowse(int page) {
+        movies = movieRepository.getMovieList(IMovieRepository.TRENDING_LIST, page, false);
     }
 
-    public void initRecommended() {
-        movies = movieRepository.getDiscoverList(new int[]{27}, 1, false);
+    public void initRecommended(int page) {
+        movies = movieRepository.getDiscoverList(new int[]{27}, page, false);
     }
 
     public void initMovieIdLists() {
