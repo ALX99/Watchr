@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -64,9 +63,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     // Method to update the data
-    public void setData(Comment[] comments) {
+    public void setData(List<Comment> comments) {
         if (comments == null) return;
-        this.commments = Arrays.asList(comments);
+        this.commments = comments;
         notifyDataSetChanged();
     }
 

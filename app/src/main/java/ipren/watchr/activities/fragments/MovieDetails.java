@@ -31,6 +31,8 @@ import com.bumptech.glide.Glide;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +44,8 @@ import ipren.watchr.activities.Util.Util;
 import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
+import ipren.watchr.dataHolders.Actor;
+import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
@@ -343,6 +347,10 @@ public class MovieDetails extends Fragment {
         cast.setAdapter(adapter);
 
         viewModel.getActors().observe(getViewLifecycleOwner(), actors -> {
+            // Sort actor based on the importance of their role
+            Collections.sort(actors, ((Actor o1, Actor o2) -> {
+                return o1.getOrder() > o2.getOrder() ? 1 : (o1.getOrder() < o2.getOrder()) ? -1 : 0;
+            }));
             adapter.setData(actors);
         });
     }
@@ -357,8 +365,12 @@ public class MovieDetails extends Fragment {
         comments.setAdapter(adapter);
 
         viewModel.getComments().observe(getViewLifecycleOwner(), comments -> {
-
-            adapter.setData(comments);
+            List<Comment> cm = Arrays.asList(comments);
+            // Sort comments, so the latest comment comes first
+            Collections.sort(cm, ((Comment o1, Comment o2) -> {
+                return o2.getDate_created().compareTo(o1.getDate_created());
+            }));
+            adapter.setData(cm);
         });
 
         // OnClickListener to send comments
