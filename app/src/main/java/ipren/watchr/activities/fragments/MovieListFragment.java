@@ -280,6 +280,7 @@ public class MovieListFragment extends Fragment {
                                 return -1;
                             }
                         });
+                        break;
                     case "Title":
                         Collections.sort(filteredMovies, (a, b) -> {
                             double result = a.getTitle().charAt(0) - b.getTitle().charAt(0);
