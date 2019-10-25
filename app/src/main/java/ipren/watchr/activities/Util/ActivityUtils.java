@@ -101,7 +101,9 @@ public class ActivityUtils {
         }
 
         from.setVisibility(View.INVISIBLE);
+        from.setEnabled(false);
         to.setVisibility(View.VISIBLE);
+        to.setEnabled(true);
     }
 
     public enum Direction {
