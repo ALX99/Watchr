@@ -53,43 +53,9 @@ public class ListViewModel extends ViewModel {
         movies = movieRepository.Search(query, 1, false);
     }
 
-    public boolean checkMovieInList(int movieId, String listType) {
-        switch (listType) {
-            case IUserDataRepository.FAVORITES_LIST: return Arrays.asList(favoritesIds.getValue()).contains(String.valueOf(movieId));
-            case IUserDataRepository.WATCH_LATER_LIST: return Arrays.asList(watchLaterIds.getValue()).contains(String.valueOf(movieId));
-            case IUserDataRepository.WATCHED_LIST: return Arrays.asList(watchedIds.getValue()).contains(String.valueOf(movieId));
-            default: return false;
-        }
-    }
-
-    /**
-     * Returns 1 if user is logged in and movie not in list
-     * Returns 0 if user is not logged in
-     * Returns -1 if user is logged in and movie is in list
-     */
-    public int updateMovieInList(int movieId, String listType) {
-        if (user.getValue() != null) {
-            LiveData<String[]> ids = null;
-            switch (listType) {
-                case IUserDataRepository.FAVORITES_LIST: ids = favoritesIds;
-                case IUserDataRepository.WATCH_LATER_LIST: ids = watchLaterIds;
-                case IUserDataRepository.WATCHED_LIST: ids = watchedIds;
-            }
-            if (Arrays.asList(ids.getValue()).contains(String.valueOf(movieId))) {
-                userRepository.removeMovieFromList(listType, "" + movieId, user.getValue().getUID(), v -> Log.d("TEST", "Removed movie with id " + movieId + " to " + listType));
-                return -1;
-            } else {
-                userRepository.addMovieToList(listType, "" + movieId, user.getValue().getUID(), v -> Log.d("TEST", "Added movie with id " + movieId + " to " + listType));
-            }
-            return 1;
-        }
-        return 0;
-    }
-
     /**
      * Converts an array of integer strings to an array of ints
      */
-    // TODO: @johan Maybe put this in util?
     private int[] convertStringArrayToIntArray(String[] strArr) {
         int[] intArr = new int[strArr.length];
         for (int i = 0; i < strArr.length; i++) {

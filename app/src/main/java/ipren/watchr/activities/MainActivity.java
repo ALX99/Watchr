@@ -2,7 +2,9 @@ package ipren.watchr.activities;
 
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +31,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ipren.watchr.R;
-import ipren.watchr.dataHolders.Filter;
+import ipren.watchr.dataHolders.MovieFilter;
 import ipren.watchr.repository.Database.MovieDB;
 import ipren.watchr.viewModels.MainViewModel;
 import ipren.watchr.viewModels.MainViewModelInterface;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MainViewModelInterface mainViewModel;
     private NavController navController;
-    private Filter filter;
+    private MovieFilter movieFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +68,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Initializes the filter
+     * Initializes the movieFilter
      */
     private void initFilter() {
-        // Filter model
-        filter = Filter.getInstance();
+        // MovieFilter model
+        movieFilter = MovieFilter.getInstance();
 
-        // Init filter drawer
+        // Init movieFilter drawer
         DrawerLayout filterDrawer = findViewById(R.id.filter_drawer);
         filterDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Initializes the filter switches
+     * Initializes the movieFilter switches
      */
     private void initSwitches() {
         initSwitch(R.id.watched_switch);
@@ -100,16 +101,16 @@ public class MainActivity extends AppCompatActivity {
         String tag = (String) switchView.getTag();
         switchView.setOnClickListener(v -> {
             if (switchView.isChecked()) {
-                filter.setSwitch(tag, true);
+                movieFilter.setSwitch(tag, true);
             } else {
-                filter.setSwitch(tag, false);
+                movieFilter.setSwitch(tag, false);
             }
         });
         return switchView;
     }
 
     /**
-     * Initializes the filter spinners
+     * Initializes the movieFilter spinners
      */
     private void initSpinners() {
         initSpinner(R.id.rating_spinner, R.array.rating_spinner);
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String value = (String) parent.getItemAtPosition(position);
-                filter.setSpinner(tag, value);
+                movieFilter.setSpinner(tag, value);
             }
 
             @Override
@@ -154,19 +155,19 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initProfileButton() {
         ImageButton profileBtn = findViewById(R.id.toolbar_profile);
+        profileBtn.setImageResource(R.drawable.ic_profile);
 
         // Observes logged in status of user and sets profile picture accordingly
         mainViewModel.getUser().observe(this, user -> {
             if (user == null) {
                 // Not logged in
-                profileBtn.setImageResource(R.drawable.ic_profile);
+                profileBtn.setColorFilter(getResources().getColor(R.color.text));
             } else {
                 // Logged in
                 Glide.with(this).asBitmap().load(user.getUserProfilePictureUri()).into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        // TODO: replace with the resource
-                        profileBtn.setImageResource(R.drawable.default_profile_photo_toolbar);
+                        profileBtn.setColorFilter(getResources().getColor(R.color.colorAccent));
                     }
 
                     @Override
@@ -195,12 +196,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Hides the search and movieFilter buttons from the toolbar
+     */
     private void hideSearchAndFilter() {
         // Get the search view from toolbar and hide
         SearchView searchView = findViewById(R.id.toolbar_search);
         searchView.setVisibility(View.GONE);
 
-        // Get the filter button from toolbar and show
+        // Get the movieFilter button from toolbar and show
         ImageButton filterBtn = findViewById(R.id.toolbar_filter);
         filterBtn.setVisibility(View.GONE);
     }
