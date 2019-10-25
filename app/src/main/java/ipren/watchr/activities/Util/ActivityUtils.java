@@ -20,7 +20,6 @@ import java.util.Date;
 
 import ipren.watchr.BuildConfig;
 import ipren.watchr.R;
-import ipren.watchr.activities.fragments.LoginFragment;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -33,17 +32,20 @@ public class ActivityUtils {
         button.setText(text);
         spinner.setVisibility(on ? View.VISIBLE : View.GONE);
     }
+
     //Helper method for manipulating textviews
     public static void setTextAndColor(TextView view, String text, int color) {
         view.setText(text);
         view.setTextColor(color);
     }
+
     //Shakes a button and the phone
     public static void shakeButton(Button button, Context context) {
         Vibrator vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(200);
         button.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake));
     }
+
     //Creates a temporary URI for pictures
     public static Uri createTempPictureFile(Context context) {
 
@@ -72,9 +74,10 @@ public class ActivityUtils {
         }
 
     }
+
     //Sets textviews to empty and hides them
-    public static void clearAndHideTextViews(TextView... textViews){
-        for(TextView textView : textViews) {
+    public static void clearAndHideTextViews(TextView... textViews) {
+        for (TextView textView : textViews) {
             textView.setText("");
             textView.setVisibility(View.INVISIBLE);
         }

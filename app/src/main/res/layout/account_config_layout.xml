@@ -16,40 +16,40 @@
         app:layout_constraintTop_toBottomOf="@+id/username_Input" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_img_acc"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="28dp"
-            android:src="@drawable/default_profile_photo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/account_settings_text" />
+        android:id="@+id/profile_img_acc"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/default_profile_photo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account_settings_text" />
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/profile_img_acc"
-            app:layout_constraintEnd_toEndOf="@+id/profile_img_acc"
-            app:layout_constraintStart_toStartOf="@+id/profile_img_acc"
-            app:srcCompat="@drawable/ic_edit_white_24dp" />
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_img_acc"
+        app:layout_constraintEnd_toEndOf="@+id/profile_img_acc"
+        app:layout_constraintStart_toStartOf="@+id/profile_img_acc"
+        app:srcCompat="@drawable/ic_edit_white_24dp" />
 
 
-        <TextView
-            android:id="@+id/user_email_txt"
-            android:layout_width="0dp"
-            android:layout_height="19dp"
-            android:layout_marginTop="12dp"
-            android:ems="10"
-            android:hint="email@email.com"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+    <TextView
+        android:id="@+id/user_email_txt"
+        android:layout_width="0dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="email@email.com"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <EditText
         android:id="@+id/username_Input"
@@ -77,50 +77,50 @@
         app:layout_constraintTop_toBottomOf="@+id/user_email_txt" />
 
     <TextView
-            android:id="@+id/account_settings_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Account settings"
-            android:textColor="@android:color/white"
-            android:textSize="25sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/account_settings_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Account settings"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/update_profile_result_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/save_user_config_btn" />
+    <TextView
+        android:id="@+id/update_profile_result_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_user_config_btn" />
 
-        <ProgressBar
-            android:id="@+id/save_user_profile_spinner"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:indeterminateTint="#753A88"
-            app:layout_constraintBottom_toBottomOf="@+id/save_user_config_btn"
-            app:layout_constraintEnd_toEndOf="@+id/save_user_config_btn"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/save_user_config_btn"
-            app:layout_constraintTop_toTopOf="@+id/save_user_config_btn"
-            app:layout_constraintVertical_bias="1.0" />
+    <ProgressBar
+        android:id="@+id/save_user_profile_spinner"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:indeterminateTint="#753A88"
+        app:layout_constraintBottom_toBottomOf="@+id/save_user_config_btn"
+        app:layout_constraintEnd_toEndOf="@+id/save_user_config_btn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/save_user_config_btn"
+        app:layout_constraintTop_toTopOf="@+id/save_user_config_btn"
+        app:layout_constraintVertical_bias="1.0" />
 
-        <ImageView
-            android:id="@+id/settings_back_btn"
-            android:layout_width="60dp"
-            android:layout_height="59dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="84dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/save_user_profile_spinner"
-            app:srcCompat="@drawable/ic_keyboard_return_black_24dp" />
+    <ImageView
+        android:id="@+id/settings_back_btn"
+        android:layout_width="60dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="84dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_user_profile_spinner"
+        app:srcCompat="@drawable/ic_keyboard_return_black_24dp" />
 
     <Button
         android:id="@+id/change_password_btn"

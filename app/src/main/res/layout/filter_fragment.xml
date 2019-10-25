@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
@@ -30,10 +29,10 @@
 
     <Spinner
         android:id="@+id/rating_spinner"
-        android:tag="rating_spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:tag="rating_spinner"
         app:layout_constraintBottom_toBottomOf="@+id/rating_label"
         app:layout_constraintEnd_toEndOf="@+id/genre_spinner"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -41,20 +40,20 @@
 
     <Spinner
         android:id="@+id/genre_spinner"
-        android:tag="genre_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:tag="genre_spinner"
         app:layout_constraintBottom_toBottomOf="@+id/genre_label"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="@+id/genre_label" />
 
     <Spinner
         android:id="@+id/order_by_spinner"
-        android:tag="order_by_spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:tag="order_by_spinner"
         app:layout_constraintBottom_toBottomOf="@+id/order_by_label"
         app:layout_constraintEnd_toEndOf="@+id/genre_spinner"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -114,33 +113,33 @@
 
     <Switch
         android:id="@+id/watched_switch"
-        android:tag="watched_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:checked="true"
+        android:tag="watched_switch"
         app:layout_constraintBottom_toBottomOf="@+id/watched_label"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="@+id/watched_label" />
 
     <Switch
         android:id="@+id/watch_later_switch"
-        android:tag="watch_later_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:checked="true"
+        android:tag="watch_later_switch"
         app:layout_constraintBottom_toBottomOf="@+id/watch_later_label"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="@+id/watch_later_label" />
 
     <Switch
         android:id="@+id/favorites_switch"
-        android:tag="favorites_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:checked="true"
+        android:tag="favorites_switch"
         app:layout_constraintBottom_toBottomOf="@+id/favorites_label"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="@+id/favorites_label" />

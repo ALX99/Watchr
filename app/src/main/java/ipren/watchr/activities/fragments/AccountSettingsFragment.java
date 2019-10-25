@@ -30,7 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.TextWatcherAdapter;
 import ipren.watchr.activities.Util.Util;
-import ipren.watchr.viewModels.AccountSettingsViewModel;
+import ipren.watchr.viewmodels.AccountSettingsViewModel;
 
 import static android.app.Activity.RESULT_OK;
 import static ipren.watchr.activities.Util.ActivityUtils.Direction;
@@ -48,6 +48,8 @@ import static ipren.watchr.activities.Util.ActivityUtils.transitionBetweenLayout
 // Elements that just display data are marked DISPLAY
 public class AccountSettingsFragment extends Fragment {
 
+    private final int IMAGE_SRC_GALLERY = 0; //OnActivityResults code, informs that the result is from the camera
+    private final int IMAGE_SRC_CAMERA = 1; //OnActivityResults code, informs that the result is from gallery
     //User verified layout -> User profile layout
     @BindView(R.id.settings_layout)
     ConstraintLayout verifiedUserLayout; //Layout root
@@ -69,7 +71,6 @@ public class AccountSettingsFragment extends Fragment {
     ImageView settingsBackBtn; //NAVIGATION: This image allows the user to exit account settings without using the back button
     @BindView(R.id.change_password_btn)
     Button goToPasswordChangeBtn; //NAVIGATION:  A button for switching to change password layout
-
     // User not verified layout
     @BindView(R.id.ver_email_layout)
     ConstraintLayout userNotVerifiedLayout; //Layout root
@@ -87,7 +88,6 @@ public class AccountSettingsFragment extends Fragment {
     TextView checkUserVerificationRespTxt; //DISPLAY: A text showing if the user is verified or not as a result of checking it.
     @BindView(R.id.verify_back_btn)
     ImageView verifyLayoutBackBtn; //NAVIGATION:  This image allows the user to exit account settings without using the back button
-
     // Layout view for changing password
     @BindView(R.id.change_password_layout)
     ConstraintLayout changePasswordLayout;//Layout root
@@ -105,10 +105,6 @@ public class AccountSettingsFragment extends Fragment {
     TextView changePasswordResponse; //DISPLAY: A text that shows the results of the save password action
     @BindView(R.id.go_back_to_profile_btn)
     ImageView goBackToProfileBtn; //NAVIGATION: Button for returning to the User profile layout
-
-
-    private final int IMAGE_SRC_GALLERY = 0; //OnActivityResults code, informs that the result is from the camera
-    private final int IMAGE_SRC_CAMERA = 1; //OnActivityResults code, informs that the result is from gallery
     private AccountSettingsViewModel settingsViewModel;
     private Uri uriToTempFile = null; //Uri for the temp file that will/is holding the new profilePicture. Getting the picture is async so this must be stored in the object
 
@@ -177,7 +173,8 @@ public class AccountSettingsFragment extends Fragment {
         verifyLayoutBackBtn.setOnClickListener(e -> Navigation.findNavController(getView()).popBackStack()); //Exits application
 
         settingsViewModel.liveUser.observe(this, user -> { // This method works as a callback for checking if the user is verified. Setting error texts and informing that the checkUser action is completed
-            if (user == null) return;                               // .refreshUsr(); Triggers Livedata<user>.
+            if (user == null)
+                return;                               // .refreshUsr(); Triggers Livedata<user>.
             if (!checkIfUsrIsVerifiedBtn.isEnabled()) {
                 checkUserVerificationRespTxt.setVisibility(View.VISIBLE);
                 if (!user.isVerified())
@@ -217,7 +214,6 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     private void initChangePasswordLayout() {
-
 
 
         oldPasswordInput.addTextChangedListener(new TextForwarder(oldPasswordInput)); // These three methods allows the ViewModel to receive the current Text of respective fields
@@ -261,7 +257,7 @@ public class AccountSettingsFragment extends Fragment {
         usernameInputField.addTextChangedListener(new TextForwarder(usernameInputField)); // These three methods allows the viewmodel to receive the currentText of the inputField, settings error messages if need be.
 
         settingsViewModel.usernameErrorTxt.observe(this, txt -> usernameInputField.setError(txt)); // This method observes an errorTxt in the viewmodel
-                                                                                                            // which is triggered when it receives a badly formatted password from this textfield
+        // which is triggered when it receives a badly formatted password from this textfield
 
         settingsBackBtn.setOnClickListener(e -> Navigation.findNavController(getView()).popBackStack()); //Exit button for leaving the fragment
         goToPasswordChangeBtn.setOnClickListener(e -> transitionBetweenLayouts(verifiedUserLayout, changePasswordLayout, Direction.Right, getContext())); //Switches to the change password layout
@@ -282,7 +278,7 @@ public class AccountSettingsFragment extends Fragment {
                 shakeButton(saveProfilesSettingsBtn, getContext()); // If an update request was rejected the fragment will react by vibrating and shaking the button.
                 if (!usernameTxt.isEmpty() && (usernameTxt.length() < 15))
                     Toast.makeText(getContext(), "You have not changed anything!", Toast.LENGTH_SHORT).show(); //Toasts cannot be triggered from the regular viewmodel and they should not. In favor of making a another observable livedata
-                                                                                                                      // or a more flexible return value , I did this small check which breaks seperation of concern slightly, however makes the code less complex.
+                // or a more flexible return value , I did this small check which breaks seperation of concern slightly, however makes the code less complex.
             }
         });
 

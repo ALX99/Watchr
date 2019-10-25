@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,21 +23,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
-import ipren.watchr.dataHolders.Genre;
-import ipren.watchr.dataHolders.Movie;
-import ipren.watchr.dataHolders.MovieFilter;
+import ipren.watchr.dataholders.Movie;
+import ipren.watchr.dataholders.MovieFilter;
 import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.repository.IUserDataRepository;
-import ipren.watchr.viewModels.ListViewModel;
+import ipren.watchr.viewmodels.ListViewModel;
 
 public class MovieListFragment extends Fragment {
 
@@ -53,6 +51,7 @@ public class MovieListFragment extends Fragment {
     @BindView(R.id.emptyListView)
     TextView emptyListView;
 
+    private int currentPage = 1;
     private ListViewModel listViewModel;
     private MovieListAdapter movieListAdapter;
     // Observer to update the movieList
@@ -60,19 +59,22 @@ public class MovieListFragment extends Fragment {
         @Override
         public void onChanged(List<Movie> movies) {
             if (movies != null) {
-                movieListAdapter.updateMovieList(movies);
+                if (currentPage == 1)
+                    movieListAdapter.updateMovieList(movies);
+                else // If not on page 1 we want to load more movies
+                    movieListAdapter.addMoreMovies(movies);
                 loadingView.setVisibility(View.GONE);
             }
         }
     };
 
+    public MovieListFragment() {
+        // Required
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    public MovieListFragment() {
-        // Required
     }
 
     @Override
@@ -90,6 +92,7 @@ public class MovieListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        currentPage = 1; // Set currentPage to 1
 
         // Get view model and set correct data
         listViewModel = ViewModelProviders.of(getActivity()).get(ListViewModel.class);
@@ -101,32 +104,40 @@ public class MovieListFragment extends Fragment {
 
         // Set list layout and adapter
         movieList.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Scroll listener for loading more movies
+        movieList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                // When reached bottom of the recyclerView
+                if (!recyclerView.canScrollVertically(1) && (listType.equals(IMovieRepository.RECOMMENDED_LIST) || listType.equals(IMovieRepository.BROWSE_LIST))) {
+                    Toast.makeText(getContext(), "Loading more movies...", Toast.LENGTH_SHORT).show();
+                    currentPage++;
+                    loadMovies(listType);
+                }
+            }
+        });
         movieListAdapter = new MovieListAdapter(listViewModel, this);
         movieList.setAdapter(movieListAdapter);
 
         connectFilterButton();
         connectSearchView(listType);
 
-        handleNavigation(listType);
+        loadMovies(listType);
 
         // Fetch fresh data from API on refresh
         refreshLayout.setOnRefreshListener(() -> {
-            handleNavigation(listType);
+            loadMovies(listType);
             refreshLayout.setRefreshing(false);
         });
     }
 
-    /**
-     * Main list navigation handler
-     * @param listType Type of list
-     */
-    private void handleNavigation(String listType) {
+    private void loadMovies(String listType) {
         switch (listType) {
             case IMovieRepository.BROWSE_LIST:
-                listViewModel.initBrowse();
+                listViewModel.initBrowse(currentPage);
                 break;
             case IMovieRepository.RECOMMENDED_LIST:
-                listViewModel.initRecommended();
+                listViewModel.initRecommended(currentPage);
                 break;
             default:
                 handleUserList(listType);
@@ -135,18 +146,20 @@ public class MovieListFragment extends Fragment {
         listViewModel.getMovies().observe(getActivity(), movieObserver);
     }
 
-    /**
-     * Sets up the correct user list
-     * @param listType Type of list
-     */
     private void handleUserList(String listType) {
         // Check if user is logged in
         if (listViewModel.getUser().getValue() != null) {
             // Get the movie ids from user repo
             switch (listType) {
-                case IUserDataRepository.WATCHED_LIST: listViewModel.getWatchedIds().observe(this, this::observeIds); break;
-                case IUserDataRepository.WATCH_LATER_LIST: listViewModel.getWatchLaterIds().observe(this, this::observeIds); break;
-                case IUserDataRepository.FAVORITES_LIST: listViewModel.getFavoritesIds().observe(this, this::observeIds); break;
+                case IUserDataRepository.WATCHED_LIST:
+                    listViewModel.getWatchedIds().observe(this, this::observeIds);
+                    break;
+                case IUserDataRepository.WATCH_LATER_LIST:
+                    listViewModel.getWatchLaterIds().observe(this, this::observeIds);
+                    break;
+                case IUserDataRepository.FAVORITES_LIST:
+                    listViewModel.getFavoritesIds().observe(this, this::observeIds);
+                    break;
             }
         } else {
             // Not logged in
@@ -160,6 +173,7 @@ public class MovieListFragment extends Fragment {
 
     /**
      * Observe the movie ids returned from user repo
+     *
      * @param ids Ids to be observed
      */
     public void observeIds(String[] ids) {
@@ -202,7 +216,7 @@ public class MovieListFragment extends Fragment {
                     // Remove the current observer
                     listViewModel.getMovies().removeObserver(movieObserver);
                     // Load new movies from a query
-                    listViewModel.getMoviesFromQuery(query);
+                    listViewModel.getMoviesFromQuery(query, currentPage);
                     // Observe them
                     listViewModel.getMovies().observe(getActivity(), movieObserver);
                 }

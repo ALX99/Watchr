@@ -2,9 +2,7 @@ package ipren.watchr.activities;
 
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,10 +29,10 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ipren.watchr.R;
-import ipren.watchr.dataHolders.MovieFilter;
-import ipren.watchr.repository.Database.MovieDB;
-import ipren.watchr.viewModels.MainViewModel;
-import ipren.watchr.viewModels.MainViewModelInterface;
+import ipren.watchr.dataholders.MovieFilter;
+import ipren.watchr.repository.room.Database.MovieDB;
+import ipren.watchr.viewmodels.MainViewModel;
+import ipren.watchr.viewmodels.MainViewModelInterface;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -93,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Sets up a switch view and its listener
+     *
      * @param view Id of the switch
      * @return The newly created switch
      */
@@ -120,8 +119,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Sets up a spinner from a spinner view and its listener
+     *
      * @param layout The spinner view id
-     * @param array Id of array of items
+     * @param array  Id of array of items
      */
     private Spinner initSpinner(int layout, int array) {
         Spinner spinner = findViewById(layout);

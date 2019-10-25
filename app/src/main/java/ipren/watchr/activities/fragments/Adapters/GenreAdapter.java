@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ipren.watchr.R;
-import ipren.watchr.dataHolders.Genre;
+import ipren.watchr.dataholders.Genre;
 
 public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> {
 

@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.concurrent.Executor;
+
 //TODO remake this test
 public class MockTaskResponse extends Task {
     boolean isComplete = false;
@@ -18,32 +19,6 @@ public class MockTaskResponse extends Task {
     boolean isCanceled = false;
     Object result = null;
     Exception exception = null;
-
-    public MockTaskResponse setComplete(boolean complete){
-        this.isComplete = complete;
-        return this;
-    }
-
-    public MockTaskResponse setSuccessful(boolean successful){
-        this.isSuccessful = successful;
-        return this;
-
-    }
-    public MockTaskResponse setCanceled(boolean canceled){
-        this.isCanceled = canceled;
-        return this;
-    }
-
-    public MockTaskResponse setResult(Object result){
-        this.result = result;
-        return this;
-    }
-
-    public MockTaskResponse setException(Exception exception){
-        this.exception = exception;
-        return this;
-    }
-
 
     @NonNull
     @Override
@@ -57,14 +32,30 @@ public class MockTaskResponse extends Task {
         return isComplete;
     }
 
+    public MockTaskResponse setComplete(boolean complete) {
+        this.isComplete = complete;
+        return this;
+    }
+
     @Override
     public boolean isSuccessful() {
         return isSuccessful;
     }
 
+    public MockTaskResponse setSuccessful(boolean successful) {
+        this.isSuccessful = successful;
+        return this;
+
+    }
+
     @Override
     public boolean isCanceled() {
         return isCanceled;
+    }
+
+    public MockTaskResponse setCanceled(boolean canceled) {
+        this.isCanceled = canceled;
+        return this;
     }
 
     @Nullable
@@ -73,10 +64,20 @@ public class MockTaskResponse extends Task {
         return result;
     }
 
+    public MockTaskResponse setResult(Object result) {
+        this.result = result;
+        return this;
+    }
+
     @Nullable
     @Override
     public Exception getException() {
         return exception;
+    }
+
+    public MockTaskResponse setException(Exception exception) {
+        this.exception = exception;
+        return this;
     }
 
     @NonNull
