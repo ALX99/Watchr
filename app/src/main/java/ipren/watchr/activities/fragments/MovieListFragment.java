@@ -145,7 +145,7 @@ public class MovieListFragment extends Fragment {
         }
     }
 
-    private void observeIds(String[] ids) {
+    public void observeIds(String[] ids) {
         if (ids != null) {
             listViewModel.initUserMovieList(ids);
             listViewModel.getMovies().observe(this, movies -> {

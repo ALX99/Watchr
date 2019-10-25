@@ -133,4 +133,12 @@ public class ListViewModel extends ViewModel {
     public LiveData<List<Genre>> getGenres(int movieId) {
         return movieRepository.getGenresFromMovie(movieId);
     }
+
+    public void removeMovieFromList(String movieId, String listType) {
+        userRepository.removeMovieFromList(listType, movieId, user.getValue().getUID(), v -> {});
+    }
+
+    public void addMovieToList(String movieId, String listType) {
+        userRepository.addMovieToList(listType, movieId, user.getValue().getUID(), v -> {});
+    }
 }

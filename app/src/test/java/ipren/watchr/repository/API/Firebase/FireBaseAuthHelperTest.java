@@ -1,6 +1,5 @@
 package ipren.watchr.repository.API.Firebase;
 import android.net.Uri;
-import android.net.wifi.hotspot2.pps.Credential;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
@@ -29,14 +28,14 @@ import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FirebaseStorage.class)
-public class FirebaseAuthHelperTest {
+public class FireBaseAuthHelperTest {
 
     private boolean callbackExecuted = false;
     private boolean callback2Executed = false;
     private boolean callback3Executed = false;
     FirebaseAuth mAuth;
     FirebaseUser user;
-    FirebaseAuthHelper firebaseAuthHelper;
+    FireBaseAuthHelper firebaseAuthHelper;
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
@@ -50,7 +49,7 @@ public class FirebaseAuthHelperTest {
         callback3Executed = false;
         mAuth = mock(FirebaseAuth.class);
         user = mock(FirebaseUser.class);
-        firebaseAuthHelper = new FirebaseAuthHelper(mAuth);
+        firebaseAuthHelper = new FireBaseAuthHelper(mAuth);
     }
 
     @Test
@@ -93,6 +92,7 @@ public class FirebaseAuthHelperTest {
         assertTrue(callbackExecuted);
         assertTrue(callback2Executed);
         assertTrue(callback3Executed);
+        firebaseAuthHelper.resendVerificationEmail(null);
     }
 
     @Test
@@ -195,10 +195,10 @@ public class FirebaseAuthHelperTest {
         });
         assertTrue(callbackExecuted);
         assertTrue(callback2Executed);
-
+        firebaseAuthHelper.resetPassword(emailTest, null);
     }
 
-    //TODO FINNISH THIS TEST
+
     @Test
     public void updateProfile() {
         String UID = "testUID1234";
@@ -240,11 +240,13 @@ public class FirebaseAuthHelperTest {
         FirebaseStorage fireStorage = mock(FirebaseStorage.class);
         when(fireStorage.getReference()).thenReturn(storageReference);
         BDDMockito.given(FirebaseStorage.getInstance()).willReturn(fireStorage);
-
+        firebaseAuthHelper.updateProfile(providedUsername, providedUri, null);
         firebaseAuthHelper.updateProfile(providedUsername, providedUri, e -> {
             if(e.isSuccessful())
                 callbackExecuted = true;
         });
+
+        assertTrue(callbackExecuted);
 
 
     }

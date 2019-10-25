@@ -76,7 +76,9 @@ public class AccountSettingsViewModelTest {
     @Test
     public void setReTypedPassword() {
         assertNull(settingsViewModel.reTypedErrorTxt.getValue());
-        settingsViewModel.setNewPassword("12345678");
+        settingsViewModel.setNewPassword("12345678"); // This will set error to !=null because the reTyped field is empty
+        assertNotNull(settingsViewModel.reTypedErrorTxt.getValue());
+        ((MutableLiveData<String>)settingsViewModel.reTypedErrorTxt).postValue(null);  //Must reset null to test if setting identical PW will cause error
         settingsViewModel.setReTypedPassword("12345678");
         assertEquals("12345678",settingsViewModel.getReTypedPassword());
         assertNull(settingsViewModel.reTypedErrorTxt.getValue());
@@ -162,9 +164,9 @@ public class AccountSettingsViewModelTest {
                 assertEquals(testUsername, userName);
                 assertEquals(testURi, pictureUri);
                 ((MutableLiveData)userLiveDataTest).postValue(new User(userName, null, pictureUri, null, true));
-                assertTrue(settingsViewModel.savingNewProfileState.getValue());
+                assertTrue(settingsViewModel.savingNewProfile.getValue());
                 callback.onComplete(new MockTaskResponse().setSuccessful(true));
-                assertFalse(settingsViewModel.savingNewProfileState.getValue());
+                assertFalse(settingsViewModel.savingNewProfile.getValue());
                 methodInvoked = true;
             }
             @Override

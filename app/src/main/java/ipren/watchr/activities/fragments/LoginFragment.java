@@ -3,7 +3,6 @@ package ipren.watchr.activities.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -179,7 +178,7 @@ public class LoginFragment extends Fragment {
 
 
         //This method observes the result of attempting to register an account, if its not successful it will display an error message and shake the button, if it is it exit the fragment and navigate to the accountsettings fragment  where the user can verify his/hers account.
-        loginViewModel.createUserResponse.observe(this, e -> {
+        loginViewModel.registerUserResponse.observe(this, e -> {
             registerUsrResponseTxt.setVisibility(View.VISIBLE);
             if (e.isSuccessful()) {
                 exitLoginFragment(true); //Exit fragment and notify the user that they are logged in;

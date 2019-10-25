@@ -1,17 +1,17 @@
 package ipren.watchr.dataHolders;
 
 import com.google.firebase.firestore.DocumentId;
-
+//An immutable class representing a rating made by a user on a movie
 public class Rating {
-    @DocumentId
-    private String uID = "";
-    private String movie_id = "";
-    private String user_id = "";
-    private int score = 0;
+    @DocumentId //FireBase uses this annotation to identify a variable that should hold document ID
+    private String uID = ""; // Uniqe ID of comment
+    private String movie_id = ""; //Movie comment was made on
+    private String user_id = ""; // User who made the comment
+    private int score = 0; //The score the user left
 
     //This is needed to enable firebase to initiate the object
     public Rating(){}
-
+    //Null safe constructor
     public Rating(String movie_id, String user_id, String uID, int score) {
         if (movie_id != null)
             this.movie_id = movie_id;
