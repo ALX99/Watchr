@@ -62,21 +62,21 @@ public class MovieRepoTest {
 
     @Test
     public void getMovieTest() throws Exception {
-        Movie x = LiveDataTestUtil.getValue(repo.getMovieByID(m.id));
-        Assert.assertEquals(m.title, x.title);
+        Movie x = LiveDataTestUtil.getValue(repo.getMovieByID(m.getId()));
+        Assert.assertEquals(m.getTitle(), x.getTitle());
     }
 
     @Test
     public void getActorsTest() throws Exception {
         // Insert new actors
         ActorDao actorDao = actorDao = db.actorDao();
-        Actor a = new Actor("1", m.id, "Chris Pratt");
-        Actor b = new Actor("2", m.id, "Chris Pratt");
+        Actor a = new Actor("1", m.getId(), "Chris Pratt");
+        Actor b = new Actor("2", m.getId(), "Chris Pratt");
         actorDao.insert(a);
         actorDao.insert(b);
 
-        List<Actor> actors = LiveDataTestUtil.getValue(repo.getActorsFromMovie(m.id));
-        Assert.assertEquals(m.id, actors.get(0).getMovieID());
+        List<Actor> actors = LiveDataTestUtil.getValue(repo.getActorsFromMovie(m.getId()));
+        Assert.assertEquals(m.getId(), actors.get(0).getMovieID());
         Assert.assertEquals(2, actors.size());
     }
 
@@ -87,22 +87,23 @@ public class MovieRepoTest {
         MovieGenreJoinDao movieGenreJoinDao = db.movieGenreJoinDao();
         Genre g = new Genre(1, "Horror");
         genreDao.insert(g);
-        movieGenreJoinDao.insert(new MovieGenreJoin(m.id, g.getGenreID()));
-        List<Genre> genres = LiveDataTestUtil.getValue(repo.getGenresFromMovie(m.id));
+        movieGenreJoinDao.insert(new MovieGenreJoin(m.getId(), g.getGenreID()));
+        List<Genre> genres = LiveDataTestUtil.getValue(repo.getGenresFromMovie(m.getId()));
         Assert.assertEquals(g.getName(), genres.get(0).getName());
     }
 
     @Test
     public void getMoviesByIDTest() throws Exception {
-        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMoviesByID(new int[]{m.id, 99}));
+        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMoviesByID(new int[]{m.getId(), 99}));
         Assert.assertEquals(1, movies.size());
-        Assert.assertEquals(m.title, movies.get(0).title);
+        Assert.assertEquals(m.getTitle(), movies.get(0).getTitle());
     }
+
     @Test
-    public void testGetActors() throws Exception{
-        db.actorDao().insert(new Actor("1",m.id, "Chris Pratt"));
-        List<Actor> a = LiveDataTestUtil.getValue(repo.getActorsFromMovie(m.id));
-        Assert.assertEquals(a.get(0).getName(),a.get(0).getName());
+    public void testGetActors() throws Exception {
+        db.actorDao().insert(new Actor("1", m.getId(), "Chris Pratt"));
+        List<Actor> a = LiveDataTestUtil.getValue(repo.getActorsFromMovie(m.getId()));
+        Assert.assertEquals(a.get(0).getName(), a.get(0).getName());
     }
 
     @Test
@@ -124,7 +125,7 @@ public class MovieRepoTest {
     }
 
     private void inserInList(String list, int page) {
-        movieListDao.insert(new MovieList(m.id, list, page, new Date()));
+        movieListDao.insert(new MovieList(m.getId(), list, page, new Date()));
 
     }
 }

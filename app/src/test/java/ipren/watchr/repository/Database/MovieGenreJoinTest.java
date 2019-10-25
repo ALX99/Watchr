@@ -69,11 +69,11 @@ public class MovieGenreJoinTest {
     public void getMoviesByGenreTest() throws Exception {
         insertDummyData();
         List<Movie> movies = LiveDataTestUtil.getValue(movieGenreJoinDao.getMoviesByGenre(new int[]{2, 3}));
-        Assert.assertEquals(m.title, movies.get(0).title);
+        Assert.assertEquals(m.getTitle(), movies.get(0).getTitle());
 
         movieGenreJoinDao.delete(new MovieGenreJoin(1, 2));
         movies = LiveDataTestUtil.getValue(movieGenreJoinDao.getMoviesByGenre(new int[]{2, 3}));
-        Assert.assertEquals(m.title, movies.get(0).title);
+        Assert.assertEquals(m.getTitle(), movies.get(0).getTitle());
 
     }
 

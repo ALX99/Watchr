@@ -31,7 +31,7 @@ public class MovieListTest {
     private MovieDao movieDao;
     private MovieDB db;
     private Movie m = new Movie(1, "testMovie");
-    MovieList movieList = new MovieList(m.id, "name", 1, new Date());
+    MovieList movieList = new MovieList(m.getId(), "name", 1, new Date());
     private MovieListDao movieListDao;
 
 
@@ -44,7 +44,7 @@ public class MovieListTest {
         movieDao.insert(m);
         movieListDao = db.movieListDao();
         movieListDao.insert(movieList);
-        MovieList a = new MovieList(m.id, "naame", 1, new Date());
+        MovieList a = new MovieList(m.getId(), "naame", 1, new Date());
         movieListDao.insert(a);
     }
 
@@ -61,17 +61,17 @@ public class MovieListTest {
 
     @Test
     public void getMoviesTest() throws Exception {
-        MovieList movieList = new MovieList(m.id, "name", 1, new Date());
+        MovieList movieList = new MovieList(m.getId(), "name", 1, new Date());
         movieListDao.insert(movieList);
         List<Movie> list = LiveDataTestUtil.getValue(movieListDao.getAllMoviesFromList(movieList.getListName()));
-        Assert.assertEquals(m.title, list.get(0).title);
+        Assert.assertEquals(m.getTitle(), list.get(0).getTitle());
     }
 
     @Test
     public void removeMovieFromListTest() throws Exception {
         Movie m = new Movie(2, "testMovie");
         movieDao.insert(m);
-        movieListDao.removeMovieFromList(m.id, movieList.getListName());
+        movieListDao.removeMovieFromList(m.getId(), movieList.getListName());
         List<Movie> mList = LiveDataTestUtil.getValue(movieListDao.getMoviesFromList(movieList.getListName(), 1));
         Assert.assertEquals(1, mList.size());
         mList = LiveDataTestUtil.getValue(movieListDao.getMoviesFromList(movieList.getListName(), 2));

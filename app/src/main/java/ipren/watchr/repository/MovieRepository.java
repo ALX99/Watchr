@@ -51,6 +51,10 @@ public class MovieRepository implements IMovieRepository {
         return INSTANCE;
     }
 
+    /**
+     * @param id The ID of the movie
+     * @return The genres that the movie contains
+     */
     public LiveData<List<Genre>> getGenresFromMovie(int id) {
         return movieDB.movieGenreJoinDao().getGenresFromMovie(id);
     }
@@ -71,8 +75,9 @@ public class MovieRepository implements IMovieRepository {
     /**
      * Need another function for getting the discoverList
      * since there can be many different discoverLists
-     * @param genres List of genres to include
-     * @param page Page num
+     *
+     * @param genres     List of genres to include
+     * @param page       Page num
      * @param forceFetch Force data from api?
      * @return The movie list
      */
@@ -100,17 +105,20 @@ public class MovieRepository implements IMovieRepository {
      * fetch movies from the API if the movie is null,
      * some information about the movie is missing,
      * the movie info is older than a day or forceFetch is set to true
+     *
      * @param page       The page number of the trending list
      * @param forceFetch Force data from the api?
      */
     private void getList(String list, int page, boolean forceFetch, Call<MovieList> call) {
         new Thread(() -> {
-            List<MovieList> movieList = movieDB.movieListDao().getMovieListsNonLivedata(list,page);
+            List<MovieList> movieList = movieDB.movieListDao().getMovieListsNonLivedata(list, page);
+            // Check if movieList doesn't exist
             if (movieList == null || movieList.size() == 0 || movieList.get(0).getUpdateDate() == null || forceFetch)
                 insertMovieList(call, list, page);
             else {
                 long diff = new Date().getTime() - movieList.get(0).getUpdateDate().getTime();
-                if (TimeUnit.MILLISECONDS.toDays(diff) > 1) {
+                // Check if the information is old and we need to fetch it again
+                if (TimeUnit.MILLISECONDS.toDays(diff) > IMovieRepository.LIST_DAY_TIMEOUT) {
                     Log.d("MOVIE", "The movie list " + list + " has to be updated!");
                     insertMovieList(call, list, page);
                 } else
@@ -121,6 +129,7 @@ public class MovieRepository implements IMovieRepository {
 
     /**
      * Handles inserting movies into the DB
+     *
      * @param call The API call
      * @param list The list to be inserted into
      * @param page The page
@@ -139,13 +148,14 @@ public class MovieRepository implements IMovieRepository {
                 new Thread(() -> {
                     movieDB.movieDao().insert(movies);
                     for (Movie m : movies) {
-                        movieDB.movieListDao().insert(new MovieList(m.id, list, page, d));
-                        Log.d("MOVIE", "inserting " + m.title + " in " + list);
+                        movieDB.movieListDao().insert(new MovieList(m.getId(), list, page, d));
+                        Log.d("MOVIE", "inserting " + m.getTitle() + " in " + list);
                         for (int i : m.getGenre_ids())
-                            movieDB.movieGenreJoinDao().insert(new MovieGenreJoin(m.id, i));
+                            movieDB.movieGenreJoinDao().insert(new MovieGenreJoin(m.getId(), i));
                     }
                 }).start();
             }
+
             @Override
             public void onFailure(Call<MovieList> call, Throwable t) {
 
@@ -165,9 +175,10 @@ public class MovieRepository implements IMovieRepository {
     }
 
     /**
-     *  Gets a movie from either the API or DB
-     *  depending if it exists in the DB
-     *  and how old it is
+     * Gets a movie from either the API or DB
+     * depending if it exists in the DB
+     * and how old it is
+     *
      * @param movieID The ID of the movie
      * @return The movie
      */
@@ -181,10 +192,10 @@ public class MovieRepository implements IMovieRepository {
                 // the gathering of a movieList and does not contain the full information
                 // therefore has to be updated
             } else if (m != null && (m.getUpdateDate() == null || m.getActorList() == null)) {
-            insertMovie(movieID, UPDATE);}
-            else {
+                insertMovie(movieID, UPDATE);
+            } else {
                 long diff = new Date().getTime() - m.getUpdateDate().getTime();
-                if (TimeUnit.MILLISECONDS.toDays(diff) > 7) {
+                if (TimeUnit.MILLISECONDS.toDays(diff) > MOVIE_DAY_TIMEOUT) {
                     Log.d("MOVIE", "The movie " + movieID + " has to be updated!");
                     insertMovie(movieID, UPDATE);
                 } else
@@ -197,6 +208,7 @@ public class MovieRepository implements IMovieRepository {
 
     /**
      * Insert a movie into the DB
+     *
      * @param movieID The ID of the movie
      * @param method  The method to be used, (inserting or updating)
      */
@@ -206,7 +218,7 @@ public class MovieRepository implements IMovieRepository {
         movieCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
-                if (!response.isSuccessful()){
+                if (!response.isSuccessful()) {
                     Log.d("MOVIE", "FAIL");
                     return;
                 }
@@ -225,12 +237,13 @@ public class MovieRepository implements IMovieRepository {
                         movieDB.movieDao().insert(movie);
                     else if (method == UPDATE)
                         movieDB.movieDao().update(movie);
-
+                    // Insert all genres
                     for (Genre g : movie.getGenres())
-                        movieDB.movieGenreJoinDao().insert(new MovieGenreJoin(movie.id, g.getGenreID()));
+                        movieDB.movieGenreJoinDao().insert(new MovieGenreJoin(movie.getId(), g.getGenreID()));
+                    // Insert all actors
                     for (Actor a : movie.getActorList().getActors())
                         if (a.getPictureLink() != null)
-                            movieDB.actorDao().insert(new Actor(movie.id, a));
+                            movieDB.actorDao().insert(new Actor(movie.getId(), a));
                 }).start();
             }
 

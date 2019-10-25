@@ -62,14 +62,14 @@ public class MovieTest {
     public void movieInsertTest() throws Exception {
         movieDao.insert(m);
         List<Movie> movies = LiveDataTestUtil.getValue(movieDao.getAllMovies());
-        Assert.assertEquals(movies.get(0).title, m.title);
+        Assert.assertEquals(movies.get(0).getTitle(), m.getTitle());
     }
 
     @Test
     public void movieFind() throws Exception {
         insertDummyData();
         Movie gMovie = LiveDataTestUtil.getValue(movieDao.getMovieByID(2));
-        Assert.assertEquals(gMovie.id, m2.id);
+        Assert.assertEquals(gMovie.getId(), m2.getId());
     }
 
     @Test
@@ -86,6 +86,6 @@ public class MovieTest {
         movieDao.insert(m);
         Movie newM = new Movie(1, "title");
         movieDao.update(newM);
-        Assert.assertEquals(newM.title, LiveDataTestUtil.getValue(movieDao.getMovieByID(1)).title);
+        Assert.assertEquals(newM.getTitle(), LiveDataTestUtil.getValue(movieDao.getMovieByID(1)).getTitle());
     }
 }

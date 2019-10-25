@@ -56,12 +56,6 @@ import ipren.watchr.viewModels.MovieViewModel;
  * The type Movie details.
  */
 public class MovieDetails extends Fragment {
-    private int movieID;
-    private IMovieViewModel viewModel;
-    private User user;
-    private NavController navController;
-
-
     @BindView(R.id.castList)
     RecyclerView cast;
     @BindView(R.id.genreList)
@@ -114,6 +108,10 @@ public class MovieDetails extends Fragment {
     ProgressBar ourRating;
     @BindView(R.id.profile_picture)
     CircleImageView profilePicture;
+    private int movieID;
+    private IMovieViewModel viewModel;
+    private User user;
+    private NavController navController;
 
     public MovieDetails() {
         // Required empty public constructor
@@ -129,7 +127,6 @@ public class MovieDetails extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
         // Bind stuff with ButterKnife
         ButterKnife.bind(this, view);
-        Toast.makeText(getContext(), Integer.toString(movieID), Toast.LENGTH_SHORT).show(); // Debug
 
         // Gets viewModel and sets the movieID
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
@@ -273,17 +270,17 @@ public class MovieDetails extends Fragment {
         viewModel.getMovie().observe(getViewLifecycleOwner(), Movie -> {
             // Don't try to set anything if the object is null.
             // Will result in fatal crash
-            if (Movie == null || Movie.overview == null)
+            if (Movie == null || Movie.getOverview() == null)
                 return;
 
             // Load images
-            Util.loadImage(poster, new StringBuilder(Constants.MOVIE_DB_GET_IMAGE).append(Movie.posterPath).toString(), Util.getProgressDrawable(requireContext())); // Poster
+            Util.loadImage(poster, new StringBuilder(Constants.MOVIE_DB_GET_IMAGE).append(Movie.getPosterPath()).toString(), Util.getProgressDrawable(requireContext())); // Poster
             Util.loadImage(cover, new StringBuilder(Constants.MOVIE_DB_GET_IMAGE).append(Movie.getBackdropPath()).toString(), Util.getProgressDrawable(requireContext())); // Cover
 
             // Title
-            title.setText(Movie.title);
+            title.setText(Movie.getTitle());
             // Overview
-            description.setText(Movie.overview);
+            description.setText(Movie.getOverview());
             // Status
             status.setText(String.format(getResources().getString(R.string.status), Movie.getStatus()));
             // Runtime

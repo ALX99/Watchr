@@ -15,14 +15,14 @@ public class Movie {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "id")
-    public final int id; // TODO?
+    private int id;
     @ColumnInfo(name = "poster_path")
     @SerializedName("poster_path")
-    public String posterPath; // TODO
+    private String posterPath;
     @ColumnInfo(name = "title")
-    public String title; // TODO
+    private String title;
     @SerializedName("overview")
-    public String overview; // TODO
+    private String overview;
     @ColumnInfo(name = "popularity")
     private double popularity;
     @Ignore
@@ -59,6 +59,8 @@ public class Movie {
     @Ignore
     @SerializedName("genres")
     private Genre[] genres;
+    // Used to get genreIds when retrofit
+    // gets movies from a movieList
     @Ignore
     @SerializedName("genre_ids")
     private int[] genre_ids;

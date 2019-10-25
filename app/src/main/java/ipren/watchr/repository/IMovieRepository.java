@@ -17,6 +17,13 @@ public interface IMovieRepository {
     String SEARCH_LIST = "Search";
     String BROWSE_LIST = "Browse";
     String RECOMMENDED_LIST = "Recommended";
+    int MOVIE_DAY_TIMEOUT = 3;
+    int LIST_DAY_TIMEOUT = 3;
+
+    // Singleton method to get instance
+    static IMovieRepository getInstance() {
+        return MovieRepository.getInstance();
+    }
 
     /**
      * Gets a movie by its ID.
@@ -82,10 +89,5 @@ public interface IMovieRepository {
      * @return The list of movies
      */
     LiveData<List<Movie>> getDiscoverList(int[] genres, int page, boolean forceFetch);
-
-    // Singleton method to get instance
-    static IMovieRepository getInstance() {
-        return MovieRepository.getInstance();
-    }
 }
 

@@ -1,23 +1,27 @@
 package ipren.watchr.dataHolders;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CommentTest {
 
     Date testDate;
     String testString;
     Comment nullConstructor;
+
     @Before
-    public void setUp(){
+    public void setUp() {
         testDate = Calendar.getInstance().getTime();
         testString = "testValue";
-        nullConstructor = new Comment(null,null,null,null,null);
+        nullConstructor = new Comment(null, null, null, null, null);
     }
+
     @Test
     public void getMovie_id() {
         assertNotNull(nullConstructor.getMovie_id());
@@ -33,7 +37,7 @@ public class CommentTest {
         assertNotNull(nullConstructor.getUser_id());
         Comment testComment = new Comment("not used", testString, "Not used", "Not Used", testDate);
         assertEquals(testComment.getUser_id(), testString);
-        testComment = new Comment(null, testString,null , null, null);
+        testComment = new Comment(null, testString, null, null, null);
         assertEquals(testComment.getUser_id(), testString);
 
     }
@@ -53,26 +57,19 @@ public class CommentTest {
         assertNotNull(nullConstructor.getUID());
         Comment testComment = new Comment("Not used", "Not used", "Not used", testString, testDate);
         assertEquals(testComment.getUID(), testString);
-        testComment = new Comment(null, null , null, testString, null);
+        testComment = new Comment(null, null, null, testString, null);
         assertEquals(testComment.getUID(), testString);
 
     }
 
     @Test
-    public void getDate(){
+    public void getDate() {
         assertNotNull(nullConstructor.getDate_created());
         Comment testComment = new Comment("Not used", "Not used", "Not used", "Not used", testDate);
         assertEquals(testComment.getDate_created(), testDate);
-        testComment = new Comment(null, null , null, null, testDate);
+        testComment = new Comment(null, null, null, null, testDate);
         assertEquals(testComment.getDate_created(), testDate);
     }
-
-
-
-
-
-
-
 
 
 }

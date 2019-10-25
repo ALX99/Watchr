@@ -18,6 +18,14 @@ import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.repository.IUserDataRepository;
 
+/*
+The ViewModel only holds information and does not do anything else
+besides calling other methods of other object to get relevant information.
+It probably would be the equivalent of controller in MVC, as dumb as possible.
+Why LiveData information is stored here is because fragments regularly gets killed
+and therefore all information they hold, this is a way to temporarily save the information
+and restore it quickly when the fragment is created again.
+ */
 public class MovieViewModel extends AndroidViewModel implements IMovieViewModel {
     private String movieID;
     private IMovieRepository movieRepository;
