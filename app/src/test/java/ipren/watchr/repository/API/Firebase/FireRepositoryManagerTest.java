@@ -50,7 +50,7 @@ public class FireRepositoryManagerTest {
     //FireAuth
     @Test (expected = MethodInvokedCallBack.class)
     public void resetPassword() {
-        FireRepositoryManager repo = new FireRepositoryManager(new FirebaseAuthHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(new FireBaseAuthHelper(null){
             @Override
             void resetPassword(String email, OnCompleteListener callback) {
                 assertTrue(referenceTest == callback);
@@ -68,7 +68,7 @@ public class FireRepositoryManagerTest {
 
     @Test  (expected = MethodInvokedCallBack.class)
     public void registerUser() {
-        FireRepositoryManager repo = new FireRepositoryManager(new FirebaseAuthHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(new FireBaseAuthHelper(null){
             @Override
             void registerUser(String email, String password, OnCompleteListener callback) {
                 assertTrue(referenceTest == callback);
@@ -83,7 +83,7 @@ public class FireRepositoryManagerTest {
     @Test  (expected = MethodInvokedCallBack.class)
     public void signOutUser() {
 
-        FireRepositoryManager repo = new FireRepositoryManager(new FirebaseAuthHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(new FireBaseAuthHelper(null){
             @Override
             void signOut() {
                 throw new MethodInvokedCallBack();
@@ -97,7 +97,7 @@ public class FireRepositoryManagerTest {
     @Test  (expected = MethodInvokedCallBack.class)
     public void loginUser() {
 
-        FireRepositoryManager repo = new FireRepositoryManager(new FirebaseAuthHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(new FireBaseAuthHelper(null){
             @Override
             void loginUser(String email, String password, OnCompleteListener callback) {
                 assertTrue(referenceTest == callback);
@@ -113,7 +113,7 @@ public class FireRepositoryManagerTest {
     @Test  (expected = MethodInvokedCallBack.class)
     public void refreshUsr() {
 
-        FireRepositoryManager repo = new FireRepositoryManager(new FirebaseAuthHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(new FireBaseAuthHelper(null){
             @Override
             void refreshUsr() {
                 throw new MethodInvokedCallBack();
@@ -125,7 +125,7 @@ public class FireRepositoryManagerTest {
     @Test  (expected = MethodInvokedCallBack.class)
     public void reSendVerificationEmail() {
 
-        FireRepositoryManager repo = new FireRepositoryManager(new FirebaseAuthHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(new FireBaseAuthHelper(null){
             @Override
             void resendVerificationEmail(OnCompleteListener callback) {
                 assertTrue(referenceTest == callback);
@@ -138,7 +138,7 @@ public class FireRepositoryManagerTest {
     @Test  (expected = MethodInvokedCallBack.class)
     public void updateProfile() {
 
-        FireRepositoryManager repo = new FireRepositoryManager(new FirebaseAuthHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(new FireBaseAuthHelper(null){
             @Override
             void updateProfile(String userName, Uri uri, OnCompleteListener callback) {
                 assertTrue(referenceTest == callback);
@@ -152,7 +152,7 @@ public class FireRepositoryManagerTest {
 
     @Test  (expected = MethodInvokedCallBack.class)
     public void changePassword() {
-        FireRepositoryManager repo = new FireRepositoryManager(new FirebaseAuthHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(new FireBaseAuthHelper(null){
             @Override
             void changePassword(String oldPassword, String newPassword, OnCompleteListener callback) {
                 assertTrue(referenceTest == callback);
@@ -169,7 +169,7 @@ public class FireRepositoryManagerTest {
     @Test(expected = MethodInvokedCallBack.class)
     public void getPublicProfile() {
 
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
 
             @Override
             LiveData<PublicProfile> getPublicProfile(String user_id) {
@@ -182,7 +182,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void getCommentsByMovie_ID() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             LiveData<Comment[]> getCommentByMovieID(String movie_id) {
                 assertEquals(TEST_ID, movie_id);
@@ -195,7 +195,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void getCommentsByUser_ID() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             LiveData<Comment[]> getCommentsByUserID(String user_id) {
                 assertEquals(TEST_ID, user_id);
@@ -208,7 +208,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void getRatingsByMovie_id() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             LiveData<Rating[]> getRatingByMovieID(String movie_id) {
                 assertEquals(TEST_ID, movie_id);
@@ -220,7 +220,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void getRatingsByUser_id() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             LiveData<Rating[]> getRatingByUserID(String user_id) {
                 assertEquals(TEST_ID, user_id);
@@ -233,7 +233,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void addMovieToList() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             public void saveMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback) {
                 assertEquals(TEST_LIST,list);
@@ -249,7 +249,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void getMovieList() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             public LiveData<String[]> getMovieListByUserID(String list, String user_id) {
                 assertEquals(TEST_LIST, list);
@@ -262,7 +262,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void removeMovieFromList() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             public void deleteMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
                 assertEquals(TEST_LIST,list);
@@ -278,7 +278,7 @@ public class FireRepositoryManagerTest {
 
     @Test
     public void rateMovie() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
                 assertTrue((score <= 10 && score >= 0));
@@ -299,7 +299,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void removeRating() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             void removeRating(String rating_id, OnCompleteListener callback) {
                 assertEquals(TEST_ID ,rating_id);
@@ -312,7 +312,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void commentMovie() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             void addComment(String text, String movie_id, String user_id, OnCompleteListener callback) {
                 assertEquals(TEST_TEXT,text);
@@ -327,7 +327,7 @@ public class FireRepositoryManagerTest {
 
     @Test (expected = MethodInvokedCallBack.class)
     public void removeComment() {
-        FireRepositoryManager repo = new FireRepositoryManager(null, new FirebaseDatabaseHelper(null){
+        FireRepositoryManager repo = new FireRepositoryManager(null, new FireBaseDatabaseHelper(null){
             @Override
             void removeComment(String comment_id, OnCompleteListener callback) {
                 assertEquals(TEST_ID,comment_id);
