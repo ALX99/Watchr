@@ -7,12 +7,12 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+
 import ipren.watchr.dataholders.Comment;
 import ipren.watchr.dataholders.PublicProfile;
 import ipren.watchr.dataholders.Rating;
 import ipren.watchr.dataholders.User;
 import ipren.watchr.repository.IUserDataRepository;
-
 //This class manages request to both FireBaseAuthHelper and FireBaseDataBaseManager as well as syncing data with the two API's
 //This class functions as controller/manager for the repository
 public class FireRepositoryManager implements IUserDataRepository {
@@ -26,11 +26,10 @@ public class FireRepositoryManager implements IUserDataRepository {
     private LiveData<User> currentLoggedUser;
 
     @VisibleForTesting
-    FireRepositoryManager(FireBaseAuthHelper firebaseAuthHelper, FireBaseDatabaseHelper firestoreDatabase) {
+    FireRepositoryManager(FireBaseAuthHelper firebaseAuthHelper, FireBaseDatabaseHelper firestoreDatabase){
         this.firebaseAuthHelper = firebaseAuthHelper;
         this.firestoreDatabase = firestoreDatabase;
     }
-
     //Initiates the repository. Syncs user data changes in FireBaseAuthHelper to FireBaseDatabaseHelper
     private FireRepositoryManager() {
         firebaseAuthHelper = new FireBaseAuthHelper();
@@ -44,7 +43,6 @@ public class FireRepositoryManager implements IUserDataRepository {
                 firestoreDatabase.syncUserWithDatabase(user); //Syncing user data with FireBaseDatabaseHelper creating a public profile for other users to see.
         });
     }
-
     //Returns an instance of the repositry
     public static IUserDataRepository getInstance() {
         if (fireApiManager == null)
@@ -60,8 +58,8 @@ public class FireRepositoryManager implements IUserDataRepository {
     }
 
     @Override
-    public void resetPassword(String email, OnCompleteListener callback) {
-        firebaseAuthHelper.resetPassword(email, callback);
+    public void resetPassword(String email ,OnCompleteListener callback) {
+        firebaseAuthHelper.resetPassword(email , callback);
     }
 
     @Override
@@ -96,7 +94,7 @@ public class FireRepositoryManager implements IUserDataRepository {
 
     @Override
     public void changePassword(String oldPassword, String newPassword, OnCompleteListener callback) {
-        firebaseAuthHelper.changePassword(oldPassword, newPassword, callback);
+        firebaseAuthHelper.changePassword(oldPassword,newPassword, callback);
     }
 
     //Firestore
@@ -114,7 +112,6 @@ public class FireRepositoryManager implements IUserDataRepository {
         else
             return firestoreDatabase.getCommentsByUserID(id);
     }
-
     //Checks what search method they are using and calls corresponding method in the database
     @Override
     public LiveData<Rating[]> getRatings(String id, int searchMethod) {
@@ -138,7 +135,6 @@ public class FireRepositoryManager implements IUserDataRepository {
     public void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
         firestoreDatabase.deleteMovieFromList(list, movie_id, user_id, callback);
     }
-
     //Processes the input score before passing it to the database
     @Override
     public void rateMovie(int score, String movie_id, String user_id, OnCompleteListener callback) {
