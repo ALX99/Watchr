@@ -24,9 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.Util;
-import ipren.watchr.dataHolders.Movie;
-import ipren.watchr.dataHolders.Rating;
-import ipren.watchr.viewModels.AccountViewModel;
+import ipren.watchr.dataholders.Movie;
+import ipren.watchr.dataholders.Rating;
+import ipren.watchr.viewmodels.AccountViewModel;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 

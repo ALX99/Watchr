@@ -24,9 +24,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.TextWatcherAdapter;
-import ipren.watchr.viewModels.LoginViewModel;
+import ipren.watchr.viewmodels.LoginViewModel;
 
-import static ipren.watchr.activities.Util.ActivityUtils.*;
+import static ipren.watchr.activities.Util.ActivityUtils.Direction;
+import static ipren.watchr.activities.Util.ActivityUtils.clearAndHideTextViews;
+import static ipren.watchr.activities.Util.ActivityUtils.loadingButtonEnabled;
+import static ipren.watchr.activities.Util.ActivityUtils.setTextAndColor;
+import static ipren.watchr.activities.Util.ActivityUtils.shakeButton;
+import static ipren.watchr.activities.Util.ActivityUtils.transitionBetweenLayouts;
 
 
 // This class has three included layouts from separate xml files, what elements are included in each layout is shown below.

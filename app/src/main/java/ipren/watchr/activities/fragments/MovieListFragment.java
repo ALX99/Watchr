@@ -28,10 +28,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
-import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataholders.Movie;
 import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.repository.IUserDataRepository;
-import ipren.watchr.viewModels.ListViewModel;
+import ipren.watchr.viewmodels.ListViewModel;
 
 public class MovieListFragment extends Fragment {
 

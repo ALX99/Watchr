@@ -30,7 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.R;
 import ipren.watchr.activities.Util.TextWatcherAdapter;
 import ipren.watchr.activities.Util.Util;
-import ipren.watchr.viewModels.AccountSettingsViewModel;
+import ipren.watchr.viewmodels.AccountSettingsViewModel;
 
 import static android.app.Activity.RESULT_OK;
 import static ipren.watchr.activities.Util.ActivityUtils.Direction;

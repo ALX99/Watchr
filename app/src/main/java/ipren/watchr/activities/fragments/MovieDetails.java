@@ -44,13 +44,13 @@ import ipren.watchr.activities.Util.Util;
 import ipren.watchr.activities.fragments.Adapters.CastAdapter;
 import ipren.watchr.activities.fragments.Adapters.CommentAdapter;
 import ipren.watchr.activities.fragments.Adapters.GenreAdapter;
-import ipren.watchr.dataHolders.Actor;
-import ipren.watchr.dataHolders.Comment;
-import ipren.watchr.dataHolders.Rating;
-import ipren.watchr.dataHolders.User;
+import ipren.watchr.dataholders.Actor;
+import ipren.watchr.dataholders.Comment;
+import ipren.watchr.dataholders.Rating;
+import ipren.watchr.dataholders.User;
 import ipren.watchr.repository.IUserDataRepository;
-import ipren.watchr.viewModels.IMovieViewModel;
-import ipren.watchr.viewModels.MovieViewModel;
+import ipren.watchr.viewmodels.IMovieViewModel;
+import ipren.watchr.viewmodels.MovieViewModel;
 
 /**
  * The type Movie details.

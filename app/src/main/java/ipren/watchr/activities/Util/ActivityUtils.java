@@ -20,7 +20,6 @@ import java.util.Date;
 
 import ipren.watchr.BuildConfig;
 import ipren.watchr.R;
-import ipren.watchr.activities.fragments.LoginFragment;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 

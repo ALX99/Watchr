@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,10 +29,10 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ipren.watchr.R;
-import ipren.watchr.dataHolders.Filter;
-import ipren.watchr.repository.Database.MovieDB;
-import ipren.watchr.viewModels.MainViewModel;
-import ipren.watchr.viewModels.MainViewModelInterface;
+import ipren.watchr.dataholders.Filter;
+import ipren.watchr.repository.room.Database.MovieDB;
+import ipren.watchr.viewmodels.MainViewModel;
+import ipren.watchr.viewmodels.MainViewModelInterface;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -19,8 +19,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ipren.watchr.R;
-import ipren.watchr.dataHolders.Comment;
-import ipren.watchr.viewModels.IMovieViewModel;
+import ipren.watchr.dataholders.Comment;
+import ipren.watchr.viewmodels.IMovieViewModel;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     private List<Comment> commments;

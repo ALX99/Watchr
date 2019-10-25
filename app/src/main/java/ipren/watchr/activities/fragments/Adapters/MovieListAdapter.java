@@ -24,10 +24,10 @@ import ipren.watchr.R;
 import ipren.watchr.activities.Util.Util;
 import ipren.watchr.activities.fragments.MovieListFragment;
 import ipren.watchr.activities.fragments.MovieListFragmentDirections;
-import ipren.watchr.dataHolders.Genre;
-import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataholders.Genre;
+import ipren.watchr.dataholders.Movie;
 import ipren.watchr.repository.IUserDataRepository;
-import ipren.watchr.viewModels.ListViewModel;
+import ipren.watchr.viewmodels.ListViewModel;
 
 /**
  * Class for handling the creation and updating of movie cards in the recycler view

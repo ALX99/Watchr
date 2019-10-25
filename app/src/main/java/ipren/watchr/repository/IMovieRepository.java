@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import ipren.watchr.dataHolders.Actor;
-import ipren.watchr.dataHolders.Genre;
-import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataholders.Actor;
+import ipren.watchr.dataholders.Genre;
+import ipren.watchr.dataholders.Movie;
+import ipren.watchr.repository.room.MovieRepository;
 
 /**
  * The interface Movie repository.

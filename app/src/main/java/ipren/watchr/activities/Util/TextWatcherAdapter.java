@@ -3,10 +3,6 @@ package ipren.watchr.activities.Util;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import java.lang.annotation.Annotation;
-
-import butterknife.OnTextChanged;
-
 public class TextWatcherAdapter implements TextWatcher {
 
     @Override
