@@ -35,4 +35,33 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string-array name="rating_spinner">
+        <item>1+</item>
+        <item>2+</item>
+        <item>3+</item>
+        <item>4+</item>
+        <item>5+</item>
+        <item>6+</item>
+        <item>7+</item>
+        <item>8+</item>
+        <item>9+</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="genre_spinner">
+        <item>Horror</item>
+        <item>Comedy</item>
+        <item>Action</item>
+        <item>Adventure</item>
+        <item>Drama</item>
+        <item>Thriller</item>
+    </string-array>
+
+    <string-array name="order_by_spinner">
+        <item>Popularity</item>
+        <item>Rating</item>
+        <item>Title</item>
+        <item>Release date</item>
+    </string-array>
+
 </resources>
