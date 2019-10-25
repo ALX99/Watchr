@@ -131,6 +131,9 @@ public class MovieListFragment extends Fragment {
         });
     }
 
+    /**
+     * Loads the correct movies according to list type
+     */
     private void loadMovies(String listType) {
         switch (listType) {
             case IMovieRepository.BROWSE_LIST:
@@ -146,6 +149,9 @@ public class MovieListFragment extends Fragment {
         listViewModel.getMovies().observe(getActivity(), movieObserver);
     }
 
+    /**
+     * Sets up the correct user list based on list type
+     */
     private void handleUserList(String listType) {
         // Check if user is logged in
         if (listViewModel.getUser().getValue() != null) {
@@ -260,37 +266,19 @@ public class MovieListFragment extends Fragment {
                     case "Popularity":
                         Collections.sort(filteredMovies, (a, b) -> {
                             double result = a.getPopularity() - b.getPopularity();
-                            if (result < 0) {
-                                return 1;
-                            } else if (result == 0) {
-                                return 0;
-                            } else {
-                                return -1;
-                            }
+                            return orderByDesc(result);
                         });
                         break;
                     case "Rating":
                         Collections.sort(filteredMovies, (a, b) -> {
                             double result = a.getVoteAverage() - b.getVoteAverage();
-                            if (result < 0) {
-                                return 1;
-                            } else if (result == 0) {
-                                return 0;
-                            } else {
-                                return -1;
-                            }
+                            return orderByDesc(result);
                         });
                         break;
                     case "Title":
                         Collections.sort(filteredMovies, (a, b) -> {
                             double result = a.getTitle().charAt(0) - b.getTitle().charAt(0);
-                            if (result < 0) {
-                                return -1;
-                            } else if (result == 0) {
-                                return 0;
-                            } else {
-                                return 1;
-                            }
+                            return orderByAsc(result);
                         });
                         break;
                 }
@@ -304,5 +292,25 @@ public class MovieListFragment extends Fragment {
                 filterDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
             }
         });
+    }
+
+    private int orderByDesc(double result) {
+        if (result < 0) {
+            return 1;
+        } else if (result == 0) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+    private int orderByAsc(double result) {
+        if (result < 0) {
+            return -1;
+        } else if (result == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }
