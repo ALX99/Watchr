@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,11 +18,13 @@ import com.google.firebase.storage.StorageReference;
 
 import ipren.watchr.dataholders.User;
 
+
 //This class manages (Logged)user authentication/management
 class FireBaseAuthHelper {
-    private final static String FIRESTORE_PIC_FOLDER = "pics/"; //Path to storage where uploaded picture are
     private final MutableLiveData userLiveData = new MutableLiveData(null); //LiveData representing the signed in user, null = no user signed in.
     private FirebaseAuth mAuth;  //An instance used for all firebase user interaction
+
+    private final static String FIRESTORE_PIC_FOLDER = "pics/"; //Path to storage where uploaded picture are
 
 
     @VisibleForTesting
@@ -108,6 +111,7 @@ class FireBaseAuthHelper {
     }
 
 
+
     //This method starts the update profile process. Preparing the data.
     // If a picture URI is present, it will attempt to upload it before updating the profile, if it fails it will send results to the callback if it is present. If it succeeds it will attempt to upload the changes
     //If no Uri is present it will try to upload the changes right away
@@ -117,7 +121,7 @@ class FireBaseAuthHelper {
                 if (e.isSuccessful())
                     uploadProfileChanges(userName, (Uri) e.getResult(), callback);
                 else
-                    triggerCallback(callback, e);
+                    triggerCallback(callback,e);
 
             });
         } else {
@@ -183,10 +187,9 @@ class FireBaseAuthHelper {
         if (callback != null)
             task.addOnCompleteListener(callback);
     }
-
     //Passes value to callback if it is not null
-    private void triggerCallback(OnCompleteListener callback, Task task) {
-        if (callback != null)
+    private void triggerCallback(OnCompleteListener callback, Task task){
+        if(callback != null)
             callback.onComplete(task);
     }
 }

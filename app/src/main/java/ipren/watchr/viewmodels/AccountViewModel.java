@@ -1,10 +1,12 @@
 package ipren.watchr.viewmodels;
 
+
 import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
+
 
 import ipren.watchr.dataholders.Comment;
 import ipren.watchr.dataholders.Movie;
@@ -17,7 +19,6 @@ import static ipren.watchr.repository.IUserDataRepository.FAVORITES_LIST;
 import static ipren.watchr.repository.IUserDataRepository.SEARCH_METHOD_USER_ID;
 import static ipren.watchr.repository.IUserDataRepository.WATCHED_LIST;
 import static ipren.watchr.repository.IUserDataRepository.WATCH_LATER_LIST;
-
 //This class provides data for the AccountFragment Activity.Functions as an abstraction layer between the API and activity/view
 public class AccountViewModel extends ViewModel {
 
@@ -33,7 +34,6 @@ public class AccountViewModel extends ViewModel {
         this.movieRepository = movieRepository;
         this.user = userDataRepository.getUserLiveData();
     }
-
     //Default constructor used by ViewModelProviders
     public AccountViewModel() {
         userDataRepository = IUserDataRepository.getInstance();
@@ -46,23 +46,22 @@ public class AccountViewModel extends ViewModel {
     }
 
 
-    public LiveData<Rating[]> getRatingByUserId(String user_id) {
-        return userDataRepository.getRatings(user_id, SEARCH_METHOD_USER_ID);
+    public LiveData<Rating[]> getRatingByUserId(String user_id){
+        return userDataRepository.getRatings(user_id,SEARCH_METHOD_USER_ID);
     }
 
-    public LiveData<Comment[]> getCommentsByUserId(String user_id) {
-        return userDataRepository.getComments(user_id, SEARCH_METHOD_USER_ID);
+    public LiveData<Comment[]> getCommentsByUserId(String user_id){
+        return userDataRepository.getComments(user_id,SEARCH_METHOD_USER_ID);
     }
 
-    public LiveData<String[]> getFavoritesList(String user_id) {
+    public LiveData<String[]> getFavoritesList(String user_id){
         return userDataRepository.getMovieList(FAVORITES_LIST, user_id);
     }
-
-    public LiveData<String[]> getWatchedList(String user_id) {
+    public LiveData<String[]> getWatchedList(String user_id){
         return userDataRepository.getMovieList(WATCHED_LIST, user_id);
     }
 
-    public LiveData<String[]> getWatchLaterList(String user_id) {
+    public LiveData<String[]> getWatchLaterList(String user_id){
         return userDataRepository.getMovieList(WATCH_LATER_LIST, user_id);
     }
 

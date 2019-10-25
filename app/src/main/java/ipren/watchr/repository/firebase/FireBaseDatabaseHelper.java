@@ -1,5 +1,6 @@
 package ipren.watchr.repository.firebase;
 
+
 import android.net.Uri;
 import android.util.Log;
 
@@ -9,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -16,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
+
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import ipren.watchr.dataholders.Comment;
 import ipren.watchr.dataholders.PublicProfile;
 import ipren.watchr.dataholders.Rating;
 import ipren.watchr.dataholders.User;
+
 
 //This class manages uploads/downloads and stores data in persistent storage.
 class FireBaseDatabaseHelper {
@@ -70,9 +74,8 @@ class FireBaseDatabaseHelper {
 
     @VisibleForTesting
     FireBaseDatabaseHelper(FirebaseFirestore firestore) {
-        this.fireStore = firestore;
+        this.fireStore  = firestore;
     }
-
     //Getting a FireStore instance and configuring it.
     FireBaseDatabaseHelper() {
         fireStore = FirebaseFirestore.getInstance();
@@ -143,7 +146,6 @@ class FireBaseDatabaseHelper {
         }
         return movieListByUser_id.get(user_id).get(list);
     }
-
     //Deletes a movie from a movie-list held by a user. Results are passed to the callback if present
     public void deleteMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
         attachCallback(fireStore.collection(USER_PATH)
@@ -164,12 +166,10 @@ class FireBaseDatabaseHelper {
         attachCallback(fireStore.collection(COMMENT_PATH).add(comment), callback);
 
     }
-
     //Attempts to remove a comment with provided comment_id.  Results are passed to the callback if present
     void removeComment(String comment_id, OnCompleteListener callback) {
         attachCallback(fireStore.collection(COMMENT_PATH).document(comment_id).delete(), callback);
     }
-
     //Method for adding/replacing ratings.   Results are passed to the callback if present
     void addRating(int score, String movie_id, String user_id, OnCompleteListener callback) {
         Map<String, Object> rating = new HashMap<>();
@@ -201,12 +201,10 @@ class FireBaseDatabaseHelper {
         });
 
     }
-
     //Attempts to remove a rating with provided rating_id.  Results are passed to the callback if present
     void removeRating(String rating_id, OnCompleteListener callback) {
         attachCallback(fireStore.collection(RATING_PATH).document(rating_id).delete(), callback);
     }
-
     //Gets the public profile based on the user_id provided.
     //Checks if request has already been made, if it has returns that value. If it has not creates an auto updating LiveData object stores it and returns it
     LiveData<PublicProfile> getPublicProfile(String user_id) {
@@ -230,7 +228,6 @@ class FireBaseDatabaseHelper {
 
         return commentsByMovie_id.get(movie_id);
     }
-
     //Checks if request has already been made, if it has returns that value. If it has not creates an auto updating LiveData object stores it and returns it
     LiveData<Comment[]> getCommentsByUserID(String user_id) {
         if (!commentsByUser_id.containsKey(user_id))
@@ -238,7 +235,6 @@ class FireBaseDatabaseHelper {
 
         return commentsByUser_id.get(user_id);
     }
-
     //Checks if request has already been made, if it has returns that value. If it has not creates an auto updating LiveData object stores it and returns it
     LiveData<Rating[]> getRatingByUserID(String user_id) {
         if (!ratingByUser_id.containsKey(user_id))
@@ -294,16 +290,14 @@ class FireBaseDatabaseHelper {
         return false;
 
     }
-
     //Attaches a callback to a task if its not null
     private void attachCallback(Task task, OnCompleteListener callback) {
         if (callback != null)
             task.addOnCompleteListener(callback);
     }
-
     //Passes value to callback if it is not null
-    private void triggerCallback(OnCompleteListener callback, Task task) {
-        if (callback != null)
+    private void triggerCallback(OnCompleteListener callback, Task task){
+        if(callback != null)
             callback.onComplete(task);
     }
 
