@@ -342,7 +342,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         return movieListFull;
     }
 
-    /*
+    /**
      * Class for holding a movie view layout
      */
     class MovieViewHolder extends RecyclerView.ViewHolder {

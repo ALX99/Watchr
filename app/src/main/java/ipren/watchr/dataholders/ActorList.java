@@ -4,8 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-// I can't for the love of got figure out how to use
-// gson deserializers
+/**
+ * Used by Gson
+ */
 public class ActorList {
     @SerializedName("cast")
     List<Actor> actors;
