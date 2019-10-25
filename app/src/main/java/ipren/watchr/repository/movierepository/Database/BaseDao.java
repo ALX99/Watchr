@@ -1,4 +1,4 @@
-package ipren.watchr.repository.room.Database;
+package ipren.watchr.repository.movierepository.Database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

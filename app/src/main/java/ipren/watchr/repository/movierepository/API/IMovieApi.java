@@ -1,4 +1,4 @@
-package ipren.watchr.repository.room.API;
+package ipren.watchr.repository.movierepository.API;
 
 import io.reactivex.Single;
 import ipren.watchr.Constants;

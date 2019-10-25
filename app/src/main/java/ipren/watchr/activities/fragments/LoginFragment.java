@@ -87,7 +87,7 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.go_to_login_btn)
     ImageView resetPwBackToLogin; //NAVIGATION: Switches to the login layout
 
-    LoginViewModel loginViewModel;
+    private LoginViewModel loginViewModel;
 
     public LoginFragment() {
     }
@@ -230,7 +230,7 @@ public class LoginFragment extends Fragment {
     }
 
     //Helper class extending a TextWatcher adapter
-    class TextForwarder extends TextWatcherAdapter {
+   private class TextForwarder extends TextWatcherAdapter {
         private EditText textField; // Observing editText
 
         TextForwarder(EditText textField) {

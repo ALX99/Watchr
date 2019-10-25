@@ -1,4 +1,4 @@
-package ipren.watchr.repository.room.Database;
+package ipren.watchr.repository.movierepository.Database;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -17,9 +17,9 @@ import ipren.watchr.dataholders.GenreList;
 import ipren.watchr.dataholders.Movie;
 import ipren.watchr.dataholders.MovieGenreJoin;
 import ipren.watchr.dataholders.MovieList;
-import ipren.watchr.repository.room.API.IMovieApi;
-import ipren.watchr.repository.room.API.MovieApi;
-import ipren.watchr.repository.room.Database.Util.DateConverter;
+import ipren.watchr.repository.movierepository.API.IMovieApi;
+import ipren.watchr.repository.movierepository.API.MovieApi;
+import ipren.watchr.repository.movierepository.Database.Util.DateConverter;
 import retrofit2.Call;
 import retrofit2.Response;
 

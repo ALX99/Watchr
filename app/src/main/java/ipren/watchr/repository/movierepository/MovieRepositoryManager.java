@@ -1,4 +1,4 @@
-package ipren.watchr.repository.room;
+package ipren.watchr.repository.movierepository;
 
 import android.util.Log;
 
@@ -16,27 +16,27 @@ import ipren.watchr.dataholders.Movie;
 import ipren.watchr.dataholders.MovieGenreJoin;
 import ipren.watchr.dataholders.MovieList;
 import ipren.watchr.repository.IMovieRepository;
-import ipren.watchr.repository.room.API.IMovieApi;
-import ipren.watchr.repository.room.API.MovieApi;
-import ipren.watchr.repository.room.Database.MovieDB;
+import ipren.watchr.repository.movierepository.API.IMovieApi;
+import ipren.watchr.repository.movierepository.API.MovieApi;
+import ipren.watchr.repository.movierepository.Database.MovieDB;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MovieRepository implements IMovieRepository {
+public class MovieRepositoryManager implements IMovieRepository {
     private static final int INSERT = 1;
     private static final int UPDATE = 2;
     private static MovieDB movieDB;
     private static IMovieApi movieApi;
     private static IMovieRepository INSTANCE;
 
-    public MovieRepository() {
+    public MovieRepositoryManager() {
 
     }
 
     // Used with junit tests
-    public MovieRepository(MovieDB movieDB) {
+    public MovieRepositoryManager(MovieDB movieDB) {
         this.movieDB = movieDB;
         movieApi = new MovieApi();
     }
@@ -46,7 +46,7 @@ public class MovieRepository implements IMovieRepository {
         if (INSTANCE != null)
             return INSTANCE;
 
-        INSTANCE = new MovieRepository();
+        INSTANCE = new MovieRepositoryManager();
         movieDB = MovieDB.getInstance();
         movieApi = new MovieApi();
         return INSTANCE;

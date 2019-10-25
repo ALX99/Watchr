@@ -1,4 +1,4 @@
-package ipren.watchr.repository.room;
+package ipren.watchr.repository.movierepository;
 
 import android.app.Application;
 import android.os.Build;
@@ -26,12 +26,12 @@ import ipren.watchr.dataholders.Movie;
 import ipren.watchr.dataholders.MovieGenreJoin;
 import ipren.watchr.dataholders.MovieList;
 import ipren.watchr.repository.IMovieRepository;
-import ipren.watchr.repository.room.Database.ActorDao;
-import ipren.watchr.repository.room.Database.GenreDao;
-import ipren.watchr.repository.room.Database.MovieDB;
-import ipren.watchr.repository.room.Database.MovieDao;
-import ipren.watchr.repository.room.Database.MovieGenreJoinDao;
-import ipren.watchr.repository.room.Database.MovieListDao;
+import ipren.watchr.repository.movierepository.Database.ActorDao;
+import ipren.watchr.repository.movierepository.Database.GenreDao;
+import ipren.watchr.repository.movierepository.Database.MovieDB;
+import ipren.watchr.repository.movierepository.Database.MovieDao;
+import ipren.watchr.repository.movierepository.Database.MovieGenreJoinDao;
+import ipren.watchr.repository.movierepository.Database.MovieListDao;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -39,7 +39,7 @@ import ipren.watchr.repository.room.Database.MovieListDao;
 public class MovieRepoTest {
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
-    MovieRepository repo;
+    MovieRepositoryManager repo;
     private Movie m = new Movie(3, "testMovie");
     private MovieDao movieDao;
     private MovieListDao movieListDao;
@@ -53,7 +53,7 @@ public class MovieRepoTest {
         movieListDao = db.movieListDao();
         m.setUpdateDate(new Date());
         movieDao.insert(m);
-        repo = new MovieRepository(db);
+        repo = new MovieRepositoryManager(db);
     }
 
     @After

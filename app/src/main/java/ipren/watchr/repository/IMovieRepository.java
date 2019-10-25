@@ -7,7 +7,7 @@ import java.util.List;
 import ipren.watchr.dataholders.Actor;
 import ipren.watchr.dataholders.Genre;
 import ipren.watchr.dataholders.Movie;
-import ipren.watchr.repository.room.MovieRepository;
+import ipren.watchr.repository.movierepository.MovieRepositoryManager;
 
 /**
  * The interface Movie repository.
@@ -23,7 +23,7 @@ public interface IMovieRepository {
 
     // Singleton method to get instance
     static IMovieRepository getInstance() {
-        return MovieRepository.getInstance();
+        return MovieRepositoryManager.getInstance();
     }
 
     /**

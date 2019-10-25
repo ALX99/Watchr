@@ -1,4 +1,4 @@
-package ipren.watchr.repository.firebase;
+package ipren.watchr.repository.firebaserepository;
 
 
 import android.net.Uri;
@@ -99,7 +99,7 @@ class FireBaseDatabaseHelper {
     }
 
     //Saves a movie to a movie-list held by a user. If the list does not exist in that user it will create it. Results are passed to the callback if present
-    public void saveMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback) {
+     void saveMovieToList(String list, String movie_id, String user_id, OnCompleteListener callback) {
 
         fireStore.collection(USER_PATH).document(user_id).collection(MOVIE_COLLECTION)
                 .document(list).update(MOVIE_ARRAY_ID_FIELD, FieldValue.arrayUnion(movie_id))
@@ -123,7 +123,7 @@ class FireBaseDatabaseHelper {
 
     //Gets all movies from a user-held movie list.
     //Checks if request has already been made, if it has returns that value. If it has not creates an auto updating LiveData object stores it and returns it
-    public LiveData<String[]> getMovieListByUserID(String list, String user_id) {
+    LiveData<String[]> getMovieListByUserID(String list, String user_id) {
         if (!movieListByUser_id.containsKey(user_id) || !movieListByUser_id.get(user_id).containsKey(list)) {
             MutableLiveData<String[]> movieList = new MutableLiveData<>();
             if (!movieListByUser_id.containsKey(user_id))
@@ -147,7 +147,7 @@ class FireBaseDatabaseHelper {
         return movieListByUser_id.get(user_id).get(list);
     }
     //Deletes a movie from a movie-list held by a user. Results are passed to the callback if present
-    public void deleteMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
+    void deleteMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
         attachCallback(fireStore.collection(USER_PATH)
                 .document(user_id).collection(MOVIE_COLLECTION).document(list)
                 .update(MOVIE_ARRAY_ID_FIELD, FieldValue.arrayRemove(movie_id)), callback);

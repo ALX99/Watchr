@@ -1,4 +1,4 @@
-package ipren.watchr.repository.firebase;
+package ipren.watchr.repository.firebaserepository;
 
 import android.net.Uri;
 import android.os.Build;
