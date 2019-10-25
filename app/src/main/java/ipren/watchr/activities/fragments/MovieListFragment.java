@@ -243,16 +243,28 @@ public class MovieListFragment extends Fragment {
                 }
 
                 // Order by
-                Collections.sort(filteredMovies, (a, b) -> {
-                    double result = a.getVoteAverage() - b.getVoteAverage();
-                    if (result < 0) {
-                        return 1;
-                    } else if (result == 0) {
-                        return 0;
-                    } else {
-                        return -1;
-                    }
-                });
+                switch (movieFilter.getOrderBy()) {
+                    case "Popularity":
+
+                        break;
+                    case "Rating":
+                        Collections.sort(filteredMovies, (a, b) -> {
+                            double result = a.getVoteAverage() - b.getVoteAverage();
+                            if (result < 0) {
+                                return 1;
+                            } else if (result == 0) {
+                                return 0;
+                            } else {
+                                return -1;
+                            }
+                        });
+                    case "Title":
+
+                        break;
+                    case "Release date":
+
+                        break;
+                }
 
                 movieListAdapter.updateFilteredMovieList(filteredMovies);
 
