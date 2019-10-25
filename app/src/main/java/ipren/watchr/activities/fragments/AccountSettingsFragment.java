@@ -287,7 +287,7 @@ public class AccountSettingsFragment extends Fragment {
         });
 
         //This method observes the state of saving profile action and updates the Save profile as a result. Mirroring the state
-        settingsViewModel.savingNewProfileState.observe(this, bool -> loadingButtonEnabled(saveProfilesSettingsBtn, saveUserConfigSpinner, bool, bool ? "saving profile..." : "Save profile"));
+        settingsViewModel.savingNewProfile.observe(this, bool -> loadingButtonEnabled(saveProfilesSettingsBtn, saveUserConfigSpinner, bool, bool ? "saving profile..." : "Save profile"));
         profilePic.setOnClickListener(e -> chooseGalleryOrCamera()); // Attempts to fetch a new profile picture by either camera or gallery
 
         //This method observes the result from a save profile action and displays the result.

@@ -1,12 +1,13 @@
 package ipren.watchr.dataHolders;
-
+//Immutable class, represents a response of any kind
 public class RequestResponse {
-    private boolean successful;
-    private String errorMsg = "";
+    private boolean successful; //Was the request successful
+    private String errorMsg = ""; //Provided errorMsg
 
     public RequestResponse(boolean successful, String errorMsg) {
         this(successful);
-        this.errorMsg = errorMsg;
+        if(errorMsg != null)
+            this.errorMsg = errorMsg;
     }
 
     public RequestResponse(boolean successful) {

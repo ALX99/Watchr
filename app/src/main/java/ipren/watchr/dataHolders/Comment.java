@@ -9,14 +9,14 @@ import com.google.firebase.firestore.PropertyName;
 import java.sql.Time;
 import java.util.Date;
 
-
+//An Immutable class representing a comment made by a user on a movie.
 public class Comment {
-    @DocumentId
-    private String uID;
-    private String movie_id;
-    private String user_id;
-    private String text;
-    private Date date_created;
+    @DocumentId //Firease uses this annotation to identify a variable that should hold document ID
+    private String uID; // Uniqe ID of comment
+    private String movie_id; //Movie comment was made on
+    private String user_id; // User who made the comment
+    private String text; // The comment Text
+    private Date date_created; // The date the comment was made
 
     //This is needed to enable firebase to initiate the object
     public Comment() {
@@ -42,7 +42,7 @@ public class Comment {
         return text;
     }
 
-    public String getuID() {
+    public String getUID() {
         return uID;
     }
 

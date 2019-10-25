@@ -26,7 +26,7 @@ public class AccountSettingsViewModel extends ViewModel {
     public final LiveData<RequestResponse> sendVerEmailResponse = new MutableLiveData<>(); // This variable represents response from an attempt to send  a email verification
     public final LiveData<RequestResponse> changePasswordResponse = new MutableLiveData<>(); //This variable represents a response from an attempt to change the current signed in users password
 
-    public final LiveData<Boolean> savingNewProfileState = new MutableLiveData<>(); //These variables mirror the state of certain operations
+    public final LiveData<Boolean> savingNewProfile = new MutableLiveData<>(); //These variables mirror the state of certain operations
     public final LiveData<Boolean> changingPassword = new MutableLiveData<>();
     public final LiveData<Boolean> sendingVerificationEmail = new MutableLiveData<>();
 
@@ -60,7 +60,7 @@ public class AccountSettingsViewModel extends ViewModel {
         userDataRepository.refreshUsr();
     }
 
-    //Handles attempts to update the user profile, will reject/pass attempt based on set values, username(txt) newProfilePicture(uri). If the test passes it will set state of "savingNewProfileState" to true, will reset once callback is triggered
+    //Handles attempts to update the user profile, will reject/pass attempt based on set values, username(txt) newProfilePicture(uri). If the test passes it will set state of "savingNewProfile" to true and attempt to update profile with set values, will reset once callback is triggered
     public boolean updateUserProfile() {
        if(username.isEmpty()){
             postValue(usernameErrorTxt, "Username please");
@@ -71,12 +71,12 @@ public class AccountSettingsViewModel extends ViewModel {
            return false;
        }
        else {
-           postValue(savingNewProfileState, true);
+           postValue(savingNewProfile, true);
            userDataRepository.updateProfile(username, newProfilePicture, this::refreshUpdateUserProfile);
            return true;
        }
     }
-    //Handles attempts to update userpassword, will reject/pass attempt based on set values, password fields(txt). If the test passes it will set state of "changingPassword" to true, will reset once callback is triggered
+    //Handles attempts to update userpassword, will reject/pass attempt based on set values, password fields(txt). If the test passes it will set state of "changingPassword" to true and attempt to update profile with set values, will reset once callback is triggered
     public boolean updateUserPassword(){
        if(oldPassword.isEmpty() || newPassword.isEmpty()){
            if(oldPassword.isEmpty()) postValue(oldPasswordErrorTxt, "Please enter your current password");
@@ -99,7 +99,7 @@ public class AccountSettingsViewModel extends ViewModel {
         postValue(sendingVerificationEmail, true);
         userDataRepository.reSendVerificationEmail(this::refreshEmailVerificationResponse);
     }
-    //Callback function, posts the response  and sets the state of "sendingVerificationEmail" to false.
+    //Callback function, posts the response  to corresponding LiveData and sets the state of "sendingVerificationEmail" to false.
     private void refreshEmailVerificationResponse(Task task){
         postValue(sendingVerificationEmail, false);
         if(task == null){
@@ -110,15 +110,15 @@ public class AccountSettingsViewModel extends ViewModel {
         }
     }
 
-    //Callback function, posts the response to the variable and sets the state of "changingPassword" to false;
+    //Callback function, posts the response to corresponding LiveData and sets the state of "changingPassword" to false;
     private void refreshPasswordChangeResponse(Task task){
        postValue(changingPassword, false);
         Exception exception = task.getException();
         postValue(changePasswordResponse, new RequestResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
     }
-    //Callback function, posts the response to the variable and sets the state of "savingNewProfileState" to false;
+    //Callback function, posts the response to corresponding LiveData and sets the state of "savingNewProfile" to false;
     private void refreshUpdateUserProfile(Task task){
-       postValue(savingNewProfileState, false);
+       postValue(savingNewProfile, false);
        if(task.isSuccessful())
            newProfilePicture = null;
         Exception exception = task.getException();

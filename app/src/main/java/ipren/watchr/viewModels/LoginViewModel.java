@@ -1,7 +1,5 @@
 package ipren.watchr.viewModels;
 
-import android.util.Log;
-
 import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -18,13 +16,28 @@ import static ipren.watchr.viewModels.util.ViewModelSupportUtils.*;
 
 public class LoginViewModel extends ViewModel {
 
-    public final IUserDataRepository userDataRepository;
-    public final LiveData<RequestResponse> signInResponse = new MutableLiveData();
-    public final LiveData<RequestResponse> createUserResponse = new MutableLiveData();
-    public final LiveData<RequestResponse> passwordResetResponse = new MutableLiveData<>();
-    public final LiveData<User> user;
+    private final IUserDataRepository userDataRepository; // For fetching and updating the signed in users data
+    private final int minPasswordLength = 6; //Minimum password length in fore fireBase Auth API
+
+    public final LiveData<User> user; //The currently signed in user
+
+    public final LiveData<RequestResponse> signInResponse = new MutableLiveData(); //This variable represents response from an attempt to sign in
+    public final LiveData<RequestResponse> registerUserResponse = new MutableLiveData(); //This variable represents response from an attempt to register a user
+    public final LiveData<RequestResponse> passwordResetResponse = new MutableLiveData<>(); //This variable represents response from an attempt to send a password reset email
+
+    public final LiveData<Boolean> signingIn = new MutableLiveData<>(false); //These variables mirror the state of certain operations
+    public final LiveData<Boolean> sendingResetMsg = new MutableLiveData<>(false);
+    public final LiveData<Boolean> registeringUser = new MutableLiveData<>(false);
 
 
+    public final LiveData<String> regEmailError = new MutableLiveData(); //This variable shows weather or not the email enterd at registration follows email format
+    public final LiveData<String> regPasswordError = new MutableLiveData(); //This variable shows weather or not  the entered password at registration is correctly formatted
+    public final LiveData<String> regReTypedPasswordError = new MutableLiveData<>(); //This variable shows weather or not the retyped password at registration matches the entered password
+    public final LiveData<String> logEmailError = new MutableLiveData(); //This variable shows weather or not the email entered at login follows email format
+    public final LiveData<String> logPasswordError = new MutableLiveData(); // This variable shows weather or not the password entered at login is correctly formatted
+    public final LiveData<String> resetEmailError = new MutableLiveData<>(); // This variable shows weather or not the email entered at reset passwod follows email format
+
+    //These variables each represent a text field,
     private String regEmailTxt = "";
     private String regPasswordTxt = "";
     private String regReTypedPasswordTxt = "";
@@ -32,29 +45,19 @@ public class LoginViewModel extends ViewModel {
     private String logPasswordTxt = "";
     private String resetEmailTxt = "";
 
-    public final LiveData<Boolean> signingIn = new MutableLiveData<>(false);
-    public final LiveData<Boolean> sendingResetMsg = new MutableLiveData<>(false);
-    public final LiveData<Boolean> registeringUser = new MutableLiveData<>(false);
-
-    public final LiveData<String> regEmailError = new MutableLiveData();
-    public final LiveData<String> regPasswordError = new MutableLiveData();
-    public final LiveData<String> regReTypedPasswordError = new MutableLiveData<>();
-    public final LiveData<String> logEmailError = new MutableLiveData();
-    public final LiveData<String> logPasswordError = new MutableLiveData();
-    public final LiveData<String> resetEmailError = new MutableLiveData<>();
-
 
     @VisibleForTesting
     public LoginViewModel(IUserDataRepository userDataRepository) {
         this.userDataRepository = userDataRepository;
         this.user = userDataRepository.getUserLiveData();
     }
-
+    //Default constructor used by ViewModelProviders
     public LoginViewModel() {
         this.userDataRepository = IUserDataRepository.getInstance();
         this.user = userDataRepository.getUserLiveData();
     }
 
+    //Handles attempts to register a user, will reject/pass attempt based on set values, If it passes it will set the state of "registeringUser" to true and attempt to register with the set values, wil reset once callback is triggered
     public boolean registerUser() {
         if (regEmailTxt.isEmpty() || regPasswordTxt.isEmpty()) {
             if (regEmailTxt.isEmpty()) postValue(regEmailError, "Please enter your email");
@@ -70,7 +73,7 @@ public class LoginViewModel extends ViewModel {
         } else
             return false;
     }
-
+    //Handles attempts to register a user, will reject/pass attempt based on set values, If it passes it will set the state of "signingIN" to true and attempt to sigIn with the set values, wil reset once callback is triggered
     public boolean signIn() {
         if (logEmailTxt.isEmpty() || logPasswordTxt.isEmpty()) {
             if (logEmailTxt.isEmpty()) postValue(logEmailError, "Please write your email");
@@ -85,7 +88,7 @@ public class LoginViewModel extends ViewModel {
         }
 
     }
-
+    //Handles attempts to reset password, will reject/pass attempt based weather or not the set email is properly formatted, If it passes it will set the state of "sendingResetMsg" to true and attempt to send reset password email, wil reset once callback is triggered
     public boolean resetPassword() {
         if (resetEmailTxt.isEmpty()) {
             postValue(resetEmailError, "Please write your email");
@@ -97,26 +100,26 @@ public class LoginViewModel extends ViewModel {
         } else
             return false;
     }
-
+    //Callback function, posts the response to corresponding LiveData and sets the state of "signIn" to false.
     private void updateSignInResponse(Task task) {
         postValue(signingIn, false);
         String error = LoginErrorParser.parseAuthError(task.getException());
         postValue(signInResponse, new RequestResponse(task.isSuccessful(), error));
     }
-
+    //Callback function, posts the response  to corresponding LiveData and sets the state of "registeringUser" to false.
     private void updateCreateUserResponse(Task task) {
         postValue(registeringUser, false);
         String error = LoginErrorParser.parseAuthError(task.getException());
-        postValue(createUserResponse, new RequestResponse(task.isSuccessful(), error));
+        postValue(registerUserResponse, new RequestResponse(task.isSuccessful(), error));
     }
-
+    //Callback function, posts the response to corresponding LiveData  and sets the state of "sendingResetMSg" to false.
     private void updateResetPasswordResponse(Task task) {
         postValue(sendingResetMsg, false);
         Exception exception = task.getException();
         postValue(passwordResetResponse, new RequestResponse(task.isSuccessful(), exception != null ? exception.getLocalizedMessage() : "Unkown error"));
     }
 
-
+    // The following setters update the mirrored value in the viewModel so that it can be used for logic and syncing activity fields in the event of a reconstruction. It also sets a corresponding error if the value is invalid
     public void setRegEmailTxt(String regEmailTxt) {
         this.regEmailTxt = regEmailTxt;
         updateEmailErrorTxt(regEmailError, regEmailTxt);
@@ -124,7 +127,7 @@ public class LoginViewModel extends ViewModel {
 
     public void setRegPasswordTxt(String regPasswordTxt) {
         this.regPasswordTxt = regPasswordTxt;
-        updatePasswordErrorTxt(regPasswordError, regPasswordTxt, 6);
+        updatePasswordErrorTxt(regPasswordError, regPasswordTxt, minPasswordLength);
     }
 
     public void setRegReTypedPasswordTxt(String regReTypedPasswordTxt) {
@@ -139,7 +142,7 @@ public class LoginViewModel extends ViewModel {
 
     public void setLogPasswordTxt(String logPasswordTxt) {
         this.logPasswordTxt = logPasswordTxt;
-        updatePasswordErrorTxt(logPasswordError, logPasswordTxt,6);
+        updatePasswordErrorTxt(logPasswordError, logPasswordTxt,minPasswordLength);
     }
 
     public void setResetEmailTxt(String resetEmailTxt) {
