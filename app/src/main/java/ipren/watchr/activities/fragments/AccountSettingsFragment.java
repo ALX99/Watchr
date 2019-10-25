@@ -131,10 +131,9 @@ public class AccountSettingsFragment extends Fragment {
 
         //Syncing to Livedata<User> if user == null no user is logged in and this fragment should not exist.
         settingsViewModel.liveUser.observe(this, user -> {
-            if (user == null) {
-                Navigation.findNavController(getView()).popBackStack();
+            if (user == null)
                 return;
-            }
+
             showEmailVerifiedLayout(user.isVerified()); // Sets initial layout and transitions to the verified layout if a user has become verified while activity is active
         });
 
@@ -288,7 +287,7 @@ public class AccountSettingsFragment extends Fragment {
         });
 
         //This method observes the state of saving profile action and updates the Save profile as a result. Mirroring the state
-        settingsViewModel.savingNewProfileState.observe(this, bool -> loadingButtonEnabled(saveProfilesSettingsBtn, saveUserConfigSpinner, bool, bool ? "saving profile..." : "Save profile"));
+        settingsViewModel.savingNewProfile.observe(this, bool -> loadingButtonEnabled(saveProfilesSettingsBtn, saveUserConfigSpinner, bool, bool ? "saving profile..." : "Save profile"));
         profilePic.setOnClickListener(e -> chooseGalleryOrCamera()); // Attempts to fetch a new profile picture by either camera or gallery
 
         //This method observes the result from a save profile action and displays the result.

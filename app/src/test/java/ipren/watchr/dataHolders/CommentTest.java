@@ -50,11 +50,11 @@ public class CommentTest {
 
     @Test
     public void getuID() {
-        assertNull(nullConstructor.getuID());
+        assertNull(nullConstructor.getUID());
         Comment testComment = new Comment("Not used", "Not used", "Not used", testString, testDate);
-        assertEquals(testComment.getuID(), testString);
+        assertEquals(testComment.getUID(), testString);
         testComment = new Comment(null, null , null, testString, null);
-        assertEquals(testComment.getuID(), testString);
+        assertEquals(testComment.getUID(), testString);
 
     }
 

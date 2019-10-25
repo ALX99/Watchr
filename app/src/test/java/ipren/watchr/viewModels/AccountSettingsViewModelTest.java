@@ -162,9 +162,9 @@ public class AccountSettingsViewModelTest {
                 assertEquals(testUsername, userName);
                 assertEquals(testURi, pictureUri);
                 ((MutableLiveData)userLiveDataTest).postValue(new User(userName, null, pictureUri, null, true));
-                assertTrue(settingsViewModel.savingNewProfileState.getValue());
+                assertTrue(settingsViewModel.savingNewProfile.getValue());
                 callback.onComplete(new MockTaskResponse().setSuccessful(true));
-                assertFalse(settingsViewModel.savingNewProfileState.getValue());
+                assertFalse(settingsViewModel.savingNewProfile.getValue());
                 methodInvoked = true;
             }
             @Override
