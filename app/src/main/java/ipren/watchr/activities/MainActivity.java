@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,10 +28,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 
 import ipren.watchr.R;
-import ipren.watchr.activities.fragments.FilterFragment;
+import ipren.watchr.dataHolders.Filter;
 import ipren.watchr.repository.Database.MovieDB;
 import ipren.watchr.viewModels.MainViewModel;
 import ipren.watchr.viewModels.MainViewModelInterface;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MainViewModelInterface mainViewModel;
     private NavController navController;
+    private Filter filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
 
-        // Set up navigation
+        // Setup navigation
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
@@ -55,53 +58,89 @@ public class MainActivity extends AppCompatActivity {
         // Get model
         mainViewModel = getViewModel();
 
-
-
-
-
-        // TODO: @johan Temporary, refactor this
-        // Set up filter drawer
-        DrawerLayout filterDrawer = findViewById(R.id.filter_drawer);
-        filterDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
-        // Set up the rating spinner
-        Spinner ratingSpinner = findViewById(R.id.rating_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> ratingAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.rating_spinner, R.layout.spinner_item);
-        // Specify the layout to use when the list of choices appears
-        ratingAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        ratingSpinner.setAdapter(ratingAdapter);
-
-        // Set up the rating spinner
-        Spinner genreSpinner = findViewById(R.id.genre_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> genreAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.genre_spinner, R.layout.spinner_item);
-        // Specify the layout to use when the list of choices appears
-        genreAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        genreSpinner.setAdapter(genreAdapter);
-
-        // Set up the rating spinner
-        Spinner orderBySpinner = findViewById(R.id.order_by_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> orderByAdapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.order_by_spinner, R.layout.spinner_item);
-        // Specify the layout to use when the list of choices appears
-        orderByAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        orderBySpinner.setAdapter(orderByAdapter);
-
-
-
-
-
-
-
-        connectProfileButton();
+        initFilter();
+        initProfileButton();
 
         // To remove focus from the search view at start
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.requestFocus();
+    }
+
+    /**
+     * Initializes the filter
+     */
+    private void initFilter() {
+        // Filter model
+        filter = Filter.getInstance();
+
+        // Init filter drawer
+        DrawerLayout filterDrawer = findViewById(R.id.filter_drawer);
+        filterDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+        initSwitches();
+        initSpinners();
+    }
+
+    /**
+     * Initializes the filter switches
+     */
+    private void initSwitches() {
+        initSwitch(R.id.watched_switch);
+        initSwitch(R.id.watch_later_switch);
+        initSwitch(R.id.favorites_switch);
+    }
+
+    /**
+     * Sets up a switch view and its listener
+     * @param view Id of the switch
+     * @return The newly created switch
+     */
+    private Switch initSwitch(int view) {
+        Switch switchView = findViewById(view);
+        String tag = (String) switchView.getTag();
+        switchView.setOnClickListener(v -> {
+            if (switchView.isChecked()) {
+                filter.setSwitch(tag, true);
+            } else {
+                filter.setSwitch(tag, false);
+            }
+        });
+        return switchView;
+    }
+
+    /**
+     * Initializes the filter spinners
+     */
+    private void initSpinners() {
+        initSpinner(R.id.rating_spinner, R.array.rating_spinner);
+        initSpinner(R.id.genre_spinner, R.array.genre_spinner);
+        initSpinner(R.id.order_by_spinner, R.array.order_by_spinner);
+    }
+
+    /**
+     * Sets up a spinner from a spinner view and its listener
+     * @param layout The spinner view id
+     * @param array Id of array of items
+     */
+    private Spinner initSpinner(int layout, int array) {
+        Spinner spinner = findViewById(layout);
+        String tag = (String) spinner.getTag();
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(), array, R.layout.spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String value = (String) parent.getItemAtPosition(position);
+                filter.setSpinner(tag, value);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        return spinner;
     }
 
     //This method can be overridden and allows us to inject a ViewModel for testing
@@ -110,14 +149,10 @@ public class MainActivity extends AppCompatActivity {
         return ViewModelProviders.of(this).get(MainViewModel.class);
     }
 
-    public NavController getNavController() {
-        return navController;
-    }
-
     /**
      * Sets up the profile button
      */
-    private void connectProfileButton() {
+    private void initProfileButton() {
         ImageButton profileBtn = findViewById(R.id.toolbar_profile);
 
         // Observes logged in status of user and sets profile picture accordingly
