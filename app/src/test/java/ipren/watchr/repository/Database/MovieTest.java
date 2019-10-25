@@ -1,4 +1,4 @@
-package ipren.watchr.Database;
+package ipren.watchr.repository.Database;
 
 import android.os.Build;
 
@@ -19,8 +19,6 @@ import java.util.List;
 
 import ipren.watchr.TestUtil.LiveDataTestUtil;
 import ipren.watchr.dataHolders.Movie;
-import ipren.watchr.repository.Database.MovieDB;
-import ipren.watchr.repository.Database.MovieDao;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.O_MR1)

@@ -1,4 +1,4 @@
-package ipren.watchr.Database;
+package ipren.watchr.repository.Database;
 
 import android.os.Build;
 
@@ -21,9 +21,6 @@ import java.util.List;
 import ipren.watchr.TestUtil.LiveDataTestUtil;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.MovieList;
-import ipren.watchr.repository.Database.MovieDB;
-import ipren.watchr.repository.Database.MovieDao;
-import ipren.watchr.repository.Database.MovieListDao;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.O_MR1)
@@ -58,7 +55,7 @@ public class MovieListTest {
 
     @Test
     public void insertAndDeleteTest() throws Exception {
-        List<MovieList> list = movieListDao.getMovieListsNonLivedata(movieList.getListName());
+        List<MovieList> list = movieListDao.getMovieListsNonLivedata(movieList.getListName(), 1);
         Assert.assertEquals(movieList.getListName(), list.get(0).getListName());
     }
 

@@ -17,7 +17,6 @@ import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.repository.IUserDataRepository;
-import ipren.watchr.repository.MovieRepository;
 
 public class MovieViewModel extends AndroidViewModel implements IMovieViewModel {
     private String movieID;
@@ -30,7 +29,7 @@ public class MovieViewModel extends AndroidViewModel implements IMovieViewModel 
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
-        movieRepository = new MovieRepository();
+        movieRepository = IMovieRepository.getInstance();
         userDataRepository = IUserDataRepository.getInstance();
     }
 

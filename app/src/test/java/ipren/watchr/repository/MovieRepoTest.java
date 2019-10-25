@@ -1,4 +1,4 @@
-package ipren.watchr;
+package ipren.watchr.repository;
 
 import android.app.Application;
 import android.os.Build;
@@ -24,23 +24,24 @@ import ipren.watchr.dataHolders.Actor;
 import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
 import ipren.watchr.dataHolders.MovieGenreJoin;
+import ipren.watchr.dataHolders.MovieList;
 import ipren.watchr.repository.Database.ActorDao;
 import ipren.watchr.repository.Database.GenreDao;
 import ipren.watchr.repository.Database.MovieDB;
 import ipren.watchr.repository.Database.MovieDao;
 import ipren.watchr.repository.Database.MovieGenreJoinDao;
-import ipren.watchr.repository.MovieRepository;
+import ipren.watchr.repository.Database.MovieListDao;
 
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.O_MR1)
 public class MovieRepoTest {
-    private static int API_TIMEOUT = 10; // Changing this might fix the API test errors
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
     MovieRepository repo;
     private Movie m = new Movie(3, "testMovie");
     private MovieDao movieDao;
+    private MovieListDao movieListDao;
     private MovieDB db;
 
     @Before
@@ -48,6 +49,7 @@ public class MovieRepoTest {
         Application a = ApplicationProvider.getApplicationContext();
         db = Room.inMemoryDatabaseBuilder(a, MovieDB.class).allowMainThreadQueries().build();
         movieDao = db.movieDao();
+        movieListDao = db.movieListDao();
         m.setUpdateDate(new Date());
         movieDao.insert(m);
         repo = new MovieRepository(db);
@@ -90,28 +92,6 @@ public class MovieRepoTest {
         Assert.assertEquals(g.getName(), genres.get(0).getName());
     }
 
-//    @Test
-//    public void getTrendingDB() throws Exception {
-//        LiveData<List<Movie>> movies = repo.getMovieList(IMovieRepository.TRENDING_LIST, 1, true);
-//        List<Movie> ms = LiveDataTestUtil.getValue(movies,5);
-//        // The list of movies returned from a query in the API is always 20
-//        Assert.assertEquals(20, ms.size());
-//    }
-//
-//    @Test
-//    public void searchTest() throws Exception {
-//        List<Movie> movies = LiveDataTestUtil.getValue(repo.Search("spiderman", 1, true), API_TIMEOUT);
-//        Assert.assertEquals(20, movies.size());
-//        Assert.assertTrue(!movies.get(0).title.isEmpty());
-//    }
-//
-//    @Test
-//    public void getTrendingAPIList() throws Exception {
-//        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST, 1, true), API_TIMEOUT);
-//        // The list of movies returned from a query in the API is always 20
-//        Assert.assertEquals(20, movies.size());
-//    }
-
     @Test
     public void getMoviesByIDTest() throws Exception {
         List<Movie> movies = LiveDataTestUtil.getValue(repo.getMoviesByID(new int[]{m.id, 99}));
@@ -123,5 +103,28 @@ public class MovieRepoTest {
         db.actorDao().insert(new Actor("1",m.id, "Chris Pratt"));
         List<Actor> a = LiveDataTestUtil.getValue(repo.getActorsFromMovie(m.id));
         Assert.assertEquals(a.get(0).getName(),a.get(0).getName());
+    }
+
+    @Test
+    public void trendingTest() throws Exception {
+        inserInList(IMovieRepository.TRENDING_LIST, 1);
+        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST, 1, false));
+        Assert.assertEquals(1, movies.size());
+        movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.TRENDING_LIST, 2, false));
+        Assert.assertEquals(0, movies.size());
+    }
+
+    @Test
+    public void discoverTest() throws Exception {
+        inserInList(IMovieRepository.DISCOVER_LIST, 1);
+        List<Movie> movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.DISCOVER_LIST, 1, false));
+        Assert.assertEquals(1, movies.size());
+        movies = LiveDataTestUtil.getValue(repo.getMovieList(IMovieRepository.DISCOVER_LIST, 2, false));
+        Assert.assertEquals(0, movies.size());
+    }
+
+    private void inserInList(String list, int page) {
+        movieListDao.insert(new MovieList(m.id, list, page, new Date()));
+
     }
 }
