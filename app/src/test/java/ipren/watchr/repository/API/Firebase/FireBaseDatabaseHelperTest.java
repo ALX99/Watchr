@@ -40,7 +40,7 @@ import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Uri.class, FieldValue.class})
-public class FirebaseDatabaseHelperTest {
+public class FireBaseDatabaseHelperTest {
 
     private final String RATING_PATH = "ratings";
     private final String COMMENT_PATH = "comments";
@@ -70,7 +70,7 @@ public class FirebaseDatabaseHelperTest {
     private boolean methodExecuted = false;
     private boolean method2Executed = false;
     private boolean method3Executed = false;
-    FirebaseDatabaseHelper firebaseDatabaseHelper;
+    FireBaseDatabaseHelper firebaseDatabaseHelper;
     //   private SetOptions setOptionsReferenceTest = mock(SetOptions.class);
     private Uri TEST_URI1 = mock(Uri.class);
     private Uri TEST_URI2 = mock(Uri.class);
@@ -109,7 +109,7 @@ public class FirebaseDatabaseHelperTest {
             fail();
             return null;
         });
-        firebaseDatabaseHelper = new FirebaseDatabaseHelper(firestore);
+        firebaseDatabaseHelper = new FireBaseDatabaseHelper(firestore);
         firebaseDatabaseHelper.syncUserWithDatabase(null);
 
         DocumentReference documentReference = mock(DocumentReference.class);
@@ -138,7 +138,7 @@ public class FirebaseDatabaseHelperTest {
         firestore = mock(FirebaseFirestore.class);
         mockGetCollectionByFireStore(USER_PATH, collection, firestore);
 
-        firebaseDatabaseHelper = new FirebaseDatabaseHelper(firestore);
+        firebaseDatabaseHelper = new FireBaseDatabaseHelper(firestore);
         when(TEST_URI1.toString()).thenReturn("android.resource://path/to/local/resource");
         firebaseDatabaseHelper.syncUserWithDatabase(new User(TEST_USERNAME, "not used", TEST_URI1, TEST_UID, false));
         TEST_URI1 = null;
@@ -183,7 +183,7 @@ public class FirebaseDatabaseHelperTest {
             return null;
         });
 
-        FirebaseDatabaseHelper firebaseDatabaseHelper = new FirebaseDatabaseHelper(firestore);
+        FireBaseDatabaseHelper firebaseDatabaseHelper = new FireBaseDatabaseHelper(firestore);
         firebaseDatabaseHelper.saveMovieToList(TEST_MOVIE_LIST, TEST_MOVIE_ID, TEST_USER_UID, null);
         firebaseDatabaseHelper.saveMovieToList(TEST_MOVIE_LIST, TEST_MOVIE_ID, TEST_USER_UID, e -> {
             if (e.isSuccessful())
@@ -226,7 +226,7 @@ public class FirebaseDatabaseHelperTest {
             return null;
         });
 
-        FirebaseDatabaseHelper firebaseDatabaseHelper = new FirebaseDatabaseHelper(firestore);
+        FireBaseDatabaseHelper firebaseDatabaseHelper = new FireBaseDatabaseHelper(firestore);
         firebaseDatabaseHelper.deleteMovieFromList(TEST_MOVIE_LIST, TEST_MOVIE_ID, TEST_USER_UID, null);
         firebaseDatabaseHelper.deleteMovieFromList(TEST_MOVIE_LIST, TEST_MOVIE_ID, TEST_USER_UID, e -> {
             if (e.isSuccessful())
@@ -254,8 +254,8 @@ public class FirebaseDatabaseHelperTest {
             return new MockTaskResponse().setSuccessful(true);
         });
         mockGetCollectionByFireStore(COMMENT_PATH, pathCollection, firestore);
-        new FirebaseDatabaseHelper(firestore).addComment(TEST_TEXT, TEST_MOVIE_ID, TEST_USER_UID, null);
-        new FirebaseDatabaseHelper(firestore).addComment(TEST_TEXT, TEST_MOVIE_ID, TEST_USER_UID, e -> {
+        new FireBaseDatabaseHelper(firestore).addComment(TEST_TEXT, TEST_MOVIE_ID, TEST_USER_UID, null);
+        new FireBaseDatabaseHelper(firestore).addComment(TEST_TEXT, TEST_MOVIE_ID, TEST_USER_UID, e -> {
             methodExecuted = true;
         });
         assertEquals(2, counter);
@@ -273,8 +273,8 @@ public class FirebaseDatabaseHelperTest {
         });
         mockGetCollectionByFireStore(COMMENT_PATH, pathCollection, firestore);
         mockGetDocument(TEST_UID, userCommentDOc, pathCollection);
-        new FirebaseDatabaseHelper(firestore).removeComment(TEST_UID, null);
-        new FirebaseDatabaseHelper(firestore).removeComment(TEST_UID, e -> {
+        new FireBaseDatabaseHelper(firestore).removeComment(TEST_UID, null);
+        new FireBaseDatabaseHelper(firestore).removeComment(TEST_UID, e -> {
             if (e.isSuccessful())
                 methodExecuted = true;
         });
@@ -294,8 +294,8 @@ public class FirebaseDatabaseHelperTest {
             return new MockTaskResponse().setSuccessful(true);
         });
 
-        new FirebaseDatabaseHelper(firestore).removeRating(TEST_UID, null);
-        new FirebaseDatabaseHelper(firestore).removeRating(TEST_UID, e -> {
+        new FireBaseDatabaseHelper(firestore).removeRating(TEST_UID, null);
+        new FireBaseDatabaseHelper(firestore).removeRating(TEST_UID, e -> {
             if (e.isSuccessful())
                 methodExecuted = true;
         });
@@ -350,7 +350,7 @@ public class FirebaseDatabaseHelperTest {
 
             return null;
         });
-        FirebaseDatabaseHelper databaseHelper = new FirebaseDatabaseHelper(firestore);
+        FireBaseDatabaseHelper databaseHelper = new FireBaseDatabaseHelper(firestore);
         LiveData<PublicProfile> live = databaseHelper.getPublicProfile(USER_ID_FIELD);
         assertEquals(TEST_VALID_URL, live.getValue().getProfilePhotoUri().toString());
         assertEquals(TEST_USERNAME, live.getValue().getUsername());
@@ -358,7 +358,7 @@ public class FirebaseDatabaseHelperTest {
         assertEquals(1, counter);
         TEST_VALID_URL = "anothervalid.com/pic";
         TEST_USERNAME = "TESTNAME";
-        databaseHelper = new FirebaseDatabaseHelper(firestore);
+        databaseHelper = new FireBaseDatabaseHelper(firestore);
         live = databaseHelper.getPublicProfile(USER_ID_FIELD);
         assertEquals(TEST_VALID_URL, live.getValue().getProfilePhotoUri().toString());
         assertEquals(TEST_USERNAME, live.getValue().getUsername());
@@ -393,8 +393,8 @@ public class FirebaseDatabaseHelperTest {
             return new MockTaskResponse().setSuccessful(true);
         });
 
-        new FirebaseDatabaseHelper(firestore).addRating(2, TEST_MOVIE_ID, TEST_USER_UID, null);
-        new FirebaseDatabaseHelper(firestore).addRating(2, TEST_MOVIE_ID, TEST_USER_UID, e -> {
+        new FireBaseDatabaseHelper(firestore).addRating(2, TEST_MOVIE_ID, TEST_USER_UID, null);
+        new FireBaseDatabaseHelper(firestore).addRating(2, TEST_MOVIE_ID, TEST_USER_UID, e -> {
             if (e.isSuccessful())
                 methodExecuted = true;
         });
@@ -440,7 +440,7 @@ public class FirebaseDatabaseHelperTest {
             return null;
         });
 
-        FirebaseDatabaseHelper fDatabaseHelper = new FirebaseDatabaseHelper(firestore);
+        FireBaseDatabaseHelper fDatabaseHelper = new FireBaseDatabaseHelper(firestore);
        LiveData<String[]> liveData = fDatabaseHelper.getMovieListByUserID(TEST_MOVIE_LIST, TEST_USER_UID);
        assertNotNull(liveData.getValue());
        assertEquals( movieID1, liveData.getValue()[0]);
@@ -459,7 +459,7 @@ public class FirebaseDatabaseHelperTest {
     public void getCommentByMovieID() {
         FirebaseFirestore firestore = mock(FirebaseFirestore.class);
         mockListenToRes(COMMENT_PATH, MOVIE_ID_FIELD, TEST_MOVIE_ID, firestore);
-        FirebaseDatabaseHelper databaseHelper = new FirebaseDatabaseHelper(firestore);
+        FireBaseDatabaseHelper databaseHelper = new FireBaseDatabaseHelper(firestore);
         assertEquals(0,counter);
         LiveData<Comment[]> firstValue = databaseHelper.getCommentByMovieID(TEST_MOVIE_ID);
 
@@ -478,7 +478,7 @@ public class FirebaseDatabaseHelperTest {
     public void getCommentsByUserID() {
         FirebaseFirestore firestore = mock(FirebaseFirestore.class);
         mockListenToRes(COMMENT_PATH, USER_ID_FIELD, TEST_USER_UID, firestore);
-        FirebaseDatabaseHelper databaseHelper = new FirebaseDatabaseHelper(firestore);
+        FireBaseDatabaseHelper databaseHelper = new FireBaseDatabaseHelper(firestore);
         assertEquals(0,counter);
         LiveData<Comment[]> firstValue = databaseHelper.getCommentsByUserID(TEST_USER_UID);
         assertTrue(firstValue.getValue().getClass().equals(Comment[].class) );
@@ -494,7 +494,7 @@ public class FirebaseDatabaseHelperTest {
     public void getRatingByUserID() {
         FirebaseFirestore firestore = mock(FirebaseFirestore.class);
         mockListenToRes(RATING_PATH, USER_ID_FIELD, TEST_USER_UID, firestore);
-        FirebaseDatabaseHelper databaseHelper = new FirebaseDatabaseHelper(firestore);
+        FireBaseDatabaseHelper databaseHelper = new FireBaseDatabaseHelper(firestore);
         assertEquals(0,counter);
         LiveData<Rating[]> firstValue = databaseHelper.getRatingByUserID(TEST_USER_UID);
         assertEquals(firstValue.getValue().getClass(), Rating[].class);
@@ -510,7 +510,7 @@ public class FirebaseDatabaseHelperTest {
     public void getRatingByMovieID() {
         FirebaseFirestore firestore = mock(FirebaseFirestore.class);
         mockListenToRes(RATING_PATH, MOVIE_ID_FIELD, TEST_MOVIE_ID, firestore);
-        FirebaseDatabaseHelper databaseHelper = new FirebaseDatabaseHelper(firestore);
+        FireBaseDatabaseHelper databaseHelper = new FireBaseDatabaseHelper(firestore);
         assertEquals(0,counter);
         LiveData<Rating[]> firstValue = databaseHelper.getRatingByMovieID(TEST_MOVIE_ID);
         assertEquals(firstValue.getValue().getClass(), Rating[].class);

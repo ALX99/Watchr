@@ -11,13 +11,13 @@ import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.API.Firebase.FireRepositoryManager;
-
+//Interface used for managing user related data such as
 public interface IUserDataRepository {
-    int SEARCH_METHOD_MOVIE_ID = 0;
-    int SEARCH_METHOD_USER_ID = 1;
-    String FAVORITES_LIST = "Favorites";
-    String WATCH_LATER_LIST = "Watch_Later";
-    String WATCHED_LIST = "Watched";
+    int SEARCH_METHOD_MOVIE_ID = 0; //Notifies that the String provided is a MOVIE_ID
+    int SEARCH_METHOD_USER_ID = 1; //Notifies that the String provided is a USER_ID
+    String FAVORITES_LIST = "Favorites"; // Static movie-list
+    String WATCH_LATER_LIST = "Watch_Later"; // Static movie-list
+    String WATCHED_LIST = "Watched"; // Static movie-list
 
     static IUserDataRepository getInstance() {
         return FireRepositoryManager.getInstance();

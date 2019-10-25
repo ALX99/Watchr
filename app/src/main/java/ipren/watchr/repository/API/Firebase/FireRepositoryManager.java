@@ -6,50 +6,50 @@ import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import ipren.watchr.dataHolders.Comment;
 import ipren.watchr.dataHolders.Rating;
 import ipren.watchr.dataHolders.PublicProfile;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
-
+//This class manages request to both FireBaseAuthHelper and FireBaseDataBaseManager as well as syncing data with the two API's
+//This class functions as controller/manager for the repository
 public class FireRepositoryManager implements IUserDataRepository {
+    //Singleton
+    private static FireRepositoryManager fireApiManager;
 
-    private static IUserDataRepository fireApiManager;
+    private FireBaseAuthHelper firebaseAuthHelper;
 
-    private FirebaseAuthHelper firebaseAuthHelper;
-
-    private FirebaseDatabaseHelper firestoreDatabase;
+    private FireBaseDatabaseHelper firestoreDatabase;
 
     private LiveData<User> currentLoggedUser;
 
     @VisibleForTesting
-    FireRepositoryManager(FirebaseAuthHelper firebaseAuthHelper, FirebaseDatabaseHelper firestoreDatabase){
+    FireRepositoryManager(FireBaseAuthHelper firebaseAuthHelper, FireBaseDatabaseHelper firestoreDatabase){
         this.firebaseAuthHelper = firebaseAuthHelper;
         this.firestoreDatabase = firestoreDatabase;
     }
-
+    //Initiates the repository. Syncs user data changes in FireBaseAuthHelper to FireBaseDatabaseHelper
     private FireRepositoryManager() {
-        firebaseAuthHelper = new FirebaseAuthHelper();
-        firestoreDatabase = new FirebaseDatabaseHelper();
+        firebaseAuthHelper = new FireBaseAuthHelper();
+        firestoreDatabase = new FireBaseDatabaseHelper();
         currentLoggedUser = firebaseAuthHelper.getUser();
 
         currentLoggedUser.observeForever(user -> {
             if (user == null)
                 return;
             else
-                firestoreDatabase.syncUserWithDatabase(user);
+                firestoreDatabase.syncUserWithDatabase(user); //Syncing user data with FireBaseDatabaseHelper creating a public profile for other users to see.
         });
     }
-
+    //Returns an instance of the repositry
     public static IUserDataRepository getInstance() {
         if (fireApiManager == null)
             fireApiManager = new FireRepositoryManager();
         return fireApiManager;
     }
 
-    //Fire Auth
+    //FireBaseAuthHelper methods
 
     @Override
     public LiveData<User> getUserLiveData() {
@@ -103,6 +103,7 @@ public class FireRepositoryManager implements IUserDataRepository {
         return firestoreDatabase.getPublicProfile(user_id);
     }
 
+    //Checks what search method they are using and calls corresponding method in the database
     @Override
     public LiveData<Comment[]> getComments(String id, int searchMethod) {
         if (searchMethod == IUserDataRepository.SEARCH_METHOD_MOVIE_ID)
@@ -110,7 +111,7 @@ public class FireRepositoryManager implements IUserDataRepository {
         else
             return firestoreDatabase.getCommentsByUserID(id);
     }
-
+    //Checks what search method they are using and calls corresponding method in the database
     @Override
     public LiveData<Rating[]> getRatings(String id, int searchMethod) {
         if (searchMethod == IUserDataRepository.SEARCH_METHOD_MOVIE_ID)
@@ -133,7 +134,7 @@ public class FireRepositoryManager implements IUserDataRepository {
     public void removeMovieFromList(String list, String movie_id, String user_id, OnCompleteListener callback) {
         firestoreDatabase.deleteMovieFromList(list, movie_id, user_id, callback);
     }
-
+    //Processes the input score before passing it to the database
     @Override
     public void rateMovie(int score, String movie_id, String user_id, OnCompleteListener callback) {
         if (score > 10)
