@@ -126,6 +126,7 @@ public class LoginViewModel extends ViewModel {
     public void setRegPasswordTxt(String regPasswordTxt) {
         this.regPasswordTxt = regPasswordTxt;
         updatePasswordErrorTxt(regPasswordError, regPasswordTxt, minPasswordLength);
+        updatePasswordMatchErrorTxt(regReTypedPasswordError, regPasswordTxt, regReTypedPasswordTxt);
     }
 
     public void setRegReTypedPasswordTxt(String regReTypedPasswordTxt) {

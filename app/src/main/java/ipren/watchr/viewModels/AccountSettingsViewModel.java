@@ -132,6 +132,7 @@ public class AccountSettingsViewModel extends ViewModel {
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
         updatePasswordErrorTxt(newPasswordErrorTxt,newPassword, minPasswordLength);
+        updatePasswordMatchErrorTxt(reTypedErrorTxt, newPassword, reTypedPassword);
     }
 
     public void setReTypedPassword(String reTypedPassword) {
