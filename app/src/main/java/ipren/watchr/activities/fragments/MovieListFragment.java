@@ -245,7 +245,16 @@ public class MovieListFragment extends Fragment {
                 // Order by
                 switch (movieFilter.getOrderBy()) {
                     case "Popularity":
-
+                        Collections.sort(filteredMovies, (a, b) -> {
+                            double result = a.getPopularity() - b.getPopularity();
+                            if (result < 0) {
+                                return 1;
+                            } else if (result == 0) {
+                                return 0;
+                            } else {
+                                return -1;
+                            }
+                        });
                         break;
                     case "Rating":
                         Collections.sort(filteredMovies, (a, b) -> {
@@ -259,10 +268,16 @@ public class MovieListFragment extends Fragment {
                             }
                         });
                     case "Title":
-
-                        break;
-                    case "Release date":
-
+                        Collections.sort(filteredMovies, (a, b) -> {
+                            double result = a.getTitle().charAt(0) - b.getTitle().charAt(0);
+                            if (result < 0) {
+                                return -1;
+                            } else if (result == 0) {
+                                return 0;
+                            } else {
+                                return 1;
+                            }
+                        });
                         break;
                 }
 

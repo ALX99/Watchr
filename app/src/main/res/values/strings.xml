@@ -62,7 +62,6 @@
         <item>Popularity</item>
         <item>Rating</item>
         <item>Title</item>
-        <item>Release date</item>
     </string-array>
 
 </resources>
