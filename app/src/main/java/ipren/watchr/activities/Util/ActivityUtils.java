@@ -24,26 +24,27 @@ import ipren.watchr.activities.fragments.LoginFragment;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
+//Helper class for activities
 public class ActivityUtils {
 
-
+    //Sets the state of a button to disables and shows/hides a spinner. Helps changing button state
     public static void loadingButtonEnabled(Button button, ProgressBar spinner, boolean on, String text) {
         button.setEnabled(!on);
         button.setText(text);
         spinner.setVisibility(on ? View.VISIBLE : View.GONE);
     }
-
+    //Helper method for manipulating textviews
     public static void setTextAndColor(TextView view, String text, int color) {
         view.setText(text);
         view.setTextColor(color);
     }
-
+    //Shakes a button and the phone
     public static void shakeButton(Button button, Context context) {
         Vibrator vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(200);
         button.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake));
     }
-
+    //Creates a temporary URI for pictures
     public static Uri createTempPictureFile(Context context) {
 
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -71,7 +72,7 @@ public class ActivityUtils {
         }
 
     }
-
+    //Sets textviews to empty and hides them
     public static void clearAndHideTextViews(TextView... textViews){
         for(TextView textView : textViews) {
             textView.setText("");
@@ -79,7 +80,7 @@ public class ActivityUtils {
         }
     }
 
-
+    //This method animates changes between layouts and sets their state variables
     public static void transitionBetweenLayouts(ViewGroup from, ViewGroup to, Direction dir, Context context) {
         switch (dir) {
             case Left:
@@ -101,7 +102,9 @@ public class ActivityUtils {
         }
 
         from.setVisibility(View.INVISIBLE);
+        from.setEnabled(false);
         to.setVisibility(View.VISIBLE);
+        to.setEnabled(true);
     }
 
     public enum Direction {

@@ -3,6 +3,8 @@ package ipren.watchr.viewModels;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 
 import org.junit.Before;
@@ -59,7 +61,9 @@ public class LoginViewModelTest {
     @Test
     public void setRegReTypedPasswordTxt() {
         assertNull(loginViewModel.regReTypedPasswordError.getValue());
-        loginViewModel.setRegPasswordTxt("12345678");
+        loginViewModel.setRegPasswordTxt("12345678"); // This will set error to !=null because the reTyped field is empty
+        assertNotNull(loginViewModel.regReTypedPasswordError.getValue());
+        ((MutableLiveData<String>)loginViewModel.regReTypedPasswordError).postValue(null);  //Must reset null to test if setting identical PW will cause error
         loginViewModel.setRegReTypedPasswordTxt("12345678");
         assertEquals("12345678", loginViewModel.getRegReTypedPasswordTxt());
         assertNull(loginViewModel.regReTypedPasswordError.getValue());

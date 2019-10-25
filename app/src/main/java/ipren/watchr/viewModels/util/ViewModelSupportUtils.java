@@ -19,16 +19,22 @@ public class ViewModelSupportUtils {
     public static void updateEmailErrorTxt(LiveData<String> live, String text) {
         if (!isEmailFormat(text) && !text.isEmpty())
             postValue(live, "Not an email address");
+        else
+            postValue(live, null);
     }
     //Checks if a password string is long enough, if it's not post error to LiveData
     public static void updatePasswordErrorTxt(LiveData<String> live, String text, int minChars) {
         if (!text.isEmpty() && text.length() < minChars)
             postValue(live, "Password is too short");
+        else
+            postValue(live, null);
     }
     //Checks if two password are identical, if they are not it post error to LiveData
     public static void updatePasswordMatchErrorTxt(LiveData<String> live, String pw, String rePw) {
         if (!pw.equals(rePw))
             postValue(live, "Passwords don't match");
+        else
+            postValue(live, null);
     }
     //Helper method for checking if a string follows email format
     public static boolean isEmailFormat(String email) {
@@ -38,6 +44,8 @@ public class ViewModelSupportUtils {
     public static void setStringTooLongErrorTxt(LiveData<String> live, String username, int maxChars){
         if(username.length() > maxChars)
             postValue(live, "Max 15 characters");
+        else
+            postValue(live, null);
     }
 
 }

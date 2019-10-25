@@ -13,6 +13,7 @@ import ipren.watchr.dataHolders.RequestResponse;
 import ipren.watchr.dataHolders.User;
 import ipren.watchr.repository.IUserDataRepository;
 import static ipren.watchr.viewModels.util.ViewModelSupportUtils.*;
+import static ipren.watchr.viewModels.util.ErrorParser.*;
 
 
 public class AccountSettingsViewModel extends ViewModel {
@@ -105,24 +106,21 @@ public class AccountSettingsViewModel extends ViewModel {
         if(task == null){
             postValue(sendVerEmailResponse, new RequestResponse(false, "Email Already verified"));
         }else{
-            Exception exc = task.getException();
-            postValue(sendVerEmailResponse,new RequestResponse(task.isSuccessful(),exc !=null ? exc.getMessage() : "" ));
+            postValue(sendVerEmailResponse,new RequestResponse(task.isSuccessful(), parseError(task.getException())));
         }
     }
 
     //Callback function, posts the response to corresponding LiveData and sets the state of "changingPassword" to false;
     private void refreshPasswordChangeResponse(Task task){
        postValue(changingPassword, false);
-        Exception exception = task.getException();
-        postValue(changePasswordResponse, new RequestResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
+        postValue(changePasswordResponse, new RequestResponse(task.isSuccessful(), parseError(task.getException())));
     }
     //Callback function, posts the response to corresponding LiveData and sets the state of "savingNewProfile" to false;
     private void refreshUpdateUserProfile(Task task){
        postValue(savingNewProfile, false);
        if(task.isSuccessful())
            newProfilePicture = null;
-        Exception exception = task.getException();
-        postValue(updateProfileResponse ,new RequestResponse(task.isSuccessful(),exception !=null ? exception.getMessage() : "" ));
+        postValue(updateProfileResponse ,new RequestResponse(task.isSuccessful(), parseError(task.getException())));
     }
 
     // The following setters update the mirrored value in the viewModel so that it can be used for logic and syncing activity fields in the event of a reconstruction. It also sets a corresponding error if the value is invalid
@@ -134,6 +132,7 @@ public class AccountSettingsViewModel extends ViewModel {
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
         updatePasswordErrorTxt(newPasswordErrorTxt,newPassword, minPasswordLength);
+        updatePasswordMatchErrorTxt(reTypedErrorTxt, newPassword, reTypedPassword);
     }
 
     public void setReTypedPassword(String reTypedPassword) {
