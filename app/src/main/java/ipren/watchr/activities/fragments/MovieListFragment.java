@@ -21,13 +21,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipren.watchr.R;
 import ipren.watchr.activities.fragments.Adapters.MovieListAdapter;
+import ipren.watchr.dataHolders.Genre;
 import ipren.watchr.dataHolders.Movie;
+import ipren.watchr.dataHolders.MovieFilter;
 import ipren.watchr.repository.IMovieRepository;
 import ipren.watchr.repository.IUserDataRepository;
 import ipren.watchr.viewModels.ListViewModel;
@@ -110,6 +116,10 @@ public class MovieListFragment extends Fragment {
         });
     }
 
+    /**
+     * Main list navigation handler
+     * @param listType Type of list
+     */
     private void handleNavigation(String listType) {
         switch (listType) {
             case IMovieRepository.BROWSE_LIST:
@@ -125,7 +135,10 @@ public class MovieListFragment extends Fragment {
         listViewModel.getMovies().observe(getActivity(), movieObserver);
     }
 
-
+    /**
+     * Sets up the correct user list
+     * @param listType Type of list
+     */
     private void handleUserList(String listType) {
         // Check if user is logged in
         if (listViewModel.getUser().getValue() != null) {
@@ -145,6 +158,10 @@ public class MovieListFragment extends Fragment {
         }
     }
 
+    /**
+     * Observe the movie ids returned from user repo
+     * @param ids Ids to be observed
+     */
     public void observeIds(String[] ids) {
         if (ids != null) {
             listViewModel.initUserMovieList(ids);
@@ -181,18 +198,22 @@ public class MovieListFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Remove the current observer
-                listViewModel.getMovies().removeObserver(movieObserver);
-                // Load new movies from a query
-                listViewModel.getMoviesFromQuery(query);
-                // Observe them
-                listViewModel.getMovies().observe(getActivity(), movieObserver);
+                if (listType.equals(IMovieRepository.BROWSE_LIST)) {
+                    // Remove the current observer
+                    listViewModel.getMovies().removeObserver(movieObserver);
+                    // Load new movies from a query
+                    listViewModel.getMoviesFromQuery(query);
+                    // Observe them
+                    listViewModel.getMovies().observe(getActivity(), movieObserver);
+                }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                movieListAdapter.getFilter().filter(newText);
+                if (!listType.equals(IMovieRepository.BROWSE_LIST)) {
+                    movieListAdapter.getFilter().filter(newText);
+                }
                 return false;
             }
         });
@@ -205,13 +226,53 @@ public class MovieListFragment extends Fragment {
         // Get the filter button from toolbar and show
         ImageButton filterBtn = getActivity().findViewById(R.id.toolbar_filter);
         filterBtn.setVisibility(View.VISIBLE);
+        DrawerLayout filterDrawer = getActivity().findViewById(R.id.filter_drawer);
 
         filterBtn.setOnClickListener(v -> {
-            DrawerLayout filterDrawer = getActivity().findViewById(R.id.filter_drawer);
             if (filterDrawer.isDrawerOpen(GravityCompat.END)) {
+                // Perform filtering
+                MovieFilter movieFilter = MovieFilter.getInstance();
+                List<Movie> movies = movieListAdapter.getMovieListFull();
+                List<Movie> filteredMovies = new ArrayList<>(movies);
+
+                for (Movie movie : movies) {
+                    // Check rating
+                    if (!(movie.getVoteAverage() >= movieFilter.getRating())) {
+                        filteredMovies.remove(movie);
+                    }
+                }
+
+                // Order by
+                switch (movieFilter.getOrderBy()) {
+                    case "Popularity":
+
+                        break;
+                    case "Rating":
+                        Collections.sort(filteredMovies, (a, b) -> {
+                            double result = a.getVoteAverage() - b.getVoteAverage();
+                            if (result < 0) {
+                                return 1;
+                            } else if (result == 0) {
+                                return 0;
+                            } else {
+                                return -1;
+                            }
+                        });
+                    case "Title":
+
+                        break;
+                    case "Release date":
+
+                        break;
+                }
+
+                movieListAdapter.updateFilteredMovieList(filteredMovies);
+
                 filterDrawer.closeDrawer(GravityCompat.END);
+                filterDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             } else {
                 filterDrawer.openDrawer(GravityCompat.END);
+                filterDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
             }
         });
     }

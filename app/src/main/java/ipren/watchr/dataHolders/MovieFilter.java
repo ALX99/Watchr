@@ -1,37 +1,35 @@
 package ipren.watchr.dataHolders;
 
-import android.util.Log;
-
 /**
- * Filter model containing current filter options.
+ * MovieFilter model containing current filter options.
  * Singleton.
  */
-public class Filter {
-    private static Filter instance;
-    private String rating;
+public class MovieFilter {
+    private static MovieFilter instance;
+    private double rating;
     private String genre;
     private String orderBy;
     private boolean includeWatched;
     private boolean includeWatchLater;
     private boolean includeFavorites;
 
-    private Filter() {
-        rating = "1+";
-        genre = "Horror";
+    private MovieFilter() {
+        rating = 1.0;
+        genre = "All";
         orderBy = "Popularity";
         includeWatched = true;
         includeWatchLater = true;
         includeFavorites = true;
     }
 
-    public static Filter getInstance() {
+    public static MovieFilter getInstance() {
         if (instance == null) {
-            instance = new Filter();
+            instance = new MovieFilter();
         }
         return instance;
     }
 
-    public String getRating() {
+    public double getRating() {
         return rating;
     }
 
@@ -56,7 +54,6 @@ public class Filter {
     }
 
     public void setSwitch(String tag, boolean status) {
-        Log.d("TEST", tag + " " + status);
         switch (tag) {
             case "watched_switch":
                 includeWatched = status;
@@ -71,10 +68,9 @@ public class Filter {
     }
 
     public void setSpinner(String tag, String value) {
-        Log.d("TEST", tag + " " + value);
         switch (tag) {
             case "rating_spinner":
-                rating = value;
+                rating = Double.parseDouble(value);
                 break;
             case "genre_spinner":
                 genre = value;

@@ -113,6 +113,12 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         notifyDataSetChanged();
     }
 
+    public void updateFilteredMovieList(List<Movie> filteredMovieList) {
+        movieList.clear();
+        movieList.addAll(filteredMovieList);
+        notifyDataSetChanged();
+    }
+
     /**
      * Inflates a movie card layout and returns it in a view holder
      */
@@ -144,7 +150,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         // Fetch genres and set to view
         listViewModel.getGenres(movieIdInt).observe(fragment.getActivity(), genres -> {
-            if (genres != null && genres.size() > 0) {
+            if (genres != null) {
                 String genresString = "";
                 for (Genre genre : genres) {
                     genresString += genre.getName() + " ";
@@ -333,5 +339,12 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @Override
     public Filter getFilter() {
         return filter;
+    }
+
+    /**
+     * Return the movie list
+     */
+    public List<Movie> getMovieListFull() {
+        return movieListFull;
     }
 }
