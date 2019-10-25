@@ -331,7 +331,7 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     //Helper class extending a Textwatcher adapter
-    class TextForwarder extends TextWatcherAdapter {
+   private class TextForwarder extends TextWatcherAdapter {
         private EditText textField; // Observing editText
 
         TextForwarder(EditText textField) {

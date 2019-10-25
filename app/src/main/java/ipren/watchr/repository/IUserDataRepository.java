@@ -10,7 +10,7 @@ import ipren.watchr.dataholders.Comment;
 import ipren.watchr.dataholders.PublicProfile;
 import ipren.watchr.dataholders.Rating;
 import ipren.watchr.dataholders.User;
-import ipren.watchr.repository.firebase.FireRepositoryManager;
+import ipren.watchr.repository.firebaserepository.FireRepositoryManager;
 
 //Interface used for managing user related data such as
 public interface IUserDataRepository {

@@ -30,7 +30,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ipren.watchr.R;
 import ipren.watchr.dataholders.MovieFilter;
-import ipren.watchr.repository.room.Database.MovieDB;
+import ipren.watchr.repository.movierepository.Database.MovieDB;
 import ipren.watchr.viewmodels.MainViewModel;
 import ipren.watchr.viewmodels.MainViewModelInterface;
 
