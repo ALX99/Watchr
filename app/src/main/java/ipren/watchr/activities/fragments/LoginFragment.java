@@ -26,12 +26,7 @@ import ipren.watchr.R;
 import ipren.watchr.activities.Util.TextWatcherAdapter;
 import ipren.watchr.viewmodels.LoginViewModel;
 
-import static ipren.watchr.activities.Util.ActivityUtils.Direction;
-import static ipren.watchr.activities.Util.ActivityUtils.clearAndHideTextViews;
-import static ipren.watchr.activities.Util.ActivityUtils.loadingButtonEnabled;
-import static ipren.watchr.activities.Util.ActivityUtils.setTextAndColor;
-import static ipren.watchr.activities.Util.ActivityUtils.shakeButton;
-import static ipren.watchr.activities.Util.ActivityUtils.transitionBetweenLayouts;
+import static ipren.watchr.activities.Util.ActivityUtils.*;
 
 
 // This class has three included layouts from separate xml files, what elements are included in each layout is shown below.
@@ -207,8 +202,7 @@ public class LoginFragment extends Fragment {
 
         resetPasswordBtn.setOnClickListener(e -> { //Attempt to send reset password link to current user
             clearAndHideTextViews(passwordResetResponse);
-            if (!loginViewModel.resetPassword())
-                shakeButton(resetPasswordBtn, getContext());  //The ViewModel can reject the attempt if any fields are badly formatted if so it will return false, the fragment will respond by vibrating/shaking the button
+            if (!loginViewModel.resetPassword()) shakeButton(resetPasswordBtn, getContext());  //The ViewModel can reject the attempt if any fields are badly formatted if so it will return false, the fragment will respond by vibrating/shaking the button
         });
 
         //This method observes the state of sending(a)ResetMSG to the specified email and updates the resetPasswordBtn  as a result. Mirroring the state
@@ -272,6 +266,3 @@ public class LoginFragment extends Fragment {
     }
 
 }
-
-
-
