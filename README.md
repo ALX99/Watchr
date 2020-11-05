@@ -4,26 +4,23 @@
 
 ## Introduction
 
-This will be an application made for android to easily be able to find movies you will love!
+This is an movie browser android application developed during a 36 day period for the course TDA367. There were in total three people working on this, with only one having previous experience with android development.  
+It was developed with the use of a scrum workflow and according to the [Jetpack](https://developer.android.com/jetpack) guidelines (might have changed since it was developed).
 
-## Development
+### Video preview
 
-[Trello](https://trello.com/b/gjwIsODj/movieapp)  
-[Requirements and Analysis Document](https://docs.google.com/document/d/1dbzKoYmv8hf_czsvtaJkKjVs7tnyF8L2YQzVcfuWCxw/edit?usp=sharing)  
-[System Design Document](https://docs.google.com/document/d/1GjAOe8Z2GMxuMLxm4WwJcoCDVlYT4zequuEK8OUly7Q/edit?usp=sharing)  
-[Meeting Protocols](https://drive.google.com/drive/folders/1XBq-GMqKhEiqjhyY5pQ3hbJZXramyKcu?usp=sharing)
+[![Watchr preview](https://img.youtube.com/vi/lGk2oZdj1MQ/0.jpg)](http://www.youtube.com/watch?v=lGk2oZdj1MQ)
 
-Development process:
+## Features
 
-1. Take on a task from [Trello](https://trello.com/b/gjwIsODj/movieapp)
-2. Plan the implementation, (take a look at the UML, etc)
-3. Implement!
-4. Write JUnit tests and make sure they go through
-5. Add class(es), and method(s) to the UML if not already there
-6. Merge with master
+- Information about movies are fetched from [themoviedb](https://www.themoviedb.org/), so it's always up to date
+- Comments and Profile pics are updated in real time. (If someone comments on another device it'll be shown directly without needing to refresh)
+- Infinite scroll. (movie entries are loaded as you scroll)
+- All the movie information is cached in a local SQLite database using [Room](https://developer.android.com/topic/libraries/architecture/room). (prevents excessive data usage)
+- Registration email & password resets are available. (see video for registration demo)
+- Everything related to your account such as comments, movie lists, and movie stats is synced to our own database in [Firebase](https://firebase.google.com/).
 
-## KEYSTORE / Build
+## Technical Details
 
-1. Put the debug.keystore in the project root folder.
-2. Put ipren.keys in the project root folder.
-3. Build
+- [Software Design Description document](SDD.pdf)
+- [Requirements and Analysis documents](RAD.pdf)
